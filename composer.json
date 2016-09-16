@@ -1,0 +1,32 @@
+{
+  "name": "runcmf/runtracy",
+  "description": "Slim Framework Tracy Adapter",
+  "version": "0.1.0",
+  "license": "Apache 2",
+  "type": "project",
+  "keywords": ["Tracy", "Slim3", "Slim 3", "Twig", "Eloquent ORM"],
+  "authors": [
+    {
+      "name": "Vladimir",
+      "email": "1f7.wizard@gmail.com",
+      "homepage": "http://runcmf.ru"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "slim/slim": "~3.5",
+    "slim/twig-view": "~2.1",
+    "tracy/tracy": "~2.4",
+    "illuminate/database": "~5.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "RunTracy\\": "src/RunTracy"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  }
+}
