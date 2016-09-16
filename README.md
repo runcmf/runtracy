@@ -60,5 +60,4 @@ see examples in RunTracy/Example
 
 ## License
 
-Apache License
-Version 2.0. Please see [License File](LICENSE.md) for more information.
+[Apache License Version 2.0](LICENSE.md)
