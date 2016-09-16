@@ -3,7 +3,7 @@
 # Install
 **1**
 ``` bash
-$ composer require runcmf/runtracy "*@dev"
+$ composer require runcmf/runtracy
 ```
 
 **2** add to your dependencies Twig, Twig_Profiler, Eloquent ORM like this
