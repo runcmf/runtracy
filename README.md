@@ -1,3 +1,5 @@
+[![Latest Version on Packagist][ico-version]][link-packagist] [![Software License][ico-license]][link-license] [![Total Downloads][ico-downloads]][link-downloads]
+
 # Slim Framework Tracy Adater #
 
 # Install
@@ -6,7 +8,7 @@
 $ composer require runcmf/runtracy
 ```
 
-**2** add to your dependencies Twig, Twig_Profiler, Eloquent ORM like this
+**2** add to your dependencies Twig, Twig_Profiler, Eloquent ORM like:
 ```php
 // Twig
 $c['twig_profile'] = function () {
@@ -49,15 +51,29 @@ Debugger::enable(Debugger::DEVELOPMENT);
 //Debugger::enable(Debugger::PRODUCTION);
 Debugger::dispatch();
 ```
-see examples in RunTracy/Example
+see config examples in vendor/runcmf/runtracy/Example
 
+![example](ss/example.png "example screenshot")
 
+## Security
 
-### Who do I talk to? ###
+If you discover any security related issues, please email to 1f7.wizard( at )gmail.com or create an issue.
 
-* 1f7.wizard ( at ) gmail.com
+## Credits
+
+* https://bitbucket.org/1f7
+* https://github.com/1f7
+* http://runetcms.ru
 * http://runcmf.ru
 
 ## License
 
 [Apache License Version 2.0](LICENSE.md)
+
+[ico-version]: https://img.shields.io/packagist/v/runcmf/runtracy.svg?style=flat-square
+[ico-license]: https://img.shields.io/badge/license-Apache%202-green.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/runcmf/runtracy.svg?style=flat-square
+
+[link-packagist]: https://packagist.org/packages/runcmf/runtracy
+[link-license]: http://www.apache.org/licenses/LICENSE-2.0
+[link-downloads]: https://bitbucket.org/1f7/runtracy

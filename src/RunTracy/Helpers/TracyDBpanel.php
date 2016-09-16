@@ -26,7 +26,7 @@ class TracyDBpanel implements IBarPanel
     private $time;
     private $ver;
 
-    public function __construct($data = [], $ver = [])
+    public function __construct($data = null, array $ver = [])
     {
         $this->data = $this->parse($data);
         $this->count = count($data);

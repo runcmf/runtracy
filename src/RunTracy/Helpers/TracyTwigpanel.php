@@ -25,7 +25,7 @@ class TracyTwigpanel implements IBarPanel
     private $dumper;
     private $ver;
 
-    public function __construct($data = [], $ver = [])
+    public function __construct($data = null, array $ver = [])
     {
         $this->data = $data;
         $this->ver = $ver;
