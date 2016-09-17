@@ -2,16 +2,16 @@
 
 # Slim Framework Tracy Adater #
 
-now ready:
-* PhpInfoPanel - full phpinfo(), 
-* SlimEnvironmentPanel - RAW data Slim Environments,  
-* SlimRequestPanel - RAW data Slim Request, 
-* SlimResponsePanel - RAW data Slim Response, 
-* SlimRouterPanel - RAW data Slim Router, 
-* EloquentORMPanel - Eloquent ORM Query / Bindings log, also can show Raw Eloquent ORM Log 
-* TwigPanel - Twig_Profiler_Dumper_Html(), also can show Raw Twig Profiler Dump  
+now ready:  
+PhpInfoPanel - full phpinfo(),  
+SlimEnvironmentPanel - RAW data Slim Environments,  
+SlimRequestPanel - RAW data Slim Request,  
+SlimResponsePanel - RAW data Slim Response,  
+SlimRouterPanel - RAW data Slim Router,  
+EloquentORMPanel - Eloquent ORM Query / Bindings log, also can show Raw Eloquent ORM Log  
+TwigPanel - Twig_Profiler_Dumper_Html(), also can show Raw Twig Profiler Dump
 
-all configurable in settings
+all configurable
 
 
 # Install
