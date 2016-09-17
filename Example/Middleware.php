@@ -1,3 +1,3 @@
 <?php
 
-$app->add(new \RunTracy\Middlewares\TracyDBMiddleware($app));
+$app->add(new \RunTracy\Middlewares\TracyMiddleware($app));

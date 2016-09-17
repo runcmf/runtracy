@@ -2,6 +2,18 @@
 
 # Slim Framework Tracy Adater #
 
+now ready:
+PhpInfoPanel - full phpinfo(),
+SlimEnvironmentPanel - RAW data Slim Environments, 
+SlimRequestPanel - RAW data Slim Request,
+SlimResponsePanel - RAW data Slim Response,
+SlimRouterPanel - RAW data Slim Router,
+EloquentORMPanel - Eloquent ORM Query / Bindings log, also can show Raw Eloquent ORM Log
+TwigPanel - Twig_Profiler_Dumper_Html(), also can show Raw Twig Profiler Dump 
+
+all configurable in settings
+
+
 # Install
 **1**
 ``` bash
@@ -40,16 +52,37 @@ $capsule::connection()->enableQueryLog();//necessary for debugging
 
 **3** register Middleware
 ``` php
-$app->add(new \RunTracy\Middlewares\TracyDBMiddleware($app));
+$app->add(new \RunTracy\Middlewares\TracyMiddleware($app));
 ```
 
 **4** add to your settings
 ``` php
 use Tracy\Debugger;
 
-Debugger::enable(Debugger::DEVELOPMENT);
-//Debugger::enable(Debugger::PRODUCTION);
+defined('DS') || define('DS', DIRECTORY_SEPARATOR);
+define('DIR', realpath(__DIR__ . '/../../') . DS);
+
+Debugger::enable(Debugger::DEVELOPMENT, DIR . 'var/log');
+//Debugger::enable(Debugger::PRODUCTION, DIR . 'var/log');
 Debugger::dispatch();
+
+return [
+    'settings' => [
+    ... // ...
+    ... // ...
+
+        'tracy' => [
+            'showPhpInfoPanel' => 1,
+            'showSlimRouterPanel' => 1,
+            'showSlimEnvironmentPanel' => 1,
+            'showSlimRequestPanel' => 1,
+            'showSlimResponsePanel' => 1,
+            'showRawSlimContainer' => 0,
+            'showEloquentORMPanel' => 1,
+            'showRawEloquentORMLog' => 0,
+            'showTwigPanel' => 1,
+            'showRawTwigProfiler' => 0,
+        ]
 ```
 see config examples in vendor/runcmf/runtracy/Example
 

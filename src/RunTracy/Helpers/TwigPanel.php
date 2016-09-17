@@ -19,7 +19,7 @@ namespace RunTracy\Helpers;
 
 use Tracy\IBarPanel;
 
-class TracyTwigpanel implements IBarPanel
+class TwigPanel implements IBarPanel
 {
     private $data;
     private $dumper;

@@ -17,25 +17,23 @@
 
 use Tracy\Debugger;
 
-Debugger::enable(Debugger::DEVELOPMENT);
-//Debugger::enable(Debugger::PRODUCTION);
-//https://github.com/nette/tracy/issues/154#issuecomment-219694817
-Debugger::dispatch();// from ver 2.4
-
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 define('DIR', realpath(__DIR__ . '/../../') . DS);
+
+Debugger::enable(Debugger::DEVELOPMENT, DIR . 'var/log');
+//Debugger::enable(Debugger::PRODUCTION, DIR . 'var/log');
+//https://github.com/nette/tracy/issues/154#issuecomment-219694817
+Debugger::dispatch();// from ver 2.4
 
 return [
     'settings' => [
         'displayErrorDetails' => true,
         'determineRouteBeforeAppMiddleware' => true,
         'addContentLengthHeader' => false,// if true = Unexpected data in output buffer
-//        'routerCacheFile' => DIR . 'var/cache/fastroute.cache',
+//        'routerCacheFile' => DIR . 'var/cache/fastroute.cache',//TODO uncomment after debug
 
         'db' => [// database configuration
             'default' => 'mysql',
-//            'default' => 'sqlite',
-//            'default' => 'pgsql',
             'connections' => [
                 'sqlite' => [
                     'driver' => 'sqlite',
@@ -53,7 +51,7 @@ return [
                     'password' => '123',
                     'charset' => 'utf8',
                     'collation' => 'utf8_unicode_ci',
-                    'prefix' => 'mybb_',
+                    'prefix' => 'mybb_'
                 ],
                 'pgsql' => [
                     'driver' => 'pgsql',
@@ -87,6 +85,21 @@ return [
             'level' => \Monolog\Logger::DEBUG,
             'path' => DIR . 'var/log/app.log',
             'maxFiles' => 15
+        ],
+        'modules' => [// register modules
+            'forum' => 'RunBB\Init'
+        ],
+        'tracy' => [
+            'showPhpInfoPanel' => 1,
+            'showSlimRouterPanel' => 1,
+            'showSlimEnvironmentPanel' => 1,
+            'showSlimRequestPanel' => 1,
+            'showSlimResponsePanel' => 1,
+            'showRawSlimContainer' => 0,
+            'showEloquentORMPanel' => 1,
+            'showRawEloquentORMLog' => 0,
+            'showTwigPanel' => 1,
+            'showRawTwigProfiler' => 0,
         ]
     ]
 ];

@@ -19,7 +19,7 @@ namespace RunTracy\Helpers;
 
 use Tracy\IBarPanel;
 
-class TracyDBpanel implements IBarPanel
+class EloquentORMPanel implements IBarPanel
 {
     private $count;
     private $data;
