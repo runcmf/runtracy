@@ -9,7 +9,8 @@ SlimRequestPanel - RAW data Slim Request,
 SlimResponsePanel - RAW data Slim Response,  
 SlimRouterPanel - RAW data Slim Router,  
 EloquentORMPanel - Eloquent ORM Query / Bindings log, also can show Raw Eloquent ORM Log  
-TwigPanel - Twig_Profiler_Dumper_Html(), also can show Raw Twig Profiler Dump
+TwigPanel - Twig_Profiler_Dumper_Html(), also can show Raw Twig Profiler Dump  
+VendorVersionsPanel - fork from https://github.com/milo/vendor-versions
 
 all configurable
 
@@ -83,11 +84,14 @@ return [
             'showRawEloquentORMLog' => 0,
             'showTwigPanel' => 1,
             'showRawTwigProfiler' => 0,
+            'showVendorVersionsPanel' => 1
         ]
 ```
 see config examples in vendor/runcmf/runtracy/Example
 
 ![example](ss/example.png "example screenshot")
+
+![example](ss/vendor_versions_panel.png "Vendor Versions Panel")
 
 ## Security
 

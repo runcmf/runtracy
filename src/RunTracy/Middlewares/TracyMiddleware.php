@@ -25,6 +25,7 @@ use RunTracy\Helpers\SlimRouterPanel;
 use RunTracy\Helpers\SlimEnvironmentPanel;
 use RunTracy\Helpers\SlimRequestPanel;
 use RunTracy\Helpers\SlimResponsePanel;
+use RunTracy\Helpers\VendorVersionsPanel;
 
 use Illuminate\Database\Capsule\Manager as DB;
 
@@ -41,8 +42,6 @@ class TracyMiddleware
     {
         $res = $next($request, $response);
 
-//        $d = DB::getQueryLog();
-//        $p = $this->app->getContainer()->get('twig_profile');
         $v = [
             'slim' => \Slim\App::VERSION,
             'twig' => \Twig_Environment::VERSION
@@ -78,6 +77,9 @@ class TracyMiddleware
         }
         if ($cfg['showSlimResponsePanel']) {
             Debugger::getBar()->addPanel(new SlimResponsePanel($this->app, $v));
+        }
+        if ($cfg['showVendorVersionsPanel']) {
+            Debugger::getBar()->addPanel(new VendorVersionsPanel(  ));
         }
 
         return $res;

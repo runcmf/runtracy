@@ -100,6 +100,7 @@ return [
             'showRawEloquentORMLog' => 0,
             'showTwigPanel' => 1,
             'showRawTwigProfiler' => 0,
+            'showVendorVersionsPanel' => 1
         ]
     ]
 ];
