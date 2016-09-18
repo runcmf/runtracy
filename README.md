@@ -10,7 +10,9 @@ SlimResponsePanel - RAW data Slim Response,
 SlimRouterPanel - RAW data Slim Router,  
 EloquentORMPanel - Eloquent ORM Query / Bindings log, also can show Raw Eloquent ORM Log  
 TwigPanel - Twig_Profiler_Dumper_Html(), also can show Raw Twig Profiler Dump  
-VendorVersionsPanel - fork from https://github.com/milo/vendor-versions
+VendorVersionsPanel - version info from composer.json and composer.lock (fork from https://github.com/milo/vendor-versions)  
+XDebugHelper - start and stop a Xdebug session (fork from https://github.com/jsmitka/Nette-XDebug-Helper)
+
 
 all configurable
 
@@ -84,7 +86,9 @@ return [
             'showRawEloquentORMLog' => 0,
             'showTwigPanel' => 1,
             'showRawTwigProfiler' => 0,
-            'showVendorVersionsPanel' => 1
+            'showVendorVersionsPanel' => 1,
+            'showXDebugHelper' => 1,
+            'XDebugHelperIDEKey' => 'netbeans-xdebug'
         ]
 ```
 see config examples in vendor/runcmf/runtracy/Example

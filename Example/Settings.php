@@ -100,7 +100,9 @@ return [
             'showRawEloquentORMLog' => 0,
             'showTwigPanel' => 1,
             'showRawTwigProfiler' => 0,
-            'showVendorVersionsPanel' => 1
+            'showVendorVersionsPanel' => 1,
+            'showXDebugHelper' => 1,
+            'XDebugHelperIDEKey' => 'netbeans-xdebug'
         ]
     ]
 ];

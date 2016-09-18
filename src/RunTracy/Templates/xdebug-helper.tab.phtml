@@ -1,0 +1,67 @@
+<span onclick="XDebugHelper.xDebugger.toggle();" style="cursor: pointer;"><img src="" alt="" id="xdebug-helper-debugger-icon" /> Debugger</span>
+<span onclick="XDebugHelper.xProfiler.toggle();" style="cursor: pointer;"><img src="" alt="" id="xdebug-helper-profiler-icon" /> Profiler</span>
+
+<script type="text/javascript">
+XDebugHelper = {
+	init: function () {
+		this.createHandler(this.xDebugger);
+		this.createHandler(this.xProfiler);
+	},
+
+	hasCookie: function (cookie) {
+		return document.cookie.indexOf(cookie + '=') != -1;
+	},
+
+	setCookie: function (cookie, value) {
+		document.cookie = cookie + '=' + value + '; path=/';
+	},
+
+	removeCookie: function (cookie) {
+		document.cookie = cookie + '=; expires=Thursday, 01-Jan-70 00:00:00 GMT; path=/';
+	},
+
+	createHandler: function (object) {
+		object.isStarted = function() {
+			return XDebugHelper.hasCookie(this.cookie);
+		};
+
+		object.toggle = function () {
+			if (this.isStarted()) {
+				XDebugHelper.removeCookie(this.cookie, this.value);
+				XDebugHelper.setIcon(this.iconId, this.inactiveIcon);
+			} else {
+				XDebugHelper.setCookie(this.cookie, this.value);
+				XDebugHelper.setIcon(this.iconId, this.activeIcon);
+			}
+		};
+
+		if (object.isStarted()) {
+			XDebugHelper.setIcon(object.iconId, object.activeIcon);
+		} else {
+			XDebugHelper.setIcon(object.iconId, object.inactiveIcon);
+		}
+	},
+
+	"xDebugger": {
+		iconId: 'xdebug-helper-debugger-icon',
+		inactiveIcon: 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAlFJREFUeNp8U02IUmEUvZo2CYGQiqKgkiWCG8lNMhLMImgntDRdzsJFYjAGLVo1m5YOIrhQyR/EHwgRNyJJLTRQWrX04UJRQRSeCv5r9z5SHLO5cPB7vu+ee8753gfb7Rb+h2w2u02lUhe0jsfjr6PR6PR4Dx8OKpfL6Q6fV6sV4Z3P53u8XC4li8ViCUfFP2poZDKZq90zNs0R5+Px+FOn07mZzWYPvV7v57sIWMQ1rWOxGIvNZ4hHMpnMbrFYHthsNp5KpXrvcrm8ux4e+dhVIpG4WK/X3zabDSsQCMQmkwmEQiF0u12oVqtgNBpBoVBAqVTa2QNeMplkseGZ3W5niCQUCm2I2Gw2Q7/fh/l8DkgKzWYTRqMRaDQaKBQKjXQ6/ZT2C5BFhBsa4XA4hmpeiUQinsFg4KaiZ0D/wOfzwWq1AsuyUC6XSdXvfQYOh+M+pvsT4cRpMpLZ6/VgOp1yE8miWq0GhmE4IsyEbLz0eDxvb2Xg9/tnYrH4DEOC4XC4b9bpdNButwEHgFarhXw+T963qJpH1vangBvWFBhNIdkUEAXWarW4HKRSKZcDESGkgUCAh78f9wTIdkMyqZk2KZVKGAwGnBWJRAKVSgVqtRpZuAwGg0PqiUQi13sC/EA+4MsfxWIR9Ho9p4AkyuVymEwmnC3yj+R+p9N5dfI7+Ev0HY/1BYVJdur1OqcC/7tEUgZJv+JajHiCR8n8Q0Dldru/4KQ32HCPVCAqeJHO4USdJDgsPOYqEjyniXgzmTsv06nCa2xBJUvEr1Pv/wgwAJ+hqz/0bytUAAAAAElFTkSuQmCC',
+		activeIcon: 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAKYSURBVDjLnZPJT1NRFMb5G1wDHV5boNiqdHrvFYolCAtsGSSWKpMFKhYqlDI6oAEKaVJwCIgSphaKtLYWCgSNBgRjMNHoxsSFS3cmJmA0NMTw+R6JKKZl4eJL7sm953fOd3JPHIC4WMpcppG5SGnZc8ZjVVF6QLn975sDgfaZmvg71oRJZIRUYcuAnq/2KWroGfm3QwEn2YpLVPPvOD2oiqj9yq/mGznegl56mx6T7ZbY1M6YAM0CuZkxT0b2Wg6QW/SsApRXDsotR+d6E9Y/h9DuqoCuJq0lKoDxqU1/pITGR27mBU4h+GEcTz5OY+ClA5JbyahYzof/9TBO9B/FcWcqpA4xU3We3GJ87ntnfO5meinMvruNnqcmXA2XoDVcCc0wCYkzBaZpA7ILRJ/2O2B87jA+QT9UeDRe8svZYAG8b/txc6kc9mA+yqayYPQXwvdmBEOrA5B2p0BtFIYOWKCm5RukWwZyXIbA+0F0LpaiKaBHmVsLw4we99ccsM8a8GClF5JOMcQdou8prULrgRmQo7KI0VcE13MrGv06lE5kodhzGvdWu2GdKkTVWC4DcELcJkKyXbCb1EhAVM//M0DVUNqP2qAJd1baUDaZjTMTeXAttsPi0cM0mgvHvA0NkxYk2QRIrieOsDmEmXttH0DfVfSluSToWmpD8bgOroUOWNw6VI7koGfOBuq6EqLLTNU6ojrmP5D1HVsjmrkYezGIrlA9LjKgnrlGXJlpgbCOD0EtD0QNN8I3cZqjAlhJr4rXpB1iNLhrYffUQWoT7yUKzbxqJlHLq0jc5JYmgHMunogKYJVqF7mTrPyfgktMRTMX/CrOq1gLF3fYNrLiX+Bs8MoTwT2fQPwXgBXHGL+TaIjfinb3C7cscRMIcYL6AAAAAElFTkSuQmCC',
+		cookie: 'XDEBUG_SESSION',
+		value: <?php echo json_encode($ideKey); ?>
+	},
+
+	"xProfiler": {
+		iconId: 'xdebug-helper-profiler-icon',
+		inactiveIcon: 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAATFJREFUeNqkk02uRUAQhVvSRJhYgETEiD1YlIE9WIe5hdiBhJEdmPin7zuVlLSXK5FcSaVU6/rqOI2hlBK/XPLbYlmW6jgOse+7OM9TbNtGkWWZ8QqwrqtIkkQAAoXIdV2/VwAApg/DQM2O44hpmt4DsBkAgAAwTfMZUFUVuchSEWhE4L0BsixLjOP4rCCOYzILEOSmaahxWZYL+KiAp/Z9T9n3fZqGJgZAAe6/AvSjQkZgGmoG2LZNdVEUio8UzzBEouAz5wwA+4Cam9I0vXzC+p9/QmITpmKB1bCBDNAN7bqO6iAIaJDUN/0/BcjUFSDmeaZ1BLy6KWAAT9dfQT8NVgSYZKOiKLpMZLme591q5DAMr3sAjDzP6cfBRs5t214fFkMRruvelCKMX3/njwADADHsyiUknsuWAAAAAElFTkSuQmCC',
+		activeIcon: 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAGvSURBVDjLpZO7alZREEbXiSdqJJDKYJNCkPBXYq12prHwBezSCpaidnY+graCYO0DpLRTQcR3EFLl8p+9525xgkRIJJApB2bN+gZmqCouU+NZzVef9isyUYeIRD0RTz482xouBBBNHi5u4JlkgUfx+evhxQ2aJRrJ/oFjUWysXeG45cUBy+aoJ90Sj0LGFY6anw2o1y/mK2ZS5pQ50+2XiBbdCvPk+mpw2OM/Bo92IJMhgiGCox+JeNEksIC11eLwvAhlzuAO37+BG9y9x3FTuiWTzhH61QFvdg5AdAZIB3Mw50AKsaRJYlGsX0tymTzf2y1TR9WwbogYY3ZhxR26gBmocrxMuhZNE435FtmSx1tP8QgiHEvj45d3jNlONouAKrjjzWaDv4CkmmNu/Pz9CzVh++Yd2rIz5tTnwdZmAzNymXT9F5AtMFeaTogJYkJfdsaaGpyO4E62pJ0yUCtKQFxo0hAT1JU2CWNOJ5vvP4AIcKeao17c2ljFE8SKEkVdWWxu42GYK9KE4c3O20pzSpyyoCx4v/6ECkCTCqccKorNxR5uSXgQnmQkw2Xf+Q+0iqQ9Ap64TwAAAABJRU5ErkJggg==',
+		cookie: 'XDEBUG_PROFILE',
+		value: 1
+	},
+
+	setIcon: function (id, icon) {
+		document.getElementById(id).src = 'data:image/png;base64,' + icon;
+	}
+};
+
+XDebugHelper.init();
+</script>

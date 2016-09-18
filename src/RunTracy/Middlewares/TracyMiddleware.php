@@ -26,6 +26,7 @@ use RunTracy\Helpers\SlimEnvironmentPanel;
 use RunTracy\Helpers\SlimRequestPanel;
 use RunTracy\Helpers\SlimResponsePanel;
 use RunTracy\Helpers\VendorVersionsPanel;
+use RunTracy\Helpers\XDebugHelper;
 
 use Illuminate\Database\Capsule\Manager as DB;
 
@@ -80,6 +81,9 @@ class TracyMiddleware
         }
         if ($cfg['showVendorVersionsPanel']) {
             Debugger::getBar()->addPanel(new VendorVersionsPanel(  ));
+        }
+        if ($cfg['showXDebugHelper']) {
+            Debugger::getBar()->addPanel(new XDebugHelper( $cfg['XDebugHelperIDEKey'] ));
         }
 
         return $res;
