@@ -49,6 +49,7 @@ class TracyMiddleware
         ];
 
         $cfg = $this->app->getContainer()->get('settings')['tracy'];
+
         if ($cfg['showEloquentORMPanel']) {
             Debugger::getBar()->addPanel(new EloquentORMPanel(DB::getQueryLog(), $v));
         }
