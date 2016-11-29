@@ -23,8 +23,15 @@ all configurable
 ``` bash
 $ composer require runcmf/runtracy
 ```
+**2** goto 3 or if need twig and/or Eloquent ORM then:
 
-**2** add to your dependencies Twig, Twig_Profiler, Eloquent ORM like:
+**2.1** install it
+``` bash
+$ composer require illuminate/database
+$ composer require slim/twig-view
+```
+
+**2.2** add to your dependencies Twig, Twig_Profiler, Eloquent ORM like:
 ```php
 // Twig
 $c['twig_profile'] = function () {
@@ -56,7 +63,7 @@ $capsule::connection()->enableQueryLog();//necessary for debugging
 
 **3** register Middleware
 ``` php
-$app->add(new \RunTracy\Middlewares\TracyMiddleware($app));
+$app->add(new RunTracy\Middlewares\TracyMiddleware($app));
 ```
 
 **4** add to your settings
@@ -92,6 +99,10 @@ return [
         ]
 ```
 see config examples in vendor/runcmf/runtracy/Example
+
+![example](ss/twig.png "example twig")
+
+![example](ss/eloquent.png "example eloquent")
 
 ![example](ss/example.png "example screenshot")
 
