@@ -88,7 +88,7 @@ return [
             'showRawTwigProfiler' => 0,
             'showVendorVersionsPanel' => 1,
             'showXDebugHelper' => 1,
-            'XDebugHelperIDEKey' => 'netbeans-xdebug'
+            'XDebugHelperIDEKey' => 'PHPSTORM'
         ]
 ```
 see config examples in vendor/runcmf/runtracy/Example

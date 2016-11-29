@@ -1,9 +1,8 @@
 {
   "name": "runcmf/runtracy",
   "description": "Slim Framework Tracy Adapter",
-  "version": "0.1.3",
   "license": "Apache 2",
-  "type": "project",
+  "type": "library",
   "keywords": ["Tracy", "Slim3", "Slim 3", "Twig", "Eloquent ORM"],
   "authors": [
     {
