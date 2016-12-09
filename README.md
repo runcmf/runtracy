@@ -11,7 +11,8 @@ SlimRouterPanel - RAW data Slim Router,
 EloquentORMPanel - Eloquent ORM Query / Bindings log, also can show Raw Eloquent ORM Log  
 TwigPanel - Twig_Profiler_Dumper_Html(), also can show Raw Twig Profiler Dump  
 VendorVersionsPanel - version info from composer.json and composer.lock (fork from https://github.com/milo/vendor-versions)  
-XDebugHelper - start and stop a Xdebug session (fork from https://github.com/jsmitka/Nette-XDebug-Helper)
+XDebugHelper - start and stop a Xdebug session (fork from https://github.com/jsmitka/Nette-XDebug-Helper)  
+IncludedFiles - Included Files list
 
 
 all configurable
@@ -48,17 +49,12 @@ $c['view'] = function ($c) {
     return $view;
 };
 
-// Register Eloquent multiple connections
-$elo_con = new \Illuminate\Container\Container();
-$elo_con['config'] = [
-    'database.connections' => $cfg['settings']['db']['connections'],
-    'database.default' => $cfg['settings']['db']['default'],
-    'database.fetch' => PDO::FETCH_OBJ
-];
-$capsule = new \Illuminate\Database\Capsule\Manager($elo_con);
+// Register Eloquent single connections
+$capsule = new \Illuminate\Database\Capsule\Manager;
+$capsule->addConnection($cfg['settings']['db']['connections']['mysql']);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
-$capsule::connection()->enableQueryLog();//necessary for debugging
+$capsule::connection()->enableQueryLog();
 ```
 
 **3** register Middleware
@@ -75,7 +71,6 @@ define('DIR', realpath(__DIR__ . '/../../') . DS);
 
 Debugger::enable(Debugger::DEVELOPMENT, DIR . 'var/log');
 //Debugger::enable(Debugger::PRODUCTION, DIR . 'var/log');
-Debugger::dispatch();
 
 return [
     'settings' => [
@@ -95,7 +90,8 @@ return [
             'showRawTwigProfiler' => 0,
             'showVendorVersionsPanel' => 1,
             'showXDebugHelper' => 1,
-            'XDebugHelperIDEKey' => 'PHPSTORM'
+            'XDebugHelperIDEKey' => 'PHPSTORM',
+            'showIncludedFiles' => 1
         ]
 ```
 see config examples in vendor/runcmf/runtracy/Example
@@ -107,6 +103,8 @@ see config examples in vendor/runcmf/runtracy/Example
 ![example](ss/example.png "example screenshot")
 
 ![example](ss/vendor_versions_panel.png "Vendor Versions Panel")
+
+![example](ss/included_files.png "Included Files Panel")
 
 ## Security
 

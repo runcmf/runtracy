@@ -18,13 +18,24 @@ $c['view'] = function ($c) {
 };
 
 // Register Eloquent multiple connections
-$elo_con = new \Illuminate\Container\Container();
-$elo_con['config'] = [
-    'database.connections' => $cfg['settings']['db']['connections'],
-    'database.default' => $cfg['settings']['db']['default'],
-    'database.fetch' => PDO::FETCH_OBJ
-];
-$capsule = new \Illuminate\Database\Capsule\Manager($elo_con);
+//PHP Notice: Indirect modification of overloaded element of Illuminate\Container\Container has no effect in .../vendor/illuminate/database/Capsule/Manager.php:51
+//PHP Notice: Indirect modification of overloaded element of Illuminate\Container\Container has no effect in .../vendor/illuminate/database/Capsule/Manager.php:53
+// https://github.com/illuminate/database/pull/194
+
+//$elo_con = new \Illuminate\Container\Container();
+//$elo_con['config'] = [
+//    'database.connections' => $cfg['settings']['db']['connections'],
+//    'database.default' => $cfg['settings']['db']['default'],
+//    'database.fetch' => PDO::FETCH_OBJ
+//];
+//$capsule = new \Illuminate\Database\Capsule\Manager($elo_con);
+//$capsule->setAsGlobal();
+//$capsule->bootEloquent();
+//$capsule::connection()->enableQueryLog();
+
+// Register Eloquent single connections
+$capsule = new \Illuminate\Database\Capsule\Manager;
+$capsule->addConnection($cfg['settings']['db']['connections']['mysql']);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 $capsule::connection()->enableQueryLog();

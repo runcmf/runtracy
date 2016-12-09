@@ -102,7 +102,8 @@ return [
             'showRawTwigProfiler' => 0,
             'showVendorVersionsPanel' => 1,
             'showXDebugHelper' => 1,
-            'XDebugHelperIDEKey' => 'netbeans-xdebug'
+            'XDebugHelperIDEKey' => 'PHPSTORM',
+            'showIncludedFiles' => 1
         ]
     ]
 ];
