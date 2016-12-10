@@ -90,20 +90,18 @@ return [
             'forum' => 'RunBB\Init'
         ],
         'tracy' => [
-            'showPhpInfoPanel' => 1,
-            'showSlimRouterPanel' => 1,
-            'showSlimEnvironmentPanel' => 1,
+            'showPhpInfoPanel' => 0,
+            'showSlimRouterPanel' => 0,
+            'showSlimEnvironmentPanel' => 0,
             'showSlimRequestPanel' => 1,
             'showSlimResponsePanel' => 1,
-            'showRawSlimContainer' => 0,
-            'showEloquentORMPanel' => 1,
-            'showRawEloquentORMLog' => 0,
-            'showTwigPanel' => 1,
-            'showRawTwigProfiler' => 0,
-            'showVendorVersionsPanel' => 1,
-            'showXDebugHelper' => 1,
+            'showSlimContainer' => 0,
+            'showEloquentORMPanel' => 0,
+            'showTwigPanel' => 0,
+            'showVendorVersionsPanel' => 0,
+            'showXDebugHelper' => 0,
             'XDebugHelperIDEKey' => 'PHPSTORM',
-            'showIncludedFiles' => 1
+            'showIncludedFiles' => 0
         ]
     ]
 ];

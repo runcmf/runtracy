@@ -1,5 +1,11 @@
 # CHANGELOG
 
+### 2016-12-10
+* add PanelSelector
+* fix vertical scroll
+* move show Slim Container to panel
+* delete all barDump 
+
 ### 2016-12-09
 * add Included Files Panel
 

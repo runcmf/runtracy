@@ -21,12 +21,15 @@ use Tracy\Debugger;
 use RunTracy\Helpers\EloquentORMPanel;
 use RunTracy\Helpers\TwigPanel;
 use RunTracy\Helpers\PhpInfoPanel;
+use RunTracy\Helpers\SlimContainerPanel;
 use RunTracy\Helpers\SlimRouterPanel;
 use RunTracy\Helpers\SlimEnvironmentPanel;
 use RunTracy\Helpers\SlimRequestPanel;
 use RunTracy\Helpers\SlimResponsePanel;
 use RunTracy\Helpers\VendorVersionsPanel;
 use RunTracy\Helpers\XDebugHelper;
+use RunTracy\Helpers\IncludedFiles;
+use RunTracy\Helpers\PanelSelector;
 
 use Illuminate\Database\Capsule\Manager as DB;
 
@@ -48,28 +51,31 @@ class TracyMiddleware
             'twig' => \Twig_Environment::VERSION
         ];
 
-        $cfg = $this->app->getContainer()->get('settings')['tracy'];
-
+        $defcfg = $this->app->getContainer()->get('settings')['tracy'];
+//        $bb = $this->app->getContainer()->get('bb');
+//        $cookies = $request->getCookieParams();// SLim cut array or json cookie
+        $cookies = json_decode($_COOKIE['tracyPanelsEnabled']);
+        if(!empty($cookies)) {
+            $def = array_fill_keys(array_keys($defcfg), 0);
+            $cookies = array_fill_keys($cookies, 1);
+            $cfg = array_merge($def, $cookies);
+        } else {
+            $cfg = [];
+        }
         if ($cfg['showEloquentORMPanel']) {
             Debugger::getBar()->addPanel(new EloquentORMPanel(DB::getQueryLog(), $v));
         }
         if ($cfg['showTwigPanel']) {
             Debugger::getBar()->addPanel(new TwigPanel($this->app->getContainer()->get('twig_profile'), $v));
         }
-        if ($cfg['showRawEloquentORMLog']) {
-            Debugger::barDump(DB::getQueryLog(), 'RAW Eloquent ORM log');
-        }
-        if ($cfg['showRawTwigProfiler']) {
-            Debugger::barDump($this->app->getContainer()->get('twig_profile'), 'RAW Twig Profiler');
-        }
-        if ($cfg['showRawSlimContainer']) {
-            Debugger::barDump($this->app->getContainer(), 'RAW Slim Container');
-        }
         if ($cfg['showPhpInfoPanel']) {
             Debugger::getBar()->addPanel(new PhpInfoPanel());
         }
         if ($cfg['showSlimEnvironmentPanel']) {
             Debugger::getBar()->addPanel(new SlimEnvironmentPanel($this->app, $v));
+        }
+        if ($cfg['showSlimContainer']) {
+            Debugger::getBar()->addPanel(new SlimContainerPanel($this->app, $v));
         }
         if ($cfg['showSlimRouterPanel']) {
             Debugger::getBar()->addPanel(new SlimRouterPanel($this->app, $v));
@@ -86,6 +92,12 @@ class TracyMiddleware
         if ($cfg['showXDebugHelper']) {
             Debugger::getBar()->addPanel(new XDebugHelper( $cfg['XDebugHelperIDEKey'] ));
         }
+        if ($cfg['showIncludedFiles']) {
+            Debugger::getBar()->addPanel(new IncludedFiles( ));
+        }
+
+        // without config hardcoded prevent switch off
+        Debugger::getBar()->addPanel(new PanelSelector( $cfg, $defcfg ));
 
         return $res;
     }

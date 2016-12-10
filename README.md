@@ -1,6 +1,9 @@
 [![Latest Version on Packagist][ico-version]][link-packagist] [![Software License][ico-license]][link-license] [![Total Downloads][ico-downloads]][link-downloads]
 
 # Slim Framework Tracy Adater #
+## configure it by mouse
+
+![example](ss/tracy_panel.png "Tracy Panel")
 
 now ready:  
 PhpInfoPanel - full phpinfo(),  
@@ -8,14 +11,14 @@ SlimEnvironmentPanel - RAW data Slim Environments,
 SlimRequestPanel - RAW data Slim Request,  
 SlimResponsePanel - RAW data Slim Response,  
 SlimRouterPanel - RAW data Slim Router,  
-EloquentORMPanel - Eloquent ORM Query / Bindings log, also can show Raw Eloquent ORM Log  
-TwigPanel - Twig_Profiler_Dumper_Html(), also can show Raw Twig Profiler Dump  
+EloquentORMPanel - Eloquent ORM Query / Bindings log  
+TwigPanel - Twig_Profiler_Dumper_Html()  
 VendorVersionsPanel - version info from composer.json and composer.lock (fork from https://github.com/milo/vendor-versions)  
 XDebugHelper - start and stop a Xdebug session (fork from https://github.com/jsmitka/Nette-XDebug-Helper)  
-IncludedFiles - Included Files list
+IncludedFiles - Included Files list  
+PanelSelector - easy configure (fork from https://github.com/adrianbj/TracyDebugger)
 
-
-all configurable
+![example](ss/panel_selector.png "Panel Selector")
 
 
 
@@ -78,33 +81,39 @@ return [
     ... // ...
 
         'tracy' => [
-            'showPhpInfoPanel' => 1,
-            'showSlimRouterPanel' => 1,
-            'showSlimEnvironmentPanel' => 1,
+            'showPhpInfoPanel' => 0,
+            'showSlimRouterPanel' => 0,
+            'showSlimEnvironmentPanel' => 0,
             'showSlimRequestPanel' => 1,
             'showSlimResponsePanel' => 1,
-            'showRawSlimContainer' => 0,
-            'showEloquentORMPanel' => 1,
-            'showRawEloquentORMLog' => 0,
-            'showTwigPanel' => 1,
-            'showRawTwigProfiler' => 0,
-            'showVendorVersionsPanel' => 1,
-            'showXDebugHelper' => 1,
+            'showSlimContainer' => 0,
+            'showEloquentORMPanel' => 0,
+            'showTwigPanel' => 0,
+            'showVendorVersionsPanel' => 0,
+            'showXDebugHelper' => 0,
             'XDebugHelperIDEKey' => 'PHPSTORM',
-            'showIncludedFiles' => 1
+            'showIncludedFiles' => 0
         ]
 ```
 see config examples in vendor/runcmf/runtracy/Example
 
-![example](ss/twig.png "example twig")
+![example](ss/twig.png "Twig panel")
 
-![example](ss/eloquent.png "example eloquent")
+![example](ss/eloquent.png "Eloquent ORM panel")
 
-![example](ss/example.png "example screenshot")
+![example](ss/container.png "Slim Container panel")
+
+![example](ss/request.png "Slim Request panel")
+
+![example](ss/response.png "Slim Response panel ")
+
+![example](ss/router.png "Slim Router panel ")
 
 ![example](ss/vendor_versions_panel.png "Vendor Versions Panel")
 
 ![example](ss/included_files.png "Included Files Panel")
+
+![example](ss/phpinfo.png "phpinfo() Panel")
 
 ## Security
 

@@ -25,7 +25,7 @@ class XDebugHelper implements IBarPanel
     private $ideKey;
 
 
-    public function __construct($ideKey = 'netbeans-xdebug')
+    public function __construct($ideKey = 'PHPSTORM')
     {
         $this->ideKey = $ideKey;
     }

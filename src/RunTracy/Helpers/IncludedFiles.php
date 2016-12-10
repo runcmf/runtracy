@@ -21,6 +21,8 @@ use Tracy\IBarPanel;
 
 class IncludedFiles implements IBarPanel
 {
+    private $icon = '';
+
     protected function getHeader()
     {
         return '<thead><tr><th><b>Count</b></th><th>File</th></tr></thead>';
@@ -33,9 +35,8 @@ class IncludedFiles implements IBarPanel
 
     public function getTab()
     {
-        return '
-        <span title="Included Files">
-            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" width="512px" height="512px">
+        $this->icon = '
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                 <g>
                     <path d="M506.195,307.084H5.805c-3.206,0-5.805,2.599-5.805,5.805V488.2c0,9.618,7.797,17.415,17.415,17.415h477.17    c9.618,0,17.415-7.797,17.415-17.415V312.889C512,309.683,509.401,307.084,506.195,307.084z M256,456.853    c-27.848,0-50.503-22.656-50.503-50.503c0-27.848,22.656-50.503,50.503-50.503s50.503,22.656,50.503,50.503    C306.503,434.197,283.848,456.853,256,456.853z" fill="#006DF0"/>
                </g>
@@ -48,7 +49,10 @@ class IncludedFiles implements IBarPanel
                 <g>
                     <path d="M415.637,6.386H97.524c-9.618,0-17.415,7.797-17.415,17.415v242.648c0,3.206,2.599,5.805,5.805,5.805h341.333    c3.206,0,5.805-2.599,5.805-5.805V23.8C433.052,14.183,425.255,6.386,415.637,6.386z M218.268,89.977h76.626    c9.618,0,17.415,7.797,17.415,17.415c0,9.618-7.797,17.415-17.415,17.415h-76.626c-9.618,0-17.415-7.797-17.415-17.415    C200.853,97.775,208.65,89.977,218.268,89.977z M341.333,188.662H171.828c-9.618,0-17.415-7.797-17.415-17.415    c0-9.618,7.797-17.415,17.415-17.415h169.506c9.618,0,17.415,7.797,17.415,17.415    C358.748,180.865,350.951,188.662,341.333,188.662z" fill="#006DF0"/>
                 </g>
-            </svg>
+            </svg>';
+        return '
+        <span title="Included Files">
+            '.$this->icon.'
         </span>';
     }
 
@@ -64,6 +68,6 @@ class IncludedFiles implements IBarPanel
                 $file
             );
         }
-        return  '<h1>Included Files: '.$num.'</h1><div class="tracy-inner"><p><table width="100%">' . $ret . '</table></p></div>';
+        return  '<h1>'.$this->icon.' &nbsp; Included Files: '.$num.'</h1><div class="tracy-inner"><table width="100%">' . $ret . '</table></div>';
     }
 }
