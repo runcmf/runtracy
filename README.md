@@ -8,6 +8,7 @@
 now ready:  
 PhpInfoPanel - full phpinfo(),  
 SlimEnvironmentPanel - RAW data Slim Environments,  
+SlimContainer - RAW data Slim Container   
 SlimRequestPanel - RAW data Slim Request,  
 SlimResponsePanel - RAW data Slim Response,  
 SlimRouterPanel - RAW data Slim Router,  
@@ -16,7 +17,7 @@ TwigPanel - Twig_Profiler_Dumper_Html()
 VendorVersionsPanel - version info from composer.json and composer.lock (fork from https://github.com/milo/vendor-versions)  
 XDebugHelper - start and stop a Xdebug session (fork from https://github.com/jsmitka/Nette-XDebug-Helper)  
 IncludedFiles - Included Files list  
-PanelSelector - easy configure (fork from https://github.com/adrianbj/TracyDebugger)
+PanelSelector - easy configure (part of fork from https://github.com/adrianbj/TracyDebugger)
 
 ![example](ss/panel_selector.png "Panel Selector")
 
@@ -113,7 +114,7 @@ see config examples in vendor/runcmf/runtracy/Example
 
 ![example](ss/included_files.png "Included Files Panel")
 
-![example](ss/phpinfo.png "phpinfo() Panel")
+![example](ss/phpinfo.png "phpinfo Panel")
 
 ## Security
 
