@@ -118,7 +118,7 @@ see config examples in vendor/runcmf/runtracy/Example
 
 ## Security
 
-If you discover any security related issues, please email to 1f7.wizard( at )gmail.com or create an issue.
+If you discover any security related issues, please email to 1f7.wizard( at )gmail.com instead of using the issue tracker.
 
 ## Credits
 

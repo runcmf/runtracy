@@ -37,7 +37,6 @@ class XDebugHelper implements IBarPanel
 
     public function getTab()
     {
-        $ideKey = $this->ideKey;
         ob_start();
         require @realpath( __DIR__ ) .'../../Templates/xdebug-helper.tab.phtml';
         return ob_get_clean();

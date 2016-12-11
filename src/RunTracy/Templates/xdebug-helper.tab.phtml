@@ -1,11 +1,13 @@
-<span onclick="XDebugHelper.xDebugger.toggle();" style="cursor: pointer;"><img src="" alt="" id="xdebug-helper-debugger-icon" /> Debugger</span>
-<span onclick="XDebugHelper.xProfiler.toggle();" style="cursor: pointer;"><img src="" alt="" id="xdebug-helper-profiler-icon" /> Profiler</span>
+<span title="Enable debug with cookie XDEBUG_SESSION = '<?php echo $this->ideKey; ?>'"><span onclick="XDebugHelper.xDebugger.toggle();" style="cursor: pointer;"><img src="" alt="" id="xdebug-helper-debugger-icon" /> &nbsp;</span></span>
+<span title="Enable profile with cookie XDEBUG_PROFILE = 1"><span onclick="XDebugHelper.xProfiler.toggle();" style="cursor: pointer;"><img src="" alt="" id="xdebug-helper-profiler-icon" /> &nbsp;</span></span>
+<span title="Enable profile with cookie XDEBUG_TRACE = 1"><span onclick="XDebugHelper.xTracer.toggle();" style="cursor: pointer;"><img src="" alt="" id="xdebug-helper-tracer-icon" /> &nbsp;</span></span>
 
 <script type="text/javascript">
 XDebugHelper = {
 	init: function () {
 		this.createHandler(this.xDebugger);
 		this.createHandler(this.xProfiler);
+                this.createHandler(this.xTracer);
 	},
 
 	hasCookie: function (cookie) {
@@ -47,7 +49,7 @@ XDebugHelper = {
 		inactiveIcon: 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAlFJREFUeNp8U02IUmEUvZo2CYGQiqKgkiWCG8lNMhLMImgntDRdzsJFYjAGLVo1m5YOIrhQyR/EHwgRNyJJLTRQWrX04UJRQRSeCv5r9z5SHLO5cPB7vu+ee8753gfb7Rb+h2w2u02lUhe0jsfjr6PR6PR4Dx8OKpfL6Q6fV6sV4Z3P53u8XC4li8ViCUfFP2poZDKZq90zNs0R5+Px+FOn07mZzWYPvV7v57sIWMQ1rWOxGIvNZ4hHMpnMbrFYHthsNp5KpXrvcrm8ux4e+dhVIpG4WK/X3zabDSsQCMQmkwmEQiF0u12oVqtgNBpBoVBAqVTa2QNeMplkseGZ3W5niCQUCm2I2Gw2Q7/fh/l8DkgKzWYTRqMRaDQaKBQKjXQ6/ZT2C5BFhBsa4XA4hmpeiUQinsFg4KaiZ0D/wOfzwWq1AsuyUC6XSdXvfQYOh+M+pvsT4cRpMpLZ6/VgOp1yE8miWq0GhmE4IsyEbLz0eDxvb2Xg9/tnYrH4DEOC4XC4b9bpdNButwEHgFarhXw+T963qJpH1vangBvWFBhNIdkUEAXWarW4HKRSKZcDESGkgUCAh78f9wTIdkMyqZk2KZVKGAwGnBWJRAKVSgVqtRpZuAwGg0PqiUQi13sC/EA+4MsfxWIR9Ho9p4AkyuVymEwmnC3yj+R+p9N5dfI7+Ev0HY/1BYVJdur1OqcC/7tEUgZJv+JajHiCR8n8Q0Dldru/4KQ32HCPVCAqeJHO4USdJDgsPOYqEjyniXgzmTsv06nCa2xBJUvEr1Pv/wgwAJ+hqz/0bytUAAAAAElFTkSuQmCC',
 		activeIcon: 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAKYSURBVDjLnZPJT1NRFMb5G1wDHV5boNiqdHrvFYolCAtsGSSWKpMFKhYqlDI6oAEKaVJwCIgSphaKtLYWCgSNBgRjMNHoxsSFS3cmJmA0NMTw+R6JKKZl4eJL7sm953fOd3JPHIC4WMpcppG5SGnZc8ZjVVF6QLn975sDgfaZmvg71oRJZIRUYcuAnq/2KWroGfm3QwEn2YpLVPPvOD2oiqj9yq/mGznegl56mx6T7ZbY1M6YAM0CuZkxT0b2Wg6QW/SsApRXDsotR+d6E9Y/h9DuqoCuJq0lKoDxqU1/pITGR27mBU4h+GEcTz5OY+ClA5JbyahYzof/9TBO9B/FcWcqpA4xU3We3GJ87ntnfO5meinMvruNnqcmXA2XoDVcCc0wCYkzBaZpA7ILRJ/2O2B87jA+QT9UeDRe8svZYAG8b/txc6kc9mA+yqayYPQXwvdmBEOrA5B2p0BtFIYOWKCm5RukWwZyXIbA+0F0LpaiKaBHmVsLw4we99ccsM8a8GClF5JOMcQdou8prULrgRmQo7KI0VcE13MrGv06lE5kodhzGvdWu2GdKkTVWC4DcELcJkKyXbCb1EhAVM//M0DVUNqP2qAJd1baUDaZjTMTeXAttsPi0cM0mgvHvA0NkxYk2QRIrieOsDmEmXttH0DfVfSluSToWmpD8bgOroUOWNw6VI7koGfOBuq6EqLLTNU6ojrmP5D1HVsjmrkYezGIrlA9LjKgnrlGXJlpgbCOD0EtD0QNN8I3cZqjAlhJr4rXpB1iNLhrYffUQWoT7yUKzbxqJlHLq0jc5JYmgHMunogKYJVqF7mTrPyfgktMRTMX/CrOq1gLF3fYNrLiX+Bs8MoTwT2fQPwXgBXHGL+TaIjfinb3C7cscRMIcYL6AAAAAElFTkSuQmCC',
 		cookie: 'XDEBUG_SESSION',
-		value: <?php echo json_encode($ideKey); ?>
+		value: <?php echo json_encode($this->ideKey); ?>
 	},
 
 	"xProfiler": {
@@ -57,6 +59,14 @@ XDebugHelper = {
 		cookie: 'XDEBUG_PROFILE',
 		value: 1
 	},
+
+    "xTracer": {
+        iconId: 'xdebug-helper-tracer-icon',
+        inactiveIcon: 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAA81BMVEUAAACvuMCtt76tvLy/v7+uuL+uub+uuL+vub+tuL6qu7uuub+tuMCtuL6vt7+uubmqqqqttr+ZzMytub+uuL+vuL+uuL+uuL+tt76ut7+vuL6ttb2zs7////+tuL+uub+wtryuuL+uuL+vt7+uuL6tuMKuu8GuvLyvur2vt8Cutbyuub+wub2tuL+uuL+sur+uucCsuL6uuL+tub+qtb+uuMCtt7+vuL+vtr2uuL+tuL+tuL+wucCvt76vuL+ut76uuL+uuMCstsGut7+uuMCuuL+tub6wtcGtuL+uuL+uuMCuub+tuL+uub+tuL+uuL8AAAD1Kg34AAAAT3RSTlMApWoiBM/AkFB6D0x9S2AWAzgFV0iPwtROh3YfFAFkWyqEaECaGSkTRlkm9jr0+jRFK/yDGP1nuCOXn8hNQ4yO4Pkxq6Hqhi2vtK2uROTeWYqC/gAAAAFiS0dEAIgFHUgAAAAJcEhZcwAADdcAAA3XAUIom3gAAAAHdElNRQfgDAsBIhvkdD7ZAAAArElEQVQY01WP5RICQQyDy+HO4e6uh7u75v3fhu4CA+RPkq+z7SzRRzpFb6BfGU1mi/WNbHYHkdPl9qiKl6vPHwiG2MORqBqLUyKZsqUzWaIcWHmiQrFUrlTFu5ogdSKlATRbTDQOKFNb8E5B7O5y6JGTe38gj1mAIdGIwfh1fQKk2KbATPY5j9zsCrCQYAmshMeA9UaELbCTkz1wEH48ndsSXIDr3zdv94f2bU/2BBvWt9WPxwAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxNi0xMi0xMVQwMTozNDoyNyswMTowMEI0I0IAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTYtMTItMTFUMDE6MzQ6MjcrMDE6MDAzaZv+AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAABJRU5ErkJggg==',
+        activeIcon: 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAA81BMVEUAAAAAbvAAbPEAcfAAgP8AbPAAbfAAbvEAbO8AbfAAZu4Aa/IAbPEAbfEAbe8AaPMAVf8AbfEAZv8AbPAAbvEAbfEAbfEAbfEAbO8AbvAAbPAAa+8Ac/IAAP8AbvAAbfEAbfMAbPAAbPAAbO8AbfAAcPUAcPMAa/IAbfAAbfEAa/IAbfAAbvIAbfAAbfAAbPAAa/AAa+0AbfAAbe8AavQAbfAAbfAAbfAAbfAAbvAAbfEAbPAAbe4AbvAAbfAAbvEAbfAAbfAAbe8AbfAAbfEAbfAAbPAAbO4AbfAAbe8AbfAAbPAAbfAAbPAAbfAAbfAAAABiYXE1AAAAT3RSTlMApWoiBM/AkFB6D0x9S2AWAzgFV0iPwtROh3YfFAFkWyqEaECaGSkTRlkm9jr0+jRFK/yDGP1nuCOXn8hNQ4yO4Pkxq6Hqhi2vtK2uROTeWYqC/gAAAAFiS0dEAIgFHUgAAAAJcEhZcwAADdcAAA3XAUIom3gAAAAHdElNRQfgDAsBIgfwdWKWAAAArElEQVQY01WP5RICQQyDy+HO4e6uh7u75v3fhu4CA+RPkq+z7SzRRzpFb6BfGU1mi/WNbHYHkdPl9qiKl6vPHwiG2MORqBqLUyKZsqUzWaIcWHmiQrFUrlTFu5ogdSKlATRbTDQOKFNb8E5B7O5y6JGTe38gj1mAIdGIwfh1fQKk2KbATPY5j9zsCrCQYAmshMeA9UaELbCTkz1wEH48ndsSXIDr3zdv94f2bU/2BBvWt9WPxwAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxNi0xMi0xMVQwMTozNDowNyswMTowMAARJD8AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTYtMTItMTFUMDE6MzQ6MDcrMDE6MDBxTJyDAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAABJRU5ErkJggg==',
+        cookie: 'XDEBUG_TRACE',
+        value: 1
+    },
 
 	setIcon: function (id, icon) {
 		document.getElementById(id).src = 'data:image/png;base64,' + icon;

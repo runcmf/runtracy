@@ -53,46 +53,47 @@ class TracyMiddleware
 
         $defcfg = $this->app->getContainer()->get('settings')['tracy'];
 //        $bb = $this->app->getContainer()->get('bb');
-//        $cookies = $request->getCookieParams();// SLim cut array or json cookie
-        $cookies = json_decode($_COOKIE['tracyPanelsEnabled']);
+//        $cookies = $request->getCookieParam('tracyPanelsEnabled', []);// SLim cut array or json cookie https://github.com/slimphp/Slim/issues/2101
+//$bb->DBG($cookies);
+        $cookies = isset($_COOKIE['tracyPanelsEnabled']) ? json_decode($_COOKIE['tracyPanelsEnabled']) : [];
         if(!empty($cookies)) {
-            $def = array_fill_keys(array_keys($defcfg), 0);
+            $def = array_fill_keys(array_keys($defcfg), null);
             $cookies = array_fill_keys($cookies, 1);
             $cfg = array_merge($def, $cookies);
         } else {
             $cfg = [];
         }
-        if ($cfg['showEloquentORMPanel']) {
+        if (isset($cfg['showEloquentORMPanel'])) {
             Debugger::getBar()->addPanel(new EloquentORMPanel(DB::getQueryLog(), $v));
         }
-        if ($cfg['showTwigPanel']) {
+        if (isset($cfg['showTwigPanel'])) {
             Debugger::getBar()->addPanel(new TwigPanel($this->app->getContainer()->get('twig_profile'), $v));
         }
-        if ($cfg['showPhpInfoPanel']) {
+        if (isset($cfg['showPhpInfoPanel'])) {
             Debugger::getBar()->addPanel(new PhpInfoPanel());
         }
-        if ($cfg['showSlimEnvironmentPanel']) {
+        if (isset($cfg['showSlimEnvironmentPanel'])) {
             Debugger::getBar()->addPanel(new SlimEnvironmentPanel($this->app, $v));
         }
-        if ($cfg['showSlimContainer']) {
+        if (isset($cfg['showSlimContainer'])) {
             Debugger::getBar()->addPanel(new SlimContainerPanel($this->app, $v));
         }
-        if ($cfg['showSlimRouterPanel']) {
+        if (isset($cfg['showSlimRouterPanel'])) {
             Debugger::getBar()->addPanel(new SlimRouterPanel($this->app, $v));
         }
-        if ($cfg['showSlimRequestPanel']) {
+        if (isset($cfg['showSlimRequestPanel'])) {
             Debugger::getBar()->addPanel(new SlimRequestPanel($this->app, $v));
         }
-        if ($cfg['showSlimResponsePanel']) {
+        if (isset($cfg['showSlimResponsePanel'])) {
             Debugger::getBar()->addPanel(new SlimResponsePanel($this->app, $v));
         }
-        if ($cfg['showVendorVersionsPanel']) {
+        if (isset($cfg['showVendorVersionsPanel'])) {
             Debugger::getBar()->addPanel(new VendorVersionsPanel(  ));
         }
-        if ($cfg['showXDebugHelper']) {
-            Debugger::getBar()->addPanel(new XDebugHelper( $cfg['XDebugHelperIDEKey'] ));
+        if (isset($cfg['showXDebugHelper'])) {
+            Debugger::getBar()->addPanel(new XDebugHelper( $defcfg['XDebugHelperIDEKey'] ));
         }
-        if ($cfg['showIncludedFiles']) {
+        if (isset($cfg['showIncludedFiles'])) {
             Debugger::getBar()->addPanel(new IncludedFiles( ));
         }
 
