@@ -26,7 +26,7 @@ $c['view'] = function ($c) {
 //$elo_con['config'] = [
 //    'database.connections' => $cfg['settings']['db']['connections'],
 //    'database.default' => $cfg['settings']['db']['default'],
-//    'database.fetch' => PDO::FETCH_OBJ
+//    'database.fetch' => PDO::FETCH_OBJ// PDO::FETCH_ASSOC and so on
 //];
 //$capsule = new \Illuminate\Database\Capsule\Manager($elo_con);
 //$capsule->setAsGlobal();

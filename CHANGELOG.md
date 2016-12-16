@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 2016-12-15
+* add ConsolePanel
+* change config format
+
 ### 2016-12-10
 * add PanelSelector
 * fix vertical scroll

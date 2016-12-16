@@ -1,6 +1,6 @@
 [![Latest Version on Packagist][ico-version]][link-packagist] [![Software License][ico-license]][link-license] [![Total Downloads][ico-downloads]][link-downloads]
 
-# Slim Framework Tracy Adater #
+# Slim Framework Tracy Debugger Bar #
 ## configure it by mouse
 
 ![example](ss/tracy_panel.png "Tracy Panel")
@@ -17,10 +17,8 @@ TwigPanel - Twig_Profiler_Dumper_Html()
 VendorVersionsPanel - version info from composer.json and composer.lock (fork from https://github.com/milo/vendor-versions)  
 XDebugHelper - start and stop a Xdebug session (fork from https://github.com/jsmitka/Nette-XDebug-Helper)  
 IncludedFiles - Included Files list  
-PanelSelector - easy configure (part of fork from https://github.com/adrianbj/TracyDebugger)
-
-![example](ss/panel_selector.png "Panel Selector")
-
+PanelSelector - easy configure (part of fork from https://github.com/adrianbj/TracyDebugger)  
+ConsolePanel - Echo console (fork from https://github.com/nickola/web-console)  
 
 
 # Install
@@ -61,12 +59,17 @@ $capsule->bootEloquent();
 $capsule::connection()->enableQueryLog();
 ```
 
-**3** register Middleware
+**3** register middleware
 ``` php
 $app->add(new RunTracy\Middlewares\TracyMiddleware($app));
 ```
 
-**4** add to your settings
+**4** register route
+``` php
+$app->post('/console', 'RunTracy\Controllers\RunTracyConsole:index');
+```
+
+**5** add to your settings
 ``` php
 use Tracy\Debugger;
 
@@ -92,11 +95,34 @@ return [
             'showTwigPanel' => 0,
             'showVendorVersionsPanel' => 0,
             'showXDebugHelper' => 0,
-            'XDebugHelperIDEKey' => 'PHPSTORM',
-            'showIncludedFiles' => 0
+            'showIncludedFiles' => 0,
+            'showConsolePanel' => 0,
+            'configs' => [
+                // XDebugger IDE key
+                'XDebugHelperIDEKey' => 'PHPSTORM',
+                // Disable login (don't ask for credentials, be careful) values( 1 || 0 )
+                'ConsoleNoLogin' => 0,
+                // Multi-user credentials values( ['user1' => 'password1', 'user2' => 'password2'] )
+                'ConsoleAccounts' => [
+                    'dev' => '34c6fceca75e456f25e7e99531e2425c6c1de443'// = sha1('dev')
+                ],
+                // Password hash algorithm (password must be hashed) values('md5', 'sha256' ...)
+                'ConsoleHashAlgorithm' => 'sha1',
+                // Home directory (multi-user mode supported) values ( var || array )
+                // '' || '/tmp' || ['user1' => '/home/user1', 'user2' => '/home/user2']
+                'ConsoleHomeDirectory' => DIR,
+                // terminal.js full URI
+                'ConsoleTerminalJs' => '/assets/js/jquery.terminal.min.js',
+                // terminal.css full URI
+                'ConsoleTerminalCss' => '/assets/css/jquery.terminal.min.css'
+            ]
         ]
 ```
+
+
 see config examples in vendor/runcmf/runtracy/Example
+
+![example](ss/panel_selector.png "Panel Selector")
 
 ![example](ss/twig.png "Twig panel")
 
@@ -115,6 +141,11 @@ see config examples in vendor/runcmf/runtracy/Example
 ![example](ss/included_files.png "Included Files Panel")
 
 ![example](ss/phpinfo.png "phpinfo Panel")
+
+![example](ss/console_panel.png "Console Panel")
+
+Remember - this is not real terminal.
+
 
 ## Security
 

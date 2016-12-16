@@ -1,9 +1,9 @@
 {
   "name": "runcmf/runtracy",
-  "description": "Slim Framework Tracy Adapter",
+  "description": "Slim Framework Debug Bar",
   "license": "Apache 2",
   "type": "library",
-  "keywords": ["Tracy", "Slim3", "Slim 3", "Twig", "Eloquent ORM"],
+  "keywords": ["Slim Framework Debug Bar", "Tracy", "Debug bar", "Slim3", "Slim 3", "Twig", "Eloquent ORM"],
   "authors": [
     {
       "name": "Vladimir",

@@ -116,9 +116,6 @@ class PanelSelector implements IBarPanel
                 <thead><tr><th>*Panels with asterisk are on by default</th></tr></thead>
                     <tr><th><input type="checkbox" onchange="toggleAllTracyPanels(this)" /> Toggle All</th></tr>';
         foreach ($this->defcfg as $name => $val) {
-            if ($name === 'XDebugHelperIDEKey') {
-                continue;
-            }
             $out .= '<tr><td style="padding-left: 20px">
             <input type="checkbox" name="selectedPanels[]" ' . ((isset($this->cfg[$name]) && $this->cfg[$name] == 1) ? 'checked="checked"' : '') . ' value="' . $name . '" />
                     ' . $name . ($this->defcfg[$name] == 1 ? '&nbsp;<strong>*</strong>' : '') . '

@@ -52,7 +52,8 @@ class TracyMiddleware
         ];
 
         $defcfg = $this->app->getContainer()->get('settings')['tracy'];
-//        $cookies = $request->getCookieParam('tracyPanelsEnabled', []);// SLim cut array or json cookie https://github.com/slimphp/Slim/issues/2101
+//        $cookies = $request->getCookieParam('tracyPanelsEnabled', []);
+        // SLim cut array or json cookie https://github.com/slimphp/Slim/issues/2101
         $cookies = isset($_COOKIE['tracyPanelsEnabled']) ? json_decode($_COOKIE['tracyPanelsEnabled']) : [];
         if(!empty($cookies)) {
             $def = array_fill_keys(array_keys($defcfg), null);
@@ -86,17 +87,20 @@ class TracyMiddleware
             Debugger::getBar()->addPanel(new SlimResponsePanel($this->app, $v));
         }
         if (isset($cfg['showVendorVersionsPanel'])) {
-            Debugger::getBar()->addPanel(new VendorVersionsPanel(  ));
+            Debugger::getBar()->addPanel(new VendorVersionsPanel( ));
         }
         if (isset($cfg['showXDebugHelper'])) {
-            Debugger::getBar()->addPanel(new XDebugHelper( $defcfg['XDebugHelperIDEKey'] ));
+            Debugger::getBar()->addPanel(new XDebugHelper( $defcfg['configs']['XDebugHelperIDEKey'] ));
         }
         if (isset($cfg['showIncludedFiles'])) {
             Debugger::getBar()->addPanel(new IncludedFiles( ));
         }
+        if (isset($cfg['showConsolePanel'])) {
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\ConsolePanel( $defcfg['configs'] ));
+        }
 
         // without config hardcoded prevent switch off
-        Debugger::getBar()->addPanel(new PanelSelector( $cfg, $defcfg ));
+        Debugger::getBar()->addPanel(new PanelSelector( $cfg, array_diff_key($defcfg, ['configs' => null]) ));
 
         return $res;
     }

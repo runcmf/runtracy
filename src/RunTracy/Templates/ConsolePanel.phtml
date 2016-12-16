@@ -1,0 +1,341 @@
+<style type="text/css">
+    #tracy-debug-panel-RunTracy-Helpers-ConsolePanel {
+        width: 700px !important;
+        /*bottom: 21px !important;*/
+    }
+    .terminal, textarea, .cmd, .terminal .terminal-output div div, .terminal .prompt {
+        background: #000000 !important;
+        color: #cccccc !important;
+        font-family: monospace, fixed !important;
+        font-size: 15px;
+        line-height: 18px;
+    }
+    .terminal {
+        min-height: 200px;
+        max-height: 550px;
+        overflow-y:scroll;
+    }
+    /*.clipboard{*/
+        /*position:absolute;*/
+        /*left:-16px;*/
+        /*top:0;*/
+        /*width:10px;*/
+        /*height:16px;*/
+        /*background:0 0;*/
+        /*border:0;*/
+        /*color:transparent;*/
+        /*outline:0;*/
+        /*padding:0;*/
+        /*resize:none;*/
+        /*z-index:0;*/
+        /*overflow:hidden;*/
+        /*visibility: hidden;*/
+    /*}*/
+
+    .spaced { margin: 15px 0; }
+    .spaced-top { margin: 15px 0 0 0; }
+    .spaced-bottom { margin: 0 0 15px 0; }
+
+    .configure { margin: 20px; }
+    .configure .variable { color: #d33682; }
+    .configure p, .configure ul { margin: 5px 0 0 0; }
+
+    .popover { color: #00C000 !important; }
+    .popover.bottom .arrow::after {border-bottom-color: #00C000 !important; }
+    .popover-content {width: 350px; !important;}
+
+    #tipscontainer { width:100%; }
+    #tipsleft { display:inline-block; width: 400px; }
+    #tipsright { display:inline-block; }
+
+    .warn {
+        display: none;
+    }
+    .warn_blink {
+        color: ghostwhite !important;
+        background: red !important;
+    }
+
+    #containerHeader h1,
+    #containerHeader p {
+        display: inline;
+        vertical-align: middle;
+    }
+    .error{color:red  !important}
+</style>
+<link rel="stylesheet" href="<?php echo $this->TerminalCss ?>">
+
+<div id="containerHeader">
+    <h1><?php echo $this->icon; ?> Console &nbsp; </h1>
+    <p><span class="warn warn_blink"> &nbsp; 'ConsoleNoLogin' => true &nbsp; </span></p>
+</div>
+
+<div>
+    <div id="term"></div>
+    <p><strong>Attention:</strong> Do not kill your server! Exposing to the public as is would introduce security risks for the host.</p>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover();
+    });
+
+//    $.getScript( "<?php //echo $this->MousewheelJs; ?>//" );
+//        .done(function() {
+    $.getScript( "<?php echo $this->TerminalJs; ?>" )
+        .done(function () {
+//            $.getScript( "/assets/js/unix_formatting.js" );
+            var settings = {'url': '/console',
+                'prompt_path_length': 32,
+                'domain': document.domain || window.location.host
+                };
+            var environment = {'user': '', 'hostname': '', 'path': ''};
+            var no_login = <?php echo $this->noLogin; ?>;
+            var silent_mode = false;
+            // Default banner
+            var banner_main = "Echo Console. Run 'tricks' to see example commands";
+
+            // configure blinker
+            if(no_login) {
+                function blinker() {
+                    $('.warn_blink').fadeOut(800);
+                    $('.warn_blink').fadeIn(800);
+                }
+                setInterval(blinker, 1600);
+            } else {
+                $( '.warn_blink' ).each(function () {
+                    this.style.setProperty( 'background', 'transparent', 'important' );
+                });
+            }
+
+            // Output
+            function show_output(output) {
+                if (output) {
+                    if (typeof output === 'string') terminal.echo(output);
+                    else if (output instanceof Array) terminal.echo($.map(output, function(object) {
+                        return $.json_stringify(object);
+                    }).join(' '));
+                    else if (typeof output === 'object') terminal.echo($.json_stringify(output));
+                    else terminal.echo(output);
+                }
+            }
+
+            // Prompt
+            function make_prompt() {
+                var path = environment.path;
+                if (path && path.length > settings.prompt_path_length)
+                    path = '...' + path.slice(path.length - settings.prompt_path_length + 3);
+
+                return '[[b;#d33682;]' + (environment.user || 'user') + ']' +
+                    '@[[b;#6c71c4;]' + (environment.hostname || settings.domain || 'console') + '] ' +
+                    (path || '~') +
+                    '$ ';
+            }
+
+            function update_prompt(terminal) {
+                terminal.set_prompt(make_prompt());
+            }
+
+            // Environment
+            function update_environment(terminal, data) {
+                if (data) {
+                    $.extend(environment, data);
+                    update_prompt(terminal);
+                }
+            }
+
+            // Service
+            function service(terminal, method, parameters, success, error, options) {
+                options = $.extend({'pause': true}, options);
+                if (options.pause) terminal.pause();
+
+                $.jrpc(settings.url, method, parameters,
+                    function(json) {
+                        if (options.pause) terminal.resume();
+
+                        if (!json.error) {
+                            if (success) success(json.result);
+                        }
+                        else if (error) error();
+                        else {
+                            var message = $.trim(json.error.message || '');
+                            var data =  $.trim(json.error.data || '');
+
+                            if (!message && data) {
+                                message = data;
+                                data = '';
+                            }
+
+                            terminal.error('&#91;ERROR&#93;' +
+                                ' RPC: ' + (message || 'Unknown error') +
+                                (data ? (" (" + data + ")") : ''));
+                        }
+                    },
+                    function(xhr, status, error_data) {
+                        if (options.pause) terminal.resume();
+
+                        if (error) error();
+                        else {
+                            if (status !== 'abort') {
+                                var response = $.trim(xhr.responseText || '');
+
+                                terminal.error('&#91;ERROR&#93;' +
+                                    ' AJAX: ' + (status || 'Unknown error') +
+                                    (response ? ("\nServer reponse:\n" + response) : ''));
+                            }
+                        }
+                    });
+            }
+
+            function service_authenticated(terminal, method, parameters, success, error, options) {
+                var token = terminal.token();
+                if (token || no_login) {
+                    var service_parameters = [token, environment];
+                    if (parameters && parameters.length)
+                        service_parameters.push.apply(service_parameters, parameters);
+                    service(terminal, method, service_parameters, success, error, options);
+                }
+                else {
+                    // Should never happen
+                    terminal.error('&#91;ERROR&#93; Access denied (no authentication token found)');
+                }
+            }
+
+            // Interpreter
+            function interpreter(command, terminal) {
+                command = $.trim(command || '');
+                if (!command) return;
+
+//                if (command == 'help') {
+//                    terminal.echo("available commands are mysql, js, test");
+//                    return;
+//                }
+/*
+ [[guib;<COLOR>;<BACKGROUND>]some text] will display some text:
+
+ [[ — open formating
+ u — underline
+ s — strike
+ o — overline
+ i — italic
+ b — bold
+ g — glow (using css text-shadow)
+ ; — separator
+ color — color of text (hex, short hex or html name of the color)
+ ; — separator
+ color — background color (hex, short hex or html name of the color)
+ ; — separator [optional]
+ class — class adeed to format span element [optional]
+ ] — end of format specification
+ text — text that will be formated (most of the time for internal use, when you format text that's wrap in more then one line you'll get full text in data-text attribute)
+ ] — end of formating
+ */
+                if (command == 'tricks') {
+                    terminal.echo("[[;green;;]" +
+                    "\twget -q https://getcomposer.org/composer.phar\n" +
+                    "\tphp -r 'echo sha1(&#34;dev&#34;);'\n" +
+                    "\tls -l                       php -h\n" +
+                    "\thostnamectl                 free -m\n" +
+                    "\tchmod u+x /path/to/file     ulimit -a\n" +
+                    "\ttail contributors.txt       whoami\n" +
+                    "\tid                          bin/cli\n" +
+                    "\tkeyboard shortcuts:] http://terminal.jcubic.pl/api_reference.php#shortcuts\n" +
+                    "");//,{raw:true, keepWords:true});
+                    return;
+                }
+
+                var command_parsed = $.terminal.splitCommand(command),
+                    method = null, parameters = [];
+
+                if (command_parsed.name.toLowerCase() === 'cd') {
+                    method = 'cd';
+                    parameters = [command_parsed.args.length ? command_parsed.args[0] : ''];
+                }
+                else {
+                    method = 'run';
+                    parameters = [command];
+                }
+
+                if (method) {
+                    service_authenticated(terminal, method, parameters, function(result) {
+                        update_environment(terminal, result.environment);
+                        show_output(result.output);
+                    });
+                }
+            }
+
+            // Login
+            function login(user, password, callback) {
+                user = $.trim(user || '');
+                password = $.trim(password || '');
+                if (user && password) {
+                    service(terminal, 'login', [user, password], function(result) {
+                            if (result && result.token) {
+                                environment.user = user;
+                                update_environment(terminal, result.environment);
+                                show_output(result.output);
+                                callback(result.token);
+                            }
+                            else callback(null);
+                        },
+                        function() { callback(null); });
+                }
+                else callback(null);
+            }
+
+            // Completion
+            function completion(terminal, pattern, callback) {
+                var view = terminal.export_view();
+                var command = view.command.substring(0, view.position);
+
+                service_authenticated(terminal, 'completion', [pattern, command], function(result) {
+                    show_output(result.output);
+
+                    if (result.completion && result.completion.length) {
+                        result.completion.reverse();
+                        callback(result.completion);
+                    }
+                }, null, {pause: false});
+            }
+
+            // Logout
+            function logout() {
+                silent_mode = true;
+
+                try {
+                    terminal.clear();
+                    terminal.logout();
+                }
+                catch (error) {}
+
+                silent_mode = false;
+            }
+
+            // Terminal
+            var terminal = $('#term').terminal(interpreter, {
+                login: !no_login ? login : false,
+                prompt: make_prompt(),
+                greetings: !no_login ? "" : "\t[[b;Red;]be careful!]: [[b;;]ConsoleNoLogin'] is [[b;Red;]true]\n",
+                tabcompletion: true,
+                completion: completion,
+                onBlur: function() { return false; },
+                exceptionHandler: function(exception) {
+                    if (!silent_mode) terminal.exception(exception);
+                }
+            });
+
+            // Logout
+            if (no_login) {
+//                terminal.set_token('__NO_LOGIN__');
+            } else {
+                logout();
+                $('#term').on('unload', function(){ logout(); });
+//                $('#term').on('beforeunload', function(){ logout(); });
+            }
+
+            // Banner
+            if (banner_main) terminal.echo(banner_main);
+        });
+//        });
+</script>

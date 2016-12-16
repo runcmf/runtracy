@@ -17,13 +17,15 @@
 
 use Tracy\Debugger;
 
+date_default_timezone_set('Europe/Moscow');
+//date_default_timezone_set('UTC');
+
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 define('DIR', realpath(__DIR__ . '/../../') . DS);
 
 Debugger::enable(Debugger::DEVELOPMENT, DIR . 'var/log');
 //Debugger::enable(Debugger::PRODUCTION, DIR . 'var/log');
-//https://github.com/nette/tracy/issues/154#issuecomment-219694817
-Debugger::dispatch();// from ver 2.4
+Debugger::timer();
 
 return [
     'settings' => [
@@ -32,7 +34,7 @@ return [
         'addContentLengthHeader' => false,// if true = Unexpected data in output buffer
 //        'routerCacheFile' => DIR . 'var/cache/fastroute.cache',//TODO uncomment after debug
 
-        'db' => [// database configuration
+        'db' => [// multi database configuration
             'default' => 'mysql',
             'connections' => [
                 'sqlite' => [
@@ -100,8 +102,27 @@ return [
             'showTwigPanel' => 0,
             'showVendorVersionsPanel' => 0,
             'showXDebugHelper' => 0,
-            'XDebugHelperIDEKey' => 'PHPSTORM',
-            'showIncludedFiles' => 0
+            'showIncludedFiles' => 0,
+            'showConsolePanel' => 0,
+            'configs' => [
+                // XDebugger IDE key
+                'XDebugHelperIDEKey' => 'PHPSTORM',
+                // Disable login (don't ask for credentials, be careful) values( 1 | 0 )
+                'ConsoleNoLogin' => 0,
+                // Multi-user credentials values( ['user1' => 'password1', 'user2' => 'password2'] )
+                'ConsoleAccounts' => [
+                    'dev' => '34c6fceca75e456f25e7e99531e2425c6c1de443'// = sha1('dev')
+                ],
+                // Password hash algorithm (password must be hashed) values('md5', 'sha256' ...)
+                'ConsoleHashAlgorithm' => 'sha1',
+                // Home directory (multi-user mode supported) values ( var || array )
+                // '' || '/tmp' || ['user1' => '/home/user1', 'user2' => '/home/user2']
+                'ConsoleHomeDirectory' => DIR,
+                // terminal.js full URI
+                'ConsoleTerminalJs' => '/assets/js/jquery.terminal.min.js',
+                // terminal.css full URI
+                'ConsoleTerminalCss' => '/assets/css/jquery.terminal.min.css'
+            ]
         ]
     ]
 ];
