@@ -34,6 +34,34 @@ class ConsolePanel implements IBarPanel
 
 
     public function getTab() {
+        // Set blinker to work with no active panel
+        $head = '
+        <style type="text/css">
+            .warn {
+                display: none;
+            }
+            .warn_blink {
+                color: ghostwhite !important;
+                background: red !important;
+            }
+        </style>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                // configure blinker
+                if('.$this->cfg['ConsoleNoLogin'].') {
+                    function blinker() {
+                        $(".warn_blink").fadeOut(800);
+                        $(".warn_blink").fadeIn(800);
+                    }
+                    setInterval(blinker, 1600);
+                } else {
+                    $( ".warn_blink" ).each(function () {
+                        this.style.setProperty( "background", "transparent", "important" );
+                    });
+                }
+            });
+        </script>';
+
         $this->icon = '
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 471.362 471.362" style="enable-background:new 0 0 471.362 471.362;" xml:space="preserve">
             <g>
@@ -42,7 +70,7 @@ class ConsolePanel implements IBarPanel
             </g>
         </svg>';
 
-        return '
+        return $head . '
         <span title="Console" class="warn_blink">
             ' . $this->icon . '&nbsp; 
         </span>

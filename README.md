@@ -19,7 +19,7 @@ XDebugHelper - start and stop a Xdebug session (fork from https://github.com/jsm
 IncludedFiles - Included Files list  
 PanelSelector - easy configure (part of fork from https://github.com/adrianbj/TracyDebugger)  
 ConsolePanel - Echo console (fork from https://github.com/nickola/web-console)  
-
+ProfilerPanel - time, mem usage, timeline (fork from https://github.com/netpromotion/profiler)  
 
 # Install
 **1**
@@ -93,6 +93,7 @@ return [
             'showSlimContainer' => 0,
             'showEloquentORMPanel' => 0,
             'showTwigPanel' => 0,
+            'showProfilerPanel' => 0,
             'showVendorVersionsPanel' => 0,
             'showXDebugHelper' => 0,
             'showIncludedFiles' => 0,
@@ -114,7 +115,16 @@ return [
                 // terminal.js full URI
                 'ConsoleTerminalJs' => '/assets/js/jquery.terminal.min.js',
                 // terminal.css full URI
-                'ConsoleTerminalCss' => '/assets/css/jquery.terminal.min.css'
+                'ConsoleTerminalCss' => '/assets/css/jquery.terminal.min.css',
+                'ProfilerPanel' => [
+                    // Memory usage 'primaryValue' set as Profiler::enable() or Profiler::enable(1)
+//                    'primaryValue' =>                   'effective',    // or 'absolute'
+                    'show' => [
+                        'memoryUsageChart' => 1, // or false
+                        'shortProfiles' => true, // or false
+                        'timeLines' => true // or false
+                    ]
+                ]
             ]
         ]
 ```
@@ -144,7 +154,7 @@ see config examples in vendor/runcmf/runtracy/Example
 
 ![example](ss/console_panel.png "Console Panel")
 
-Remember - this is not real terminal.
+![example](ss/profiler_panel.png "Profiler Panel")
 
 
 ## Security

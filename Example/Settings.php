@@ -100,6 +100,7 @@ return [
             'showSlimContainer' => 0,
             'showEloquentORMPanel' => 0,
             'showTwigPanel' => 0,
+            'showProfilerPanel' => 0,
             'showVendorVersionsPanel' => 0,
             'showXDebugHelper' => 0,
             'showIncludedFiles' => 0,
@@ -107,7 +108,7 @@ return [
             'configs' => [
                 // XDebugger IDE key
                 'XDebugHelperIDEKey' => 'PHPSTORM',
-                // Disable login (don't ask for credentials, be careful) values( 1 | 0 )
+                // Disable login (don't ask for credentials, be careful) values ( 1 | 0 )
                 'ConsoleNoLogin' => 0,
                 // Multi-user credentials values( ['user1' => 'password1', 'user2' => 'password2'] )
                 'ConsoleAccounts' => [
@@ -121,7 +122,16 @@ return [
                 // terminal.js full URI
                 'ConsoleTerminalJs' => '/assets/js/jquery.terminal.min.js',
                 // terminal.css full URI
-                'ConsoleTerminalCss' => '/assets/css/jquery.terminal.min.css'
+                'ConsoleTerminalCss' => '/assets/css/jquery.terminal.min.css',
+                'ProfilerPanel' => [
+                    // Memory usage 'primaryValue' set as Profiler::enable() or Profiler::enable(1)
+//                    'primaryValue' =>                   'effective',    // or 'absolute'
+                    'show' => [
+                        'memoryUsageChart' => 1, // or false
+                        'shortProfiles' => true, // or false
+                        'timeLines' => true // or false
+                    ]
+                ]
             ]
         ]
     ]

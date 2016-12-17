@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 2016-12-17
+* add ProfilerPanel
+
 ### 2016-12-15
 * add ConsolePanel
 * change config format

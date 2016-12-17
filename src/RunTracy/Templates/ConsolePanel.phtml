@@ -48,13 +48,14 @@
     #tipsleft { display:inline-block; width: 400px; }
     #tipsright { display:inline-block; }
 
-    .warn {
-        display: none;
-    }
-    .warn_blink {
-        color: ghostwhite !important;
-        background: red !important;
-    }
+    /* moved to RunTracy\Helpers\ConsolePanel */
+    /*.warn {*/
+        /*display: none;*/
+    /*}*/
+    /*.warn_blink {*/
+        /*color: ghostwhite !important;*/
+        /*background: red !important;*/
+    /*}*/
 
     #containerHeader h1,
     #containerHeader p {
@@ -96,18 +97,19 @@
             // Default banner
             var banner_main = "Echo Console. Run 'tricks' to see example commands";
 
-            // configure blinker
-            if(no_login) {
-                function blinker() {
-                    $('.warn_blink').fadeOut(800);
-                    $('.warn_blink').fadeIn(800);
-                }
-                setInterval(blinker, 1600);
-            } else {
-                $( '.warn_blink' ).each(function () {
-                    this.style.setProperty( 'background', 'transparent', 'important' );
-                });
-            }
+            // moved to RunTracy\Helpers\ConsolePanel
+//            // configure blinker
+//            if(no_login) {
+//                function blinker() {
+//                    $('.warn_blink').fadeOut(800);
+//                    $('.warn_blink').fadeIn(800);
+//                }
+//                setInterval(blinker, 1600);
+//            } else {
+//                $( '.warn_blink' ).each(function () {
+//                    this.style.setProperty( 'background', 'transparent', 'important' );
+//                });
+//            }
 
             // Output
             function show_output(output) {
@@ -213,7 +215,6 @@
 //                }
 /*
  [[guib;<COLOR>;<BACKGROUND>]some text] will display some text:
-
  [[ — open formating
  u — underline
  s — strike
@@ -231,7 +232,7 @@
  text — text that will be formated (most of the time for internal use, when you format text that's wrap in more then one line you'll get full text in data-text attribute)
  ] — end of formating
  */
-                if (command == 'tricks') {
+                if (command === 'tricks') {
                     terminal.echo("[[;green;;]" +
                     "\twget -q https://getcomposer.org/composer.phar\n" +
                     "\tphp -r 'echo sha1(&#34;dev&#34;);'\n" +

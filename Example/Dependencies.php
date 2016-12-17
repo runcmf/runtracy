@@ -1,4 +1,19 @@
 <?php
+/**
+ * Copyright 2016 1f7.wizard@gmail.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 $c = $app->getContainer();
 
@@ -17,6 +32,35 @@ $c['view'] = function ($c) {
     return $view;
 };
 
+// monolog
+$c['logger'] = function ($c) {
+    $settings = $c->get('settings')['logger'];
+    $logger = new Monolog\Logger($settings['name']);
+    $logger->pushProcessor(new Monolog\Processor\UidProcessor());
+    $logger->pushHandler(new Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
+    $logger->pushHandler(new Monolog\Handler\RotatingFileHandler($settings['path'], $settings['maxFiles'], $settings['level']));
+    return $logger;
+};
+
+//Override the default Not Found Handler
+$c['notFoundHandler'] = function ($c) {
+    return function ($request, $response) use ($c) {
+        $c->view->offsetSet('erno', '404');
+        $c->view->offsetSet('ermes', 'Page not found');
+        $c->view->offsetSet('uri', $request->getUri());
+        return $c->view->render($response, 'Error/40x.html.twig')->withStatus(404);
+    };
+};
+//Override the default Not Allowed Handler
+$c['notAllowedHandler'] = function ($c) {
+    return function ($request, $response, $methods) use ($c) {
+        $c->view->offsetSet('erno', '405');
+        $c->view->offsetSet('ermes', 'Can not route with method{s}: ' . implode(', ', $methods));
+        $c->view->offsetSet('uri', $request->getUri());
+        return $c->view->render($response, 'Error/40x.html.twig')->withStatus(405);
+    };
+};
+
 // Register Eloquent multiple connections
 //PHP Notice: Indirect modification of overloaded element of Illuminate\Container\Container has no effect in .../vendor/illuminate/database/Capsule/Manager.php:51
 //PHP Notice: Indirect modification of overloaded element of Illuminate\Container\Container has no effect in .../vendor/illuminate/database/Capsule/Manager.php:53
@@ -33,9 +77,11 @@ $c['view'] = function ($c) {
 //$capsule->bootEloquent();
 //$capsule::connection()->enableQueryLog();
 
+//RunTracy\Helpers\Profiler\Profiler::start('init_EloquentORM');
 // Register Eloquent single connections
 $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($cfg['settings']['db']['connections']['mysql']);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 $capsule::connection()->enableQueryLog();
+//RunTracy\Helpers\Profiler\Profiler::finish('init_EloquentORM');
