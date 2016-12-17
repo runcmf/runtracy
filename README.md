@@ -5,7 +5,7 @@
 
 ![example](ss/tracy_panel.png "Tracy Panel")
 
-now ready:  
+now in package:  
 PhpInfoPanel - full phpinfo(),  
 SlimEnvironmentPanel - RAW data Slim Environments,  
 SlimContainer - RAW data Slim Container   
@@ -18,7 +18,7 @@ VendorVersionsPanel - version info from composer.json and composer.lock (fork fr
 XDebugHelper - start and stop a Xdebug session (fork from https://github.com/jsmitka/Nette-XDebug-Helper)  
 IncludedFiles - Included Files list  
 PanelSelector - easy configure (part of fork from https://github.com/adrianbj/TracyDebugger)  
-ConsolePanel - Echo console (fork from https://github.com/nickola/web-console)  
+ConsolePanel - PTY (pseudo TTY) console (fork from https://github.com/nickola/web-console)  
 ProfilerPanel - time, mem usage, timeline (fork from https://github.com/netpromotion/profiler)  
 
 # Install
@@ -34,7 +34,7 @@ $ composer require illuminate/database
 $ composer require slim/twig-view
 ```
 
-**2.2** add to your dependencies Twig, Twig_Profiler, Eloquent ORM like:
+**2.2** add to your dependencies (Twig, Twig_Profiler) and/or Eloquent ORM like:
 ```php
 // Twig
 $c['twig_profile'] = function () {
@@ -51,7 +51,7 @@ $c['view'] = function ($c) {
     return $view;
 };
 
-// Register Eloquent single connections
+// Register Eloquent single connection
 $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($cfg['settings']['db']['connections']['mysql']);
 $capsule->setAsGlobal();
@@ -64,12 +64,14 @@ $capsule::connection()->enableQueryLog();
 $app->add(new RunTracy\Middlewares\TracyMiddleware($app));
 ```
 
-**4** register route
+**4** register route if you plan use PTY Console
 ``` php
 $app->post('/console', 'RunTracy\Controllers\RunTracyConsole:index');
 ```
-
-**5** add to your settings
+also copy you want jquery.terminal.min.js & jquery.terminal.min.css  from vendor/runcmf/runtracy/web and correct path below.
+  
+  
+**5** add to your settings Debugger initialisation and 'tracy' section 
 ``` php
 use Tracy\Debugger;
 
@@ -152,7 +154,7 @@ see config examples in vendor/runcmf/runtracy/Example
 
 ![example](ss/phpinfo.png "phpinfo Panel")
 
-![example](ss/console_panel.png "Console Panel")
+![example](ss/console_panel.png "PTY Console Panel")
 
 ![example](ss/profiler_panel.png "Profiler Panel")
 

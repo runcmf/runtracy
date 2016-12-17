@@ -71,7 +71,7 @@ class ConsolePanel implements IBarPanel
         </svg>';
 
         return $head . '
-        <span title="Console" class="warn_blink">
+        <span title="PTY Console" class="warn_blink">
             ' . $this->icon . '&nbsp; 
         </span>
         ';
