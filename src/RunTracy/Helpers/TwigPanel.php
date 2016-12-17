@@ -23,13 +23,11 @@ class TwigPanel implements IBarPanel
 {
     private $data;
     private $dumper;
-    private $ver;
     private $icon;
 
-    public function __construct($data = null, array $ver = [])
+    public function __construct($data = null)
     {
         $this->data = $data;
-        $this->ver = $ver;
         $this->dumper = new \Twig_Profiler_Dumper_Html();
     }
 
@@ -41,6 +39,6 @@ class TwigPanel implements IBarPanel
 
     public function getPanel()
     {
-        return '<h1>'.$this->icon.' Slim '.$this->ver['slim'].' / Twig '.$this->ver['twig'].'</h1><div class="tracy-inner"><p><table width="100%"><thead><tr><th><b>Twig profiler result</b></th></tr></thead><tr class="yes"><th><b>' . $this->dumper->dump($this->data) . '</b></th></tr></table></p></div>';
+        return '<h1>'.$this->icon.' Slim 3 / Twig </h1><div class="tracy-inner"><p><table width="100%"><thead><tr><th><b>Twig profiler result</b></th></tr></thead><tr class="yes"><th><b>' . $this->dumper->dump($this->data) . '</b></th></tr></table></p></div>';
     }
 }

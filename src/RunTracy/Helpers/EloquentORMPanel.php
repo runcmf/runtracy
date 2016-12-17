@@ -24,14 +24,12 @@ class EloquentORMPanel implements IBarPanel
     private $count;
     private $data;
     private $time;
-    private $ver;
     private $icon;
 
-    public function __construct($data = null, array $ver = [])
+    public function __construct($data = null)
     {
         $this->data = $this->parse($data);
         $this->count = count($data);
-        $this->ver = $ver;
     }
 
     protected function getHeader()
@@ -52,7 +50,7 @@ class EloquentORMPanel implements IBarPanel
 
     public function getPanel()
     {
-        return '<h1>'.$this->icon.' &nbsp; Slim '.$this->ver['slim'].' / Eloquent ORM</h1><div class="tracy-inner"><p><table width="100%">' . $this->data . '<tr class="yes"><th><b>' . $this->count . '</b></th><th><b>' . $this->time . ' ms</b></th><th>Total</th></tr></table></p></div>';
+        return '<h1>'.$this->icon.' &nbsp; Slim 3 / Eloquent ORM</h1><div class="tracy-inner"><p><table width="100%">' . $this->data . '<tr class="yes"><th><b>' . $this->count . '</b></th><th><b>' . $this->time . ' ms</b></th><th>Total</th></tr></table></p></div>';
     }
 
     private function parse($data)

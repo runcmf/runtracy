@@ -48,7 +48,6 @@ class TracyMiddleware
 
         $v = [
             'slim' => \Slim\App::VERSION,
-            'twig' => \Twig_Environment::VERSION
         ];
 
         $defcfg = $this->app->getContainer()->get('settings')['tracy'];
@@ -63,10 +62,10 @@ class TracyMiddleware
             $cfg = [];
         }
         if (isset($cfg['showEloquentORMPanel'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\EloquentORMPanel(DB::getQueryLog(), $v));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\EloquentORMPanel(DB::getQueryLog()));
         }
         if (isset($cfg['showTwigPanel'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\TwigPanel($this->app->getContainer()->get('twig_profile'), $v));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\TwigPanel($this->app->getContainer()->get('twig_profile')));
         }
         if (isset($cfg['showPhpInfoPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\PhpInfoPanel());
