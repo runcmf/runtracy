@@ -15,22 +15,6 @@
         max-height: 550px;
         overflow-y:scroll;
     }
-    /*.clipboard{*/
-        /*position:absolute;*/
-        /*left:-16px;*/
-        /*top:0;*/
-        /*width:10px;*/
-        /*height:16px;*/
-        /*background:0 0;*/
-        /*border:0;*/
-        /*color:transparent;*/
-        /*outline:0;*/
-        /*padding:0;*/
-        /*resize:none;*/
-        /*z-index:0;*/
-        /*overflow:hidden;*/
-        /*visibility: hidden;*/
-    /*}*/
 
     .spaced { margin: 15px 0; }
     .spaced-top { margin: 15px 0 0 0; }
@@ -40,22 +24,9 @@
     .configure .variable { color: #d33682; }
     .configure p, .configure ul { margin: 5px 0 0 0; }
 
-    .popover { color: #00C000 !important; }
-    .popover.bottom .arrow::after {border-bottom-color: #00C000 !important; }
-    .popover-content {width: 350px; !important;}
-
     #tipscontainer { width:100%; }
     #tipsleft { display:inline-block; width: 400px; }
     #tipsright { display:inline-block; }
-
-    /* moved to RunTracy\Helpers\ConsolePanel */
-    /*.warn {*/
-        /*display: none;*/
-    /*}*/
-    /*.warn_blink {*/
-        /*color: ghostwhite !important;*/
-        /*background: red !important;*/
-    /*}*/
 
     #containerHeader h1,
     #containerHeader p {
@@ -78,12 +49,6 @@
 
 
 <script type="text/javascript">
-    $(document).ready(function(){
-        $('[data-toggle="popover"]').popover();
-    });
-
-//    $.getScript( "<?php //echo $this->MousewheelJs; ?>//" );
-//        .done(function() {
     $.getScript( "<?php echo $this->TerminalJs; ?>" )
         .done(function () {
 //            $.getScript( "/assets/js/unix_formatting.js" );
@@ -96,20 +61,6 @@
             var silent_mode = false;
             // Default banner
             var banner_main = "Welcome to PTY Console. Run 'tricks' to see example commands";
-
-            // moved to RunTracy\Helpers\ConsolePanel
-//            // configure blinker
-//            if(no_login) {
-//                function blinker() {
-//                    $('.warn_blink').fadeOut(800);
-//                    $('.warn_blink').fadeIn(800);
-//                }
-//                setInterval(blinker, 1600);
-//            } else {
-//                $( '.warn_blink' ).each(function () {
-//                    this.style.setProperty( 'background', 'transparent', 'important' );
-//                });
-//            }
 
             // Output
             function show_output(output) {
@@ -209,29 +160,6 @@
                 command = $.trim(command || '');
                 if (!command) return;
 
-//                if (command == 'help') {
-//                    terminal.echo("available commands are mysql, js, test");
-//                    return;
-//                }
-/*
- [[guib;<COLOR>;<BACKGROUND>]some text] will display some text:
- [[ — open formating
- u — underline
- s — strike
- o — overline
- i — italic
- b — bold
- g — glow (using css text-shadow)
- ; — separator
- color — color of text (hex, short hex or html name of the color)
- ; — separator
- color — background color (hex, short hex or html name of the color)
- ; — separator [optional]
- class — class adeed to format span element [optional]
- ] — end of format specification
- text — text that will be formated (most of the time for internal use, when you format text that's wrap in more then one line you'll get full text in data-text attribute)
- ] — end of formating
- */
                 if (command === 'tricks') {
                     terminal.echo("[[;green;;]" +
                     "\twget -q https://getcomposer.org/composer.phar\n" +
@@ -338,5 +266,4 @@
             // Banner
             if (banner_main) terminal.echo(banner_main);
         });
-//        });
 </script>

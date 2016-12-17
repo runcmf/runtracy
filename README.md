@@ -22,11 +22,11 @@ ConsolePanel - PTY (pseudo TTY) console (fork from https://github.com/nickola/we
 ProfilerPanel - time, mem usage, timeline (fork from https://github.com/netpromotion/profiler)  
 
 # Install
-**1**
+**1.**
 ``` bash
 $ composer require runcmf/runtracy
 ```
-**2** goto 3 or if need twig and/or Eloquent ORM then:
+**2.** goto 3 or if need twig and/or Eloquent ORM then:
 
 **2.1** install it
 ``` bash
@@ -59,19 +59,20 @@ $capsule->bootEloquent();
 $capsule::connection()->enableQueryLog();
 ```
 
-**3** register middleware
+**3.** register middleware
 ``` php
 $app->add(new RunTracy\Middlewares\TracyMiddleware($app));
 ```
 
-**4** register route if you plan use PTY Console
+**4.** register route if you plan use PTY Console
 ``` php
 $app->post('/console', 'RunTracy\Controllers\RunTracyConsole:index');
 ```
-also copy you want jquery.terminal.min.js & jquery.terminal.min.css  from vendor/runcmf/runtracy/web and correct path below.
+also copy you want jquery.terminal.min.js & jquery.terminal.min.css  from vendor/runcmf/runtracy/web and correct path in 'settings' below.
   
   
-**5** add to your settings Debugger initialisation and 'tracy' section 
+**5.** add to your settings Debugger initialisation and 'tracy' section.   
+if you plan to use twig and/or Eloquent ORM uncomment from below lines 'showTwigPanel' and/or 'showEloquentORMPanel'   
 ``` php
 use Tracy\Debugger;
 
@@ -93,8 +94,8 @@ return [
             'showSlimRequestPanel' => 1,
             'showSlimResponsePanel' => 1,
             'showSlimContainer' => 0,
-            'showEloquentORMPanel' => 0,
-            'showTwigPanel' => 0,
+//            'showEloquentORMPanel' => 0,
+//            'showTwigPanel' => 0,
             'showProfilerPanel' => 0,
             'showVendorVersionsPanel' => 0,
             'showXDebugHelper' => 0,
@@ -131,6 +132,16 @@ return [
         ]
 ```
 
+***6.*** Console Panel used JQuery.  
+And if you plan to use it then add to your template from local or from CDN (https://code.jquery.com/)
+or copy/paste
+``` html
+<script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+```
+
 
 see config examples in vendor/runcmf/runtracy/Example
 
@@ -156,6 +167,52 @@ see config examples in vendor/runcmf/runtracy/Example
 
 ![example](ss/console_panel.png "PTY Console Panel")
 
+
+Profiler Example in clear [slim-skeleton](https://packagist.org/packages/slim/slim-skeleton)  
+ public/index.php
+``` php
+<?php
+if (PHP_SAPI == 'cli-server') {
+    // To help the built-in PHP dev server, check if the request was actually for
+    // something which should probably be served as a static file
+    $url  = parse_url($_SERVER['REQUEST_URI']);
+    $file = __DIR__ . $url['path'];
+    if (is_file($file)) {
+        return false;
+    }
+}
+
+require __DIR__ . '/../vendor/autoload.php';
+RunTracy\Helpers\Profiler\Profiler::enable();
+RunTracy\Helpers\Profiler\Profiler::start('App');
+
+session_start();
+
+    RunTracy\Helpers\Profiler\Profiler::start('initApp');
+// Instantiate the app
+$settings = require __DIR__ . '/../src/settings.php';
+$app = new \Slim\App($settings);
+    RunTracy\Helpers\Profiler\Profiler::finish('initApp');
+
+    RunTracy\Helpers\Profiler\Profiler::start('initDeps');
+// Set up dependencies
+require __DIR__ . '/../src/dependencies.php';
+    RunTracy\Helpers\Profiler\Profiler::finish('initDeps');
+
+    RunTracy\Helpers\Profiler\Profiler::start('initMiddlewares');
+// Register middleware
+require __DIR__ . '/../src/middleware.php';
+    RunTracy\Helpers\Profiler\Profiler::finish('initMiddlewares');
+
+    RunTracy\Helpers\Profiler\Profiler::start('initRoutes');
+// Register routes
+require __DIR__ . '/../src/routes.php';
+    RunTracy\Helpers\Profiler\Profiler::finish('initRoutes');
+
+// Run app
+$app->run();
+RunTracy\Helpers\Profiler\Profiler::finish('App');
+```
 ![example](ss/profiler_panel.png "Profiler Panel")
 
 
