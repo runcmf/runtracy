@@ -68,8 +68,14 @@ $app->add(new RunTracy\Middlewares\TracyMiddleware($app));
 ``` php
 $app->post('/console', 'RunTracy\Controllers\RunTracyConsole:index');
 ```
-also copy you want jquery.terminal.min.js & jquery.terminal.min.css  from vendor/runcmf/runtracy/web and correct path in 'settings' below.
-  
+also copy you want jquery.terminal.min.js & jquery.terminal.min.css  from vendor/runcmf/runtracy/web and correct path in 'settings' below.  
+add from local or from CDN (https://code.jquery.com/) or copy/paste
+``` html
+<script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+```  
   
 **5.** add to your settings Debugger initialisation and 'tracy' section.   
 if you plan to use twig and/or Eloquent ORM uncomment from below lines 'showTwigPanel' and/or 'showEloquentORMPanel'   
@@ -130,16 +136,6 @@ return [
                 ]
             ]
         ]
-```
-
-***6.*** Console Panel used JQuery.  
-And if you plan to use it then add to your template from local or from CDN (https://code.jquery.com/)
-or copy/paste
-``` html
-<script
-    src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-    crossorigin="anonymous"></script>
 ```
 
 
