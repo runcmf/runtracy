@@ -164,7 +164,7 @@ see config examples in vendor/runcmf/runtracy/Example
 ![example](ss/console_panel.png "PTY Console Panel")
 
 
-Profiler Example in clear [slim-skeleton](https://packagist.org/packages/slim/slim-skeleton)  
+Profiler Example in new installed [slim-skeleton](https://packagist.org/packages/slim/slim-skeleton)  
  public/index.php
 ``` php
 <?php
@@ -233,4 +233,4 @@ If you discover any security related issues, please email to 1f7.wizard( at )gma
 
 [link-packagist]: https://packagist.org/packages/runcmf/runtracy
 [link-license]: http://www.apache.org/licenses/LICENSE-2.0
-[link-downloads]: https://bitbucket.org/1f7/runtracy
+[link-downloads]: https://github.com/runcmf/runtracy

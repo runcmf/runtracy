@@ -163,7 +163,7 @@
                 if (command === 'tricks') {
                     terminal.echo("[[;green;;]" +
                     "\twget -q https://getcomposer.org/composer.phar\n" +
-                    "\tphp -r 'echo sha1(&#34;dev&#34;);'\n" +
+                    "\tvendor/bin/phpunit          php -r 'echo sha1(&#34;dev&#34;);'\n" +
                     "\tls -l                       php -h\n" +
                     "\thostnamectl                 free -m\n" +
                     "\tchmod u+x /path/to/file     ulimit -a\n" +
