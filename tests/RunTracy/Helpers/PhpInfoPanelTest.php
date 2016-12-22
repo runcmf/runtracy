@@ -32,8 +32,8 @@ class PhpInfoPanelTest extends BaseTestCase
         $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
 
         // test Tracy tab
-        $this->assertRegexp('#PHP Info#', $panel->getTab());
+        $this->assertRegexp('/PHP Info/s', $panel->getTab());
         // test Tracy panel
-        $this->assertRegexp('#Configuration#', $panel->getPanel());
+        $this->assertRegexp('/phpinfo/s', $panel->getPanel());
     }
 }

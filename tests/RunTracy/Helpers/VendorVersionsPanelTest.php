@@ -32,8 +32,8 @@ class VendorVersionsPanelTest extends BaseTestCase
         $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
 
         // test Tracy tab
-        $this->assertRegexp('#Vendor Versions#', $panel->getTab());
+        $this->assertRegexp('/Vendor Versions/s', $panel->getTab());
         // test Tracy panel
-        $this->assertRegexp('#slim/slim#', $panel->getPanel());
+        $this->assertRegexp('/VendorVersionsPanel/s', $panel->getPanel());
     }
 }
