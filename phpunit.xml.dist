@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+        bootstrap="tests/bootstrap.php"
+        backupGlobals="false"
+        backupStaticAttributes="false"
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        processIsolation="false"
+        stopOnFailure="false"
+        syntaxCheck="false"
+>
+    <testsuites>
+        <testsuite name="RunTracy Tests Suite">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
+    <!--
+    <logging>
+        <log type="coverage-html" target="./_report" charset="UTF-8"
+             yui="true" highlight="true"
+             lowUpperBound="50" highLowerBound="80"/>
+    </logging>
+    -->
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+            <exclude>
+                <directory>./Example</directory>
+                <directory>./vendor</directory>
+                <directory>./tests</directory>
+                <directory>./ss</directory>
+                <directory>./web</directory>
+            </exclude>
+        </whitelist>
+        <blacklist>
+            <directory suffix=".php">./vendor</directory>
+            <file>./tests/bootstrap.php</file>
+            <file>./tests/BaseTestCase.php</file>
+            <file>./tests/Settings.php</file>
+        </blacklist>
+    </filter>
+</phpunit>

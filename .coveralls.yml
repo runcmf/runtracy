@@ -1,0 +1,2 @@
+service_name: travis-ci # travis-ci or travis-pro
+json_path: coveralls-upload.json

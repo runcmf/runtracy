@@ -1,0 +1,32 @@
+language: php
+
+sudo: false
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+  - hhvm
+
+matrix:
+  allow_failures:
+  - php: 7.1
+
+before_script:
+  - if [ "$TRAVIS_PHP_VERSION" == "7.0" ] ; then
+      composer require satooshi/php-coveralls:1.* -n ;
+    else
+      composer install -n ;
+    fi
+
+script:
+  - if [ "$TRAVIS_PHP_VERSION" == "7.0" ] ; then
+      vendor/bin/phpunit --coverage-clover clover.xml ;
+    else
+      vendor/bin/phpunit ;
+    fi
+
+after_script:
+  - if [ "$TRAVIS_PHP_VERSION" == "7.0" ] ; then
+      vendor/bin/coveralls --coverage_clover=clover.xml -v ;
+    fi

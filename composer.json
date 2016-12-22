@@ -24,8 +24,12 @@
   ],
   "require": {
     "php": ">=5.5.0",
-    "slim/slim": "~3.5",
+    "slim/slim": "~3.7",
     "tracy/tracy": "~2.4"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^2.5",
+    "phpunit/phpunit": "^5.7"
   },
   "autoload": {
     "psr-4": {
@@ -36,5 +40,11 @@
     "psr-4": {
       "Tests\\": "tests/"
     }
+  },
+  "scripts": {
+    "test": [
+      "@phpunit"
+    ],
+    "phpunit": "php vendor/bin/phpunit"
   }
 }

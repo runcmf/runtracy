@@ -1,4 +1,8 @@
-[![Latest Version on Packagist][ico-version]][link-packagist] [![Software License][ico-license]][link-license] [![Total Downloads][ico-downloads]][link-downloads]
+[![Build Status](https://travis-ci.org/runcmf/runtracy.svg?branch=master)](https://travis-ci.org/runcmf/runtracy)
+[![Coverage Status](https://coveralls.io/repos/github/runcmf/runtracy/badge.svg?branch=master)](https://coveralls.io/github/runcmf/runtracy?branch=master)
+[![Latest Version on Packagist][ico-version]][link-packagist]
+[![Software License][ico-license]][link-license]
+[![Total Downloads][ico-downloads]][link-downloads]
 
 # Slim Framework Tracy Debugger Bar #
 ## configure it by mouse
@@ -211,6 +215,13 @@ RunTracy\Helpers\Profiler\Profiler::finish('App');
 ```
 ![example](ss/profiler_panel.png "Profiler Panel")
 
+
+## Tests
+```bash
+$ cd vendor/runcmf/runtracy
+$ composer update
+$ vendor/bin/phpunit
+```
 
 ## Security
 

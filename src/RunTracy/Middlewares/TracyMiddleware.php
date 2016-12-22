@@ -49,11 +49,8 @@ class TracyMiddleware
             'slim' => \Slim\App::VERSION,
         ];
 
-//        $defcfg = $this->app->getContainer()->get('settings')['tracy'];
         $defcfg = $this->app->getContainer()['settings']['tracy'];
-//        $cookies = $request->getCookieParam('tracyPanelsEnabled', []);
-        // SLim cut array or json cookie https://github.com/slimphp/Slim/issues/2101
-        $cookies = isset($_COOKIE['tracyPanelsEnabled']) ? json_decode($_COOKIE['tracyPanelsEnabled']) : [];
+        $cookies = json_decode($request->getCookieParam('tracyPanelsEnabled'));
         if(!empty($cookies)) {
             $def = array_fill_keys(array_keys($defcfg), null);
             $cookies = array_fill_keys($cookies, 1);

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 2016-12-22
+* begin test coverage
+
 ### 2016-12-20
 * repo transferred to https://github.com/runcmf/runtracy
 
