@@ -34,6 +34,6 @@ class PhpInfoPanelTest extends BaseTestCase
         // test Tracy tab
         $this->assertRegexp('#PHP Info#', $panel->getTab());
         // test Tracy panel
-        $this->assertRegexp('#PHP License#', $panel->getPanel());
+        $this->assertRegexp('#Configuration#', $panel->getPanel());
     }
 }

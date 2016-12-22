@@ -34,6 +34,6 @@ class VendorVersionsPanelTest extends BaseTestCase
         // test Tracy tab
         $this->assertRegexp('#Vendor Versions#', $panel->getTab());
         // test Tracy panel
-        $this->assertRegexp('#Packages#', $panel->getPanel());
+        $this->assertRegexp('#slim/slim#', $panel->getPanel());
     }
 }
