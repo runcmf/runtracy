@@ -1,14 +1,21 @@
 <?php
 
-namespace RunTracy\Tests;
+namespace Tests\RunTracy\Helpers\Profiler;
 
+use Tests\BaseTestCase;
 use RunTracy\Helpers\Profiler\Profiler;
 use RunTracy\Helpers\Profiler\ProfilerService;
 
-class ProfilerTest extends \PHPUnit_Framework_TestCase
+/**
+ * @runTestsInSeparateProcesses
+ * Class ProfilerTest
+ * @package Tests\RunTracy\Helpers\Profiler
+ */
+class ProfilerTest extends BaseTestCase
 {
+
     /**
-     * @runInSeparateProcess
+     * @runTestsInSeparateProcesses
      */
     public function testEnableCallsProfilerServiceInit()
     {
@@ -19,5 +26,19 @@ class ProfilerTest extends \PHPUnit_Framework_TestCase
 
         /** @noinspection PhpInternalEntityUsedInspection */
         $this->assertCount(1, ProfilerService::getInstance()->getProfiles());
+        /** @noinspection PhpInternalEntityUsedInspection */
+        $this->assertTrue(ProfilerService::hasInstance());
+
+    }
+
+    public function testProfilerPanel()
+    {
+        $panel = new \RunTracy\Helpers\ProfilerPanel($this->cfg['settings']['tracy']['configs']['ProfilerPanel']);
+        $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
+
+        // test Tracy tab
+        $this->assertRegexp('#Profiler info#', $panel->getTab());
+        // without RunTracy config 'Profiling is disabled' by default
+        $this->assertRegexp('#Profiling is disabled#', $panel->getPanel());
     }
 }

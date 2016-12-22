@@ -53,6 +53,11 @@ class PhpInfoPanel implements IBarPanel
         $phpInfo = ob_get_contents();
         ob_get_clean();
 
+        // warning:
+        // DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 64
+        // suppress warnings
+        libxml_use_internal_errors(true);
+
         $dom = new \DOMDocument();
         $dom->loadHTML($phpInfo);
         $body = $dom->getElementsByTagName('body')->item(0);

@@ -36,7 +36,7 @@ trait SingletonTrait
     /**
      * @return bool true if has instance, otherwise false
      */
-    protected static function hasInstance()
+    public static function hasInstance()
     {
         $self = get_called_class();
         return isset(self::$instances[$self]);

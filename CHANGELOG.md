@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 2016-12-23
+* add tests
+
 ### 2016-12-22
 * begin test coverage
 

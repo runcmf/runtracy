@@ -18,21 +18,12 @@
 namespace RunTracy\Middlewares;
 
 use Tracy\Debugger;
-//use RunTracy\Helpers\EloquentORMPanel;
-//use RunTracy\Helpers\TwigPanel;
-//use RunTracy\Helpers\PhpInfoPanel;
-//use RunTracy\Helpers\SlimContainerPanel;
-//use RunTracy\Helpers\SlimRouterPanel;
-//use RunTracy\Helpers\SlimEnvironmentPanel;
-//use RunTracy\Helpers\SlimRequestPanel;
-//use RunTracy\Helpers\SlimResponsePanel;
-//use RunTracy\Helpers\VendorVersionsPanel;
-//use RunTracy\Helpers\XDebugHelper;
-//use RunTracy\Helpers\IncludedFiles;
 use RunTracy\Helpers\PanelSelector;
 
-use Illuminate\Database\Capsule\Manager as DB;
-
+/**
+ * Class TracyMiddleware
+ * @package RunTracy\Middlewares
+ */
 class TracyMiddleware
 {
     private $app;
@@ -59,7 +50,9 @@ class TracyMiddleware
             $cfg = [];
         }
         if (isset($cfg['showEloquentORMPanel'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\EloquentORMPanel(DB::getQueryLog()));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\EloquentORMPanel(
+                    \Illuminate\Database\Capsule\Manager::getQueryLog())
+            );
         }
         if (isset($cfg['showTwigPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\TwigPanel($this->app->getContainer()->get('twig_profile')));
@@ -83,24 +76,24 @@ class TracyMiddleware
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimResponsePanel($this->app, $v));
         }
         if (isset($cfg['showVendorVersionsPanel'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\VendorVersionsPanel( ));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\VendorVersionsPanel());
         }
         if (isset($cfg['showXDebugHelper'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\XDebugHelper( $defcfg['configs']['XDebugHelperIDEKey'] ));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\XDebugHelper($defcfg['configs']['XDebugHelperIDEKey']));
         }
         if (isset($cfg['showIncludedFiles'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\IncludedFiles( ));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\IncludedFiles());
         }
         // check if enabled or blink if active critical value
         if (isset($cfg['showConsolePanel']) || $defcfg['configs']['ConsoleNoLogin']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\ConsolePanel( $defcfg['configs'] ));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\ConsolePanel($defcfg['configs']));
         }
         if (isset($cfg['showProfilerPanel'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\ProfilerPanel( $defcfg['configs']['ProfilerPanel'] ));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\ProfilerPanel($defcfg['configs']['ProfilerPanel']));
         }
 
         // hardcoded without config prevent switch off
-        Debugger::getBar()->addPanel(new PanelSelector( $cfg, array_diff_key($defcfg, ['configs' => null]) ));
+        Debugger::getBar()->addPanel(new PanelSelector($cfg, array_diff_key($defcfg, ['configs' => null])));
 
         return $res;
     }
