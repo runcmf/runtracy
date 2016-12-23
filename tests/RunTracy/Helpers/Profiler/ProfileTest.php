@@ -19,6 +19,10 @@ namespace Tests\RunTracy\Helpers\Profiler;
 
 use RunTracy\Helpers\Profiler\Profile;
 
+/**
+ * Class ProfileTest
+ * @package Tests\RunTracy\Helpers\Profiler
+ */
 class ProfileTest extends \PHPUnit_Framework_TestCase
 {
     /**
