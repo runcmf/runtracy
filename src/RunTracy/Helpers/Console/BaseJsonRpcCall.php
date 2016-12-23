@@ -17,7 +17,6 @@
 
 namespace RunTracy\Helpers\Console;
 
-
 class BaseJsonRpcCall
 {
     /** @var int */
@@ -66,12 +65,12 @@ class BaseJsonRpcCall
      */
     public static function GetCallData(BaseJsonRpcCall $call)
     {
-        return array(
+        return [
             'jsonrpc' => '2.0',
             'id' => $call->Id,
             'method' => $call->Method,
             'params' => $call->Params,
-        );
+        ];
     }
 
 

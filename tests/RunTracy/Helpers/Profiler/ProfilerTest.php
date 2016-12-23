@@ -28,7 +28,6 @@ class ProfilerTest extends BaseTestCase
         $this->assertCount(1, ProfilerService::getInstance()->getProfiles());
         /** @noinspection PhpInternalEntityUsedInspection */
         $this->assertTrue(ProfilerService::hasInstance());
-
     }
 
     public function testProfilerPanel()

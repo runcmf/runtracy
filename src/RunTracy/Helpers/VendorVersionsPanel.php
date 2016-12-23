@@ -28,7 +28,7 @@ class VendorVersionsPanel implements IBarPanel
     {
         $composerLockDir = $composerLockDir ?: __DIR__ . '/../../../../../../';
 
-        if (!is_dir($dir = @realpath( $composerLockDir ))) {
+        if (!is_dir($dir = @realpath($composerLockDir))) {
             $this->error = 'Path "'.$composerLockDir.'" is not a directory.';
         } elseif (!is_file($dir . DIRECTORY_SEPARATOR . 'composer.lock')) {
             $this->error = "Directory '$dir' does not contain the composer.lock file.";
@@ -49,7 +49,7 @@ class VendorVersionsPanel implements IBarPanel
         $jsonFile = $this->dir . DIRECTORY_SEPARATOR . 'composer.json';
         $lockFile = $this->dir . DIRECTORY_SEPARATOR . 'composer.lock';
 
-        if ($this->error === NULL) {
+        if ($this->error === null) {
             $required = array_filter($this->decode($jsonFile));
             $installed = array_filter($this->decode($lockFile));
             $required += ['require' => [], 'require-dev' => []];
@@ -62,7 +62,7 @@ class VendorVersionsPanel implements IBarPanel
 
         $error = $this->error;
 
-        require @realpath( __DIR__ ) .'../../Templates/VendorVersionsPanel.phtml';
+        require @realpath(__DIR__) .'../../Templates/VendorVersionsPanel.phtml';
         return ob_get_clean();
     }
 
@@ -78,11 +78,11 @@ class VendorVersionsPanel implements IBarPanel
 
                 'required' => isset($required[$p['name']])
                     ? $required[$p['name']]
-                    : NULL,
+                    : null,
 
                 'url' => isset($p['source']['url'])
                     ? preg_replace('/\.git$/', '', $p['source']['url'])
-                    : NULL,
+                    : null,
             ];
         }
 
@@ -97,15 +97,15 @@ class VendorVersionsPanel implements IBarPanel
     private function decode($file)
     {
         $json = @file_get_contents($file);
-        if ($json === FALSE) {
+        if ($json === false) {
             $this->error = error_get_last()['message'];
-            return NULL;
+            return null;
         }
 
-        $decoded = @json_decode($json, TRUE);
+        $decoded = @json_decode($json, true);
         if (!is_array($decoded)) {
             $this->error = error_get_last()['message'];
-            return NULL;
+            return null;
         }
 
         return $decoded;

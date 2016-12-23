@@ -28,12 +28,14 @@ class ConsolePanel implements IBarPanel
     private $TerminalCss = '';
     private $noLogin = 0;
 
-    public function __construct(array $cfg = []) {
+    public function __construct(array $cfg = [])
+    {
         $this->cfg = $cfg;
     }
 
 
-    public function getTab() {
+    public function getTab()
+    {
         // Set blinker to work with no active panel
         $head = '
         <style type="text/css">
@@ -77,15 +79,15 @@ class ConsolePanel implements IBarPanel
         ';
     }
 
-    public function getPanel() {
+    public function getPanel()
+    {
 //        $this->MousewheelJs = $this->cfg['ConsoleMousewheelJs'];
         $this->noLogin = $this->cfg['ConsoleNoLogin'];
         $this->TerminalJs = $this->cfg['ConsoleTerminalJs'];
         $this->TerminalCss = $this->cfg['ConsoleTerminalCss'];
 
         ob_start();
-        require @realpath( __DIR__ ) .'../../Templates/ConsolePanel.phtml';
+        require @realpath(__DIR__) .'../../Templates/ConsolePanel.phtml';
         return ob_get_clean();
-
     }
 }

@@ -44,6 +44,5 @@ class SlimContainerPanel implements IBarPanel
     public function getPanel()
     {
         return '<h1>' . $this->icon . ' Slim ' . $this->ver['slim'] . ' Container:</h1><div style="overflow: scroll; max-height: 600px;">' . Dumper::toHtml($this->app->getContainer()) . '</div>';
-
     }
 }

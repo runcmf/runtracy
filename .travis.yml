@@ -14,7 +14,7 @@ matrix:
 
 before_script:
   - if [ "$TRAVIS_PHP_VERSION" == "7.0" ] ; then
-      composer require satooshi/php-coveralls:1.* -n ;
+      composer require satooshi/php-coveralls:1.* squizlabs/php_codesniffer:2.* -n ;
     else
       composer install -n ;
     fi
@@ -22,6 +22,7 @@ before_script:
 script:
   - if [ "$TRAVIS_PHP_VERSION" == "7.0" ] ; then
       vendor/bin/phpunit --coverage-clover clover.xml ;
+      vendor/bin/phpcs ;
     else
       vendor/bin/phpunit ;
     fi

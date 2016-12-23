@@ -252,7 +252,6 @@ class BaseJsonRpcServer
                     }
                     break;
             }
-
         } while (false);
 
         if ($error) {
@@ -314,7 +313,7 @@ class BaseJsonRpcServer
     {
         if (get_parent_class($this)) {
             $this->RegisterInstance($this, '');
-        } else if ($instance) {
+        } elseif ($instance) {
             $this->RegisterInstance($instance, '');
         }
     }
@@ -501,5 +500,4 @@ class BaseJsonRpcServer
         $this->response = $this->calls = [];
         $this->hasCalls = $this->isBatchCall = false;
     }
-
 }

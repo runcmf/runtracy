@@ -26,7 +26,8 @@ class RunTracyConsole extends WebConsoleRPCServer
 {
     private $ci;
 
-    public function __construct(ContainerInterface $ci) {
+    public function __construct(ContainerInterface $ci)
+    {
         parent::__construct();
 
         $this->ci = $ci;
@@ -43,6 +44,6 @@ class RunTracyConsole extends WebConsoleRPCServer
         $this->password_hash_algorithm = $cfg['ConsoleHashAlgorithm'] ?: '';
         $this->home_directory = $cfg['ConsoleHomeDirectory'] ?: '';
 
-        return $response->withJson( $this->Execute() );
+        return $response->withJson($this->Execute());
     }
 }

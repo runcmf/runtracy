@@ -22,11 +22,11 @@ class BaseJsonRpcClient
      * Curl Options
      * @var array
      */
-    public $CurlOptions = array(
+    public $CurlOptions = [
         CURLOPT_POST => 1,
         CURLOPT_RETURNTRANSFER => 1,
-        CURLOPT_HTTPHEADER => array('Content-Type' => 'application/json'),
-    );
+        CURLOPT_HTTPHEADER => ['Content-Type' => 'application/json'],
+    ];
 
     /**
      * Current Request id
@@ -44,13 +44,13 @@ class BaseJsonRpcClient
      * Batch Calls
      * @var BaseJsonRpcCall[]
      */
-    private $batchCalls = array();
+    private $batchCalls = [];
 
     /**
      * Batch Notifications
      * @var BaseJsonRpcCall[]
      */
-    private $batchNotifications = array();
+    private $batchNotifications = [];
 
 
     /**
@@ -82,8 +82,8 @@ class BaseJsonRpcClient
     public function BeginBatch()
     {
         if (!$this->isBatchCall) {
-            $this->batchNotifications = array();
-            $this->batchCalls = array();
+            $this->batchNotifications = [];
+            $this->batchCalls = [];
             $this->isBatchCall = true;
             return true;
         }
@@ -116,7 +116,7 @@ class BaseJsonRpcClient
     public function RollbackBatch()
     {
         $this->isBatchCall = false;
-        $this->batchCalls = array();
+        $this->batchCalls = [];
 
         return true;
     }
@@ -129,7 +129,7 @@ class BaseJsonRpcClient
      * @param int $id
      * @return mixed
      */
-    protected function call($method, $parameters = array(), $id = null)
+    protected function call($method, $parameters = [], $id = null)
     {
         $method = str_replace('_', '.', $method);
         $call = new BaseJsonRpcCall($method, $parameters, $id);
@@ -140,7 +140,7 @@ class BaseJsonRpcClient
                 $this->batchNotifications[] = $call;
             }
         } else {
-            $this->processCalls(array($call));
+            $this->processCalls([$call]);
         }
 
         return $call;
@@ -153,7 +153,7 @@ class BaseJsonRpcClient
      * @param array $parameters
      * @return BaseJsonRpcCall
      */
-    public function __call($method, $parameters = array())
+    public function __call($method, $parameters = [])
     {
         return $this->call($method, $parameters, $this->getRequestId());
     }
@@ -171,7 +171,7 @@ class BaseJsonRpcClient
         $result = $this->batchCalls ? array_values(array_map('BaseJsonRpcCall::GetCallData', $calls)) : BaseJsonRpcCall::GetCallData($singleCall);
 
         // Send Curl Request
-        $options = $this->CurlOptions + array(CURLOPT_POSTFIELDS => json_encode($result));
+        $options = $this->CurlOptions + [CURLOPT_POSTFIELDS => json_encode($result)];
         $ch = curl_init();
         curl_setopt_array($ch, $options);
 

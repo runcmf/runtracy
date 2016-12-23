@@ -135,5 +135,4 @@ class PanelSelector implements IBarPanel
 
         return $out;
     }
-
 }

@@ -1,7 +1,10 @@
 # CHANGELOG
 
 ### 2016-12-23
-* add tests
+* add tests  
+vendor/bin/phpcs --report-file=./phpcs  
+vendor/bin/phpcbf  
+https://lint.travis-ci.org/
 
 ### 2016-12-22
 * begin test coverage

@@ -15,25 +15,27 @@
  * limitations under the License.
  */
 
-namespace Tests\RunTracy\Helpers;
+namespace Tests\RunTracy\Controllers;
 
 use Tests\BaseTestCase;
 
 /**
  * @runTestsInSeparateProcesses
- * Class VendorVersionsPanelTest
- * @package Tests\RunTracy\Helpers
+ * Class RunTracyConsoleTest
+ * @package Tests\RunTracy\Controllers
  */
-class VendorVersionsPanelTest extends BaseTestCase
+class RunTracyConsoleTest extends BaseTestCase
 {
-    public function testVendorVersionsPanel()
+    public function testRunTracyConsole()
     {
-        $panel = new \RunTracy\Helpers\VendorVersionsPanel();
-        $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
+        $resOut = $this->runApp('post', '/console');
 
-        // test Tracy tab
-        $this->assertRegexp('/Vendor Versions/s', $panel->getTab());
-        // test Tracy panel
-        $this->assertRegexp('/VendorVersionsPanel/s', $panel->getPanel());
+        $this->assertInstanceOf('\Psr\Http\Message\ResponseInterface', $resOut);
+        $this->assertInstanceOf('\Slim\Http\Response', $resOut);
+        $this->assertEquals(200, $resOut->getStatusCode());
+
+        $this->assertRegexp('/application\/json/s', $resOut->getHeaderLine('Content-Type'));
+
+        $this->assertRegexp('#jsonrpc#', (string)$resOut->getBody());
     }
 }

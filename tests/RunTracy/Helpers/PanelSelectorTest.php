@@ -28,7 +28,10 @@ class PanelSelectorTest extends BaseTestCase
 {
     public function testPanelSelector()
     {
-        $panel = new \RunTracy\Helpers\PanelSelector([], array_diff_key($this->cfg['settings']['tracy'], ['configs' => null]));
+        $panel = new \RunTracy\Helpers\PanelSelector(
+            [],
+            array_diff_key($this->cfg['settings']['tracy'], ['configs' => null])
+        );
         $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
 
         // test Tracy tab

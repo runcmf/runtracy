@@ -6,7 +6,6 @@ use /** @noinspection PhpInternalEntityUsedInspection */ RunTracy\Helpers\Profil
 use RunTracy\Helpers\Profiler\AdvancedProfiler;
 use RunTracy\Helpers\Profiler\Profile;
 
-
 class Profiler extends AdvancedProfiler
 {
     /**
@@ -27,7 +26,7 @@ class Profiler extends AdvancedProfiler
     /**
      * @inheritdoc
      */
-    public static function enable($real_usage=false)
+    public static function enable($real_usage = false)
     {
         /** @noinspection PhpInternalEntityUsedInspection */
         ProfilerService::init();

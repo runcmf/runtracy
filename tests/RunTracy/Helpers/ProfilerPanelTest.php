@@ -55,7 +55,6 @@ class ProfilerPanelTest extends BaseTestCase
         $this->assertRegexp('#Memory change#s', $panel->getPanel());
 
         $this->assertRegexp('#effective#s', $panel->getPanel());
-
     }
 
     public function testProfilerPanelEnabledShowMemAbsolute()

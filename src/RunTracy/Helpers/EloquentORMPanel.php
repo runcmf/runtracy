@@ -55,14 +55,15 @@ class EloquentORMPanel implements IBarPanel
 
     private function parse($data)
     {
+//file_put_contents('__elo_dump', var_export($data, true));
         $return = $this->getHeader();
         $time = $cnt = 0;
-        foreach ($data AS $var) {
+        foreach ($data as $var) {
             $time += $var['time'];
             $row = $this->getBaseRow();
             $bind = '<span class="tracy-dump-hash"><hr />';
             if (!empty($var['bindings'])) {
-                foreach ($var['bindings'] as $k => $v){
+                foreach ($var['bindings'] as $k => $v) {
                     $bind .= "[$k => $v]<br />";
                 }
             }

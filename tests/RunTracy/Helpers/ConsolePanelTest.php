@@ -18,6 +18,7 @@
 namespace Tests\RunTracy\Helpers;
 
 use Tests\BaseTestCase;
+
 /**
  * @runTestsInSeparateProcesses
  * Class ConsolePanelTest

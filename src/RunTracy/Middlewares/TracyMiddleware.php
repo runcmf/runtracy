@@ -42,7 +42,7 @@ class TracyMiddleware
 
         $defcfg = $this->app->getContainer()['settings']['tracy'];
         $cookies = json_decode($request->getCookieParam('tracyPanelsEnabled'));
-        if(!empty($cookies)) {
+        if (!empty($cookies)) {
             $def = array_fill_keys(array_keys($defcfg), null);
             $cookies = array_fill_keys($cookies, 1);
             $cfg = array_merge($def, $cookies);
@@ -51,8 +51,8 @@ class TracyMiddleware
         }
         if (isset($cfg['showEloquentORMPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\EloquentORMPanel(
-                    \Illuminate\Database\Capsule\Manager::getQueryLog())
-            );
+                \Illuminate\Database\Capsule\Manager::getQueryLog()
+            ));
         }
         if (isset($cfg['showTwigPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\TwigPanel($this->app->getContainer()->get('twig_profile')));

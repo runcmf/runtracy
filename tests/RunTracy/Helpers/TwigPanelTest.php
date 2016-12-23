@@ -28,7 +28,7 @@ class TwigPanelTest extends BaseTestCase
 {
     public function testTwigPanel()
     {
-        if(class_exists('\\Slim\\Views\\TwigExtension')) {
+        if (class_exists('\\Slim\\Views\\TwigExtension')) {
             $app = new \Slim\App($this->cfg);
             $c = $app->getContainer();
 

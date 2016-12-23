@@ -28,7 +28,9 @@ class EloquentORMPanelTest extends BaseTestCase
 {
     public function testEloquentORMPanel()
     {
-        if(class_exists('\\Illuminate\\Database\\Capsule\\Manager')) {
+        if (!class_exists('\\Illuminate\\Database\\Capsule\\Manager')) {
+            $this->markTestSkipped('Illuminate\Database not installed and all tests in this file are invactive!');
+        } else {
             // Register Eloquent single connections
             $capsule = new \Illuminate\Database\Capsule\Manager;
             $capsule->addConnection($this->cfg['settings']['db']['connections']['mysql']);
@@ -47,8 +49,24 @@ class EloquentORMPanelTest extends BaseTestCase
             $this->assertRegexp('#DB Query Info#', $panel->getTab());
             // test Tracy panel
             $this->assertRegexp('#Eloquent ORM#', $panel->getPanel());
-        } else {
-            $this->markTestSkipped('Illuminate\Database not installed and all tests in this file are invactive!');
+
+
+            $data =
+                [
+                    'query' => 'update `mybb_sessions` set `uid` = ?, `time` = ?, `location` = ?, `useragent` = ?, `location1` = ?, `location2` = ?, `nopermission` = ? where `sid` = ?',
+                    'bindings' =>
+                        [
+                            0 => 1,
+                            1 => 1482512713,
+                            2 => '/?',
+                            3 => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0',
+                            4 => 0,
+                            5 => 0,
+                            6 => 0,
+                            7 => '89a412a4ad6ad9df88b42ca4c12bb271',
+                        ],
+                    'time' => 4.9100000000000001,
+                ];
         }
     }
 }

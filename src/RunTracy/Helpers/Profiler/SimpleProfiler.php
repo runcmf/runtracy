@@ -45,7 +45,7 @@ class SimpleProfiler
     /**
      * Enable profiler
      */
-    public static function enable($real_usage=false)
+    public static function enable($real_usage = false)
     {
         static::$enabled = true;
         static::$real_usage = $real_usage ? true : false;
