@@ -18,4 +18,12 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 //        ob_end_clean();
 //fwrite(STDERR, '$panel->getTab(): ' . $panel->getTab() . " ###\n");
     }
+
+    protected function callProtectedMethod($name, $classname, $params) {
+        $class = new \ReflectionClass($classname);
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+        $obj = new $classname($params);
+        return $method->invokeArgs($obj, $params);
+    }
 }

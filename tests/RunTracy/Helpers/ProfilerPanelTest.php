@@ -18,6 +18,7 @@
 namespace Tests\RunTracy\Helpers;
 
 use Tests\BaseTestCase;
+use RunTracy\Helpers\Profiler\Profiler;
 
 /**
  * @runTestsInSeparateProcesses
@@ -26,14 +27,51 @@ use Tests\BaseTestCase;
  */
 class ProfilerPanelTest extends BaseTestCase
 {
-    public function testProfilerPanel()
+    public function testProfilerPanelDisabled()
     {
+        $this->assertFalse(Profiler::isEnabled());
+
         $panel = new \RunTracy\Helpers\ProfilerPanel($this->cfg['settings']['tracy']['configs']['ProfilerPanel']);
         $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
 
         // test Tracy tab
         $this->assertRegexp('#Profiler info#', $panel->getTab());
         // test Tracy panel
-        $this->assertRegexp('#Profiling is disabled.#', $panel->getPanel());
+        $this->assertRegexp('#Profiling is disabled#s', $panel->getPanel());
+    }
+
+    public function testProfilerPanelEnabledShowMemEffective()
+    {
+        $this->assertFalse(Profiler::isEnabled());
+        Profiler::enable();//effective
+        $this->assertTrue(Profiler::isEnabled());
+
+        $panel = new \RunTracy\Helpers\ProfilerPanel($this->cfg['settings']['tracy']['configs']['ProfilerPanel']);
+        $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
+
+        // test Tracy tab
+        $this->assertRegexp('#Profiler info#s', $panel->getTab());
+        // test Tracy panel
+        $this->assertRegexp('#Memory change#s', $panel->getPanel());
+
+        $this->assertRegexp('#effective#s', $panel->getPanel());
+
+    }
+
+    public function testProfilerPanelEnabledShowMemAbsolute()
+    {
+        $this->assertFalse(Profiler::isEnabled());
+        Profiler::enable(1);//absolute
+        $this->assertTrue(Profiler::isEnabled());
+
+        $panel = new \RunTracy\Helpers\ProfilerPanel($this->cfg['settings']['tracy']['configs']['ProfilerPanel']);
+        $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
+
+        // test Tracy tab
+        $this->assertRegexp('#Profiler info#s', $panel->getTab());
+        // test Tracy panel
+        $this->assertRegexp('#Memory change#s', $panel->getPanel());
+
+        $this->assertRegexp('#absolute#s', $panel->getPanel());
     }
 }
