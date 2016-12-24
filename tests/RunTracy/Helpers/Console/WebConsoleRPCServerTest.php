@@ -162,8 +162,8 @@ class WebConsoleRPCServerTest extends BaseTestCase
         $ret = $console->login('dev', 'dev');
         $this->assertArrayHasKey('token', $ret);
         $this->assertArrayHasKey('environment', $ret);
-        // vendor/runcmf/
-        $this->assertRegexp('#vendor\/runcmf#s', $ret['environment']['path']);
+        // runcmf/
+        $this->assertRegexp('#runcmf\/#s', $ret['environment']['path']);
 
         // chdir to one level up
         $cd = $console->cd($ret['token'], $ret['environment'], '../');
@@ -204,9 +204,17 @@ class WebConsoleRPCServerTest extends BaseTestCase
         $this->assertRegexp('#run: not found#s', $res['output']);
 
         // test sh command
-        $res = $console->run($ret['token'], $ret['environment'], 'if ls / > /dev/null 2> /dev/null ;then echo ok; else echo not_ok; fi');
+        $res = $console->run(
+            $ret['token'],
+            $ret['environment'],
+            'if ls / > /dev/null 2> /dev/null ;then echo ok; else echo not_ok; fi'
+        );
         $this->assertEquals('ok', $res['output']);
-        $res = $console->run($ret['token'], $ret['environment'], 'if ls /no-such-dir > /dev/null 2> /dev/null ;then echo ok; else echo not_ok; fi');
+        $res = $console->run(
+            $ret['token'],
+            $ret['environment'],
+            'if ls /no-such-dir > /dev/null 2> /dev/null ;then echo ok; else echo not_ok; fi'
+        );
         $this->assertEquals('not_ok', $res['output']);
 
         // test php command
