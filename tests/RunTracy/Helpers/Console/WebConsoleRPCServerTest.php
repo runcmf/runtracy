@@ -74,8 +74,33 @@ class WebConsoleRPCServerTest extends BaseTestCase
         $ret = $console->authUser('dev', 'dev');
         $this->assertEquals('dev:358e86472ec7619731baf6950db699b26e2c2df8d51a31159d40ae4987f6fbab', $ret);
         // get user name
-        $ret = $console->authToken($ret);
-        $this->assertEquals('dev', $ret);
+        $user = $console->authToken($ret);
+        $this->assertEquals('dev', $user);
+
+        // test without login
+        $console->setVar('no_login', true);
+        $user = $console->authToken($ret);
+        $this->assertTrue($user);
+
+        // fake token
+        $console->setVar('no_login', false);
+        $this->expectException(\RunTracy\Exceptions\IncorrectUserOrPassword::class);
+        $console->authToken('dev:358e8');
+    }
+
+    public function testWebConsoleRPCServerAuthException()
+    {
+        $cfg = $this->cfg['settings']['tracy']['configs'];
+
+        $console = new FakeConsole;
+        $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $console);
+
+        $console->setVar('no_login', ($cfg['ConsoleNoLogin'] ?: false));
+        foreach ($cfg['ConsoleAccounts'] as $u => $p) {
+            $console->setVar('accounts', $p, $u);
+        }
+        $console->setVar('password_hash_algorithm', ($cfg['ConsoleHashAlgorithm'] ?: ''));
+        $console->setVar('home_directory', ($cfg['ConsoleHomeDirectory'] ?: ''));
 
         // fake password
         $this->expectException(\RunTracy\Exceptions\IncorrectUserOrPassword::class);
@@ -97,17 +122,32 @@ class WebConsoleRPCServerTest extends BaseTestCase
         $console->setVar('home_directory', ($cfg['ConsoleHomeDirectory'] ?: ''));
 
         $ret = $console->getHomeDir('dev');
-        $this->assertRegexp('#vendor\/runcmf#s', $ret);
+        $this->assertRegexp('#\/runcmf\/#s', $ret);
+
+        // check if (is_string($this->home_directory))
+        $console->setVar('home_directory', 123);
+        $ret = $console->getHomeDir('dev');
+        $this->assertRegexp('#\/runcmf\/#s', $ret);
+
+        // return to def
+        $console->setVar('home_directory', ($cfg['ConsoleHomeDirectory'] ?: ''));
 
         $ret = $console->getEnv();
         $this->assertArrayHasKey('path', $ret);
         $this->assertArrayHasKey('hostname', $ret);
 
+        // set fake dir
+        $ret = $console->setEnv([
+            'path' => '/no-such-dir',
+            'hostname' => 'localhost'
+        ]);
+        $this->assertRegexp('/Current working directory not found/s', $ret['output']);
+
+        // set real dir
         $env = [
             'path' => getcwd(),
             'hostname' => 'localhost'
         ];
-
         $ret = $console->setEnv($env);
         $this->assertFalse($ret);// false - all ok
 
@@ -164,12 +204,13 @@ class WebConsoleRPCServerTest extends BaseTestCase
         $this->assertRegexp('#run: not found#s', $res['output']);
 
         // test sh command
-        $res = $console->run($ret['token'], $ret['environment'], 'ls -l');
-        $this->assertRegexp('#runtracy#s', $res['output']);
+        $res = $console->run($ret['token'], $ret['environment'], 'if ls / > /dev/null 2> /dev/null ;then echo ok; else echo not_ok; fi');
+        $this->assertEquals('ok', $res['output']);
+        $res = $console->run($ret['token'], $ret['environment'], 'if ls /no-such-dir > /dev/null 2> /dev/null ;then echo ok; else echo not_ok; fi');
+        $this->assertEquals('not_ok', $res['output']);
 
         // test php command
         $res = $console->run($ret['token'], $ret['environment'], 'php -r \'echo sha1("dev");\'');
         $this->assertEquals('34c6fceca75e456f25e7e99531e2425c6c1de443', $res['output']);
-//fwrite(STDERR, '$result: ' . var_export($res, true) . " ###\n");
     }
 }

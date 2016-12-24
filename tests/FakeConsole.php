@@ -24,7 +24,7 @@ class FakeConsole extends WebConsoleRPCServer
     public function setVar($var, $value, $index = '')
     {
         if (!empty($index)) {
-            $this->$var[$index] = $value;
+            $this->$var = [$index => $value];
         } else {
             $this->$var = $value;
         }

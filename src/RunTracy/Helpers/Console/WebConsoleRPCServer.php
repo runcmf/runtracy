@@ -27,12 +27,6 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
     protected $accounts = [];
     protected $password_hash_algorithm = '';
 
-
-    private function error($message)
-    {
-        throw new \Exception($message);
-    }
-
     // Authentication
     protected function authenticateUser($user, $password)
     {
