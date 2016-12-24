@@ -35,6 +35,8 @@ class SlimRouterPanel implements IBarPanel
 
     public function getTab()
     {
+        // image dropped if add line feed
+        // @codingStandardsIgnoreStart
         $this->icon = '
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" version="1.1" width="16px" height="16px">
             <path fill="#043CBF" 
@@ -68,6 +70,8 @@ class SlimRouterPanel implements IBarPanel
             11.22-11.719 12.043-11.719 15.621 0 6.0237 2.4417 8.2094 12.935 11.58 28.29 9.0858 75.264 21.688 
             92.065 24.699 14.99 2.6866 18.893 2.7025 21.498 0.0876z"/>
         </svg>';
+        // @codingStandardsIgnoreEnd
+
         return '<span title="Slim Router">'.$this->icon.'</span>';
     }
 

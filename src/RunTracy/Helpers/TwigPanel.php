@@ -33,6 +33,8 @@ class TwigPanel implements IBarPanel
 
     public function getTab()
     {
+        // image dropped if add line feed
+        // @codingStandardsIgnoreStart
         $this->icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 532 178" style="width: 35px">
             <path fill="#016301" d="m439 153.67c-13.839-3.3534-27.492-13.852-34.543-26.563-1.9832-3.575-4.8271-10.55-6.3198-15.5-2.4268-8.0476-2.7156-10.587-2.7288-24-0.0174-17.571 1.7519-25.761 8.271-38.287 
             7.21-13.853 17.154-22.854 31.034-28.09 5.3616-2.0225 8.3741-2.4659 17.015-2.5047 9.3728-0.04211 11.552 
@@ -70,6 +72,7 @@ class TwigPanel implements IBarPanel
             0.01456-10.787 0.0468-11.75 2.5798-1.2695 3.3391-1.2992 78.453-0.0323 81.785 0.92182 2.4246 1.2146 
             2.4875 13.091 2.8151 11.358 0.31327 12.272 0.48851 14.057 2.6958 2.9676 3.669 2.6615 12.478-0.54508 
             15.685l-2.4546 2.4546h-35.911c-34.816 0-35.991-0.0632-38.545-2.0726z"/></svg>';
+        // @codingStandardsIgnoreEnd
         return '
         <span title="Twig Info">'.$this->icon.
             '<span class="tracy-label">'. sprintf('%.2f ms', $this->data->getDuration() * 1000) .'</span>

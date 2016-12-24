@@ -26,7 +26,7 @@ use RunTracy\Helpers\Profiler\Profile;
 class ProfileTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers \RunTracy\Helpers\Profiler\Profile::class
+     * @covers \RunTracy\Helpers\Profiler\Profile
      */
     public function testProfile()
     {
