@@ -18,6 +18,7 @@
 namespace Tests\RunTracy\Helpers\Console;
 
 use Tests\BaseTestCase;
+use Tests\FakeConsole;
 
 /**
  * @runTestsInSeparateProcesses
@@ -26,12 +27,10 @@ use Tests\BaseTestCase;
  */
 class WebConsoleRPCServerTest extends BaseTestCase
 {
-    public function testWebConsoleRPCServer()
+    public function testWebConsoleRPCServerUtilities()
     {
         $s = new \RunTracy\Helpers\Console\WebConsoleRPCServer();
         $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $s);
-
-        // Utilities
 
         // isEmptyString($string)
         $retVal = $this->callProtectedMethod('isEmptyString', '\RunTracy\Helpers\Console\WebConsoleRPCServer', ['']);
@@ -55,5 +54,122 @@ class WebConsoleRPCServerTest extends BaseTestCase
         $vars = [0 => 'md5', 1 => 'dev'];
         $retVal = $this->callProtectedMethod('getHash', '\RunTracy\Helpers\Console\WebConsoleRPCServer', $vars);
         $this->assertEquals('e77989ed21758e78331b20e477fc5582', $retVal);
+    }
+
+    public function testWebConsoleRPCServerAuth()
+    {
+        $cfg = $this->cfg['settings']['tracy']['configs'];
+
+        $console = new FakeConsole;
+        $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $console);
+
+        $console->setVar('no_login', ($cfg['ConsoleNoLogin'] ?: false));
+        foreach ($cfg['ConsoleAccounts'] as $u => $p) {
+            $console->setVar('accounts', $p, $u);
+        }
+        $console->setVar('password_hash_algorithm', ($cfg['ConsoleHashAlgorithm'] ?: ''));
+        $console->setVar('home_directory', ($cfg['ConsoleHomeDirectory'] ?: ''));
+
+        // normal user
+        $ret = $console->authUser('dev', 'dev');
+        $this->assertEquals('dev:358e86472ec7619731baf6950db699b26e2c2df8d51a31159d40ae4987f6fbab', $ret);
+        // get user name
+        $ret = $console->authToken($ret);
+        $this->assertEquals('dev', $ret);
+
+        // fake password
+        $this->expectException(\RunTracy\Exceptions\IncorrectUserOrPassword::class);
+        $console->authUser('dev', 'zzz');
+    }
+
+    public function testWebConsoleRPCServerCommon()
+    {
+        $cfg = $this->cfg['settings']['tracy']['configs'];
+
+        $console = new FakeConsole;
+        $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $console);
+
+        $console->setVar('no_login', ($cfg['ConsoleNoLogin'] ?: false));
+        foreach ($cfg['ConsoleAccounts'] as $u => $p) {
+            $console->setVar('accounts', $p, $u);
+        }
+        $console->setVar('password_hash_algorithm', ($cfg['ConsoleHashAlgorithm'] ?: ''));
+        $console->setVar('home_directory', ($cfg['ConsoleHomeDirectory'] ?: ''));
+
+        $ret = $console->getHomeDir('dev');
+        $this->assertRegexp('#vendor\/runcmf#s', $ret);
+
+        $ret = $console->getEnv();
+        $this->assertArrayHasKey('path', $ret);
+        $this->assertArrayHasKey('hostname', $ret);
+
+        $env = [
+            'path' => getcwd(),
+            'hostname' => 'localhost'
+        ];
+
+        $ret = $console->setEnv($env);
+        $this->assertFalse($ret);// false - all ok
+
+        // normal user, get token
+        $ret = $console->authUser('dev', 'dev');
+        $this->assertEquals('dev:358e86472ec7619731baf6950db699b26e2c2df8d51a31159d40ae4987f6fbab', $ret);
+
+        //init($token, $environment)
+        $ret = $console->init($ret, $env);
+        $this->assertFalse($ret);// false - all ok
+
+        $ret = $console->login('dev', 'dev');
+        $this->assertArrayHasKey('token', $ret);
+        $this->assertArrayHasKey('environment', $ret);
+        // vendor/runcmf/
+        $this->assertRegexp('#vendor\/runcmf#s', $ret['environment']['path']);
+
+        // chdir to one level up
+        $cd = $console->cd($ret['token'], $ret['environment'], '../');
+        // check path not contain 'runcmf'
+        $this->assertTrue(strpos($cd['environment']['path'], 'runcmf') === false);
+        // here 'vendor' must be in path
+        $this->assertFalse(strpos($cd['environment']['path'], 'vendor') === false);
+
+        // check completion
+        $comp = $console->completion($ret['token'], $ret['environment'], 'run');
+        // $comp containt dirs list
+        $this->assertArrayHasKey('completion', $comp);
+        $this->assertTrue(in_array('runtracy', $comp['completion']));
+    }
+
+    public function testWebConsoleRPCServerRun()
+    {
+        $cfg = $this->cfg['settings']['tracy']['configs'];
+
+        $console = new FakeConsole;
+        $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $console);
+
+        $console->setVar('no_login', ($cfg['ConsoleNoLogin'] ?: false));
+        foreach ($cfg['ConsoleAccounts'] as $u => $p) {
+            $console->setVar('accounts', $p, $u);
+        }
+        $console->setVar('password_hash_algorithm', ($cfg['ConsoleHashAlgorithm'] ?: ''));
+        $console->setVar('home_directory', ($cfg['ConsoleHomeDirectory'] ?: ''));
+
+        // login
+        $ret = $console->login('dev', 'dev');
+        $this->assertArrayHasKey('token', $ret);
+        $this->assertArrayHasKey('environment', $ret);
+
+        $res = $console->run($ret['token'], $ret['environment'], 'run');
+        // 'output' => 'sh: 1: run: not found'
+        $this->assertArrayHasKey('output', $res);
+        $this->assertRegexp('#run: not found#s', $res['output']);
+
+        // test sh command
+        $res = $console->run($ret['token'], $ret['environment'], 'ls -l');
+        $this->assertRegexp('#runtracy#s', $res['output']);
+
+        // test php command
+        $res = $console->run($ret['token'], $ret['environment'], 'php -r \'echo sha1("dev");\'');
+        $this->assertEquals('34c6fceca75e456f25e7e99531e2425c6c1de443', $res['output']);
+//fwrite(STDERR, '$result: ' . var_export($res, true) . " ###\n");
     }
 }

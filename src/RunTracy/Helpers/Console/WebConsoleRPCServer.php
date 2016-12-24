@@ -17,6 +17,8 @@
 
 namespace RunTracy\Helpers\Console;
 
+use RunTracy\Exceptions\IncorrectUserOrPassword;
+
 class WebConsoleRPCServer extends BaseJsonRpcServer
 {
     protected $home_directory = '';
@@ -32,7 +34,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
     }
 
     // Authentication
-    private function authenticateUser($user, $password)
+    protected function authenticateUser($user, $password)
     {
         $user = trim((string) $user);
         $password = trim((string) $password);
@@ -49,10 +51,11 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
             }
         }
 
-        throw new \Exception("Incorrect user or password");
+//        throw new \Exception('Incorrect user or password');
+        throw new IncorrectUserOrPassword();
     }
 
-    private function authenticateToken($token)
+    protected function authenticateToken($token)
     {
 
         if ($this->no_login) {
@@ -76,10 +79,11 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
             }
         }
 
-        throw new \Exception("Incorrect user or password");
+//        throw new \Exception('Incorrect user or password');
+        throw new IncorrectUserOrPassword();
     }
 
-    private function getHomeDirectory($user)
+    protected function getHomeDirectory($user)
     {
         if (is_string($this->home_directory)) {
             if (!$this->isEmptyString($this->home_directory)) {
@@ -95,13 +99,13 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
     }
 
     // Environment
-    private function getEnvironment()
+    protected function getEnvironment()
     {
         $hostname = function_exists('gethostname') ? gethostname() : null;
         return ['path' => getcwd(), 'hostname' => $hostname];
     }
 
-    private function setEnvironment($environment)
+    protected function setEnvironment($environment)
     {
         $environment = !empty($environment) ? (array) $environment : [];
         $path = (isset($environment['path']) && !$this->isEmptyString($environment['path'])) ?
@@ -119,10 +123,11 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
                 'environment' => $this->getEnvironment()];
             }
         }
+        return false;
     }
 
     // Initialization
-    private function initialize($token, $environment)
+    protected function initialize($token, $environment)
     {
         $user = $this->authenticateToken($token);
         $this->home_directory = $this->getHomeDirectory($user);
@@ -131,6 +136,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
         if ($result) {
             return $result;
         }
+        return false;
     }
 
     // Methods
@@ -176,7 +182,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
         return ['environment' => $this->getEnvironment()];
     }
 
-    public function completion($token, $environment, $pattern, $command)
+    public function completion($token, $environment, $pattern)
     {
         $result = $this->initialize($token, $environment);
         if ($result) {
