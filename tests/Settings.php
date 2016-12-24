@@ -15,11 +15,16 @@
  * limitations under the License.
  */
 
+use Tracy\Debugger;
+
 //date_default_timezone_set('Europe/Moscow');
 date_default_timezone_set('UTC');
 
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 defined('DIR') || define('DIR', realpath(__DIR__ . '/../../') . DS);
+
+Debugger::enable(Debugger::DEVELOPMENT, '/tmp');
+//Debugger::enable(Debugger::PRODUCTION, DIR . 'var/log');
 
 return [
     'settings' => [
