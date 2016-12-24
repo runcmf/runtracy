@@ -91,7 +91,8 @@ class ProfilerPanel implements IBarPanel
             }
         </style>
         ';
-        $table .= '<style>.tracy-addons-profiler-hidden{display:none}.tracy-addons-profiler-bar{display:inline-block;margin:0;height:0.8em;}</style>';
+        $table .= '<style>.tracy-addons-profiler-hidden{display:none}
+            .tracy-addons-profiler-bar{display:inline-block;margin:0;height:0.8em;}</style>';
         $table .= '<table>';
         if ($this->config[self::CONFIG_SHOW][self::CONFIG_SHOW_MEMORY_USAGE_CHART]) {
             $table .= '<tr><td colspan="4" style="text-align: center">' . $this->getMemoryChart() . '</td></tr>';
@@ -99,13 +100,17 @@ class ProfilerPanel implements IBarPanel
 //dump($this->config[self::CONFIG_PRIMARY_VALUE]);
 //        if ($this->config[self::CONFIG_PRIMARY_VALUE] == self::CONFIG_PRIMARY_VALUE_EFFECTIVE) {
         if ($this->config[self::CONFIG_PRIMARY_VALUE] == self::CONFIG_PRIMARY_VALUE_ABSOLUTE) {
-            $table .= '<tr><th>Start</th><th>Finish</th><th>Time (absolute)</th><th>Memory change (absolute)</th></tr>';
+            $table .= '
+            <tr><th>Start</th><th>Finish</th><th>Time (absolute)</th><th>Memory change (absolute)</th></tr>';
         } else {
-            $table .= '<tr><th>Start</th><th>Finish</th><th>Time (effective)</th><th>Memory change (effective)</th></tr>';
+            $table .= '
+            <tr><th>Start</th><th>Finish</th><th>Time (effective)</th><th>Memory change (effective)</th></tr>';
         }
         $this->profilerService->iterateProfiles(function (Profile $profile) use (&$table) {
             /** @noinspection PhpInternalEntityUsedInspection */
-            if (!$this->config[self::CONFIG_SHOW][self::CONFIG_SHOW_SHORT_PROFILES] && ($profile->meta[ProfilerService::TIME_LINE_ACTIVE] + $profile->meta[ProfilerService::TIME_LINE_INACTIVE]) < 1) {
+            if (!$this->config[self::CONFIG_SHOW][self::CONFIG_SHOW_SHORT_PROFILES] &&
+                ($profile->meta[ProfilerService::TIME_LINE_ACTIVE] +
+                    $profile->meta[ProfilerService::TIME_LINE_INACTIVE]) < 1) {
                 return /* continue */;
             }
             if ($profile->meta[Profiler::START_LABEL] == $profile->meta[Profiler::FINISH_LABEL]) {
@@ -181,7 +186,8 @@ class ProfilerPanel implements IBarPanel
         $maxHeight = 90 - 2 * $margin;
         $gridStep = 10;
         $memoryChart = sprintf(
-            '<!--suppress HtmlUnknownAttribute --><svg style="width: %dpx; height: %dpx" viewBox="0 0 %d %d" xmlns="http://www.w3.org/2000/svg">',
+            '<!--suppress HtmlUnknownAttribute -->
+            <svg style="width: %dpx; height: %dpx" viewBox="0 0 %d %d" xmlns="http://www.w3.org/2000/svg">',
             $maxWidth + 2 * $margin,
             $maxHeight + 2 * $margin,
             $maxWidth + 2 * $margin,
@@ -213,49 +219,67 @@ class ProfilerPanel implements IBarPanel
         $prevY = $maxHeight;
         $lines = '';
         $points = '';
-        $this->profilerService->iterateMemoryTimeLine(function ($time, $height, $metaData) use ($colors, &$memoryChart, $maxWidth, $maxHeight, $margin, &$firstIteration, &$prevX, &$prevY, &$lines, &$points) {
-            if ($firstIteration) {
-                /** @noinspection PhpInternalEntityUsedInspection */
-                $memoryChart .= sprintf(
-                    '<text x="%d" y="%d" font-size="%d">%d kB</text>',
-                    $margin * 2,
-                    10 / 2 + $margin * 2,
-                    10,
-                    floor($metaData[ProfilerService::META_MEMORY_PEAK] / 1024)
-                );
-                $firstIteration = false;
-            }
+        $this->profilerService->iterateMemoryTimeLine(
+            function (
+                $time,
+                $height,
+                $metaData
+            ) use (
+                $colors,
+                &$memoryChart,
+                $maxWidth,
+                $maxHeight,
+                $margin,
+                &$firstIteration,
+                &$prevX,
+                &$prevY,
+                &$lines,
+                &$points
+            ) {
+            
+                if ($firstIteration) {
+                    /** @noinspection PhpInternalEntityUsedInspection */
+                    $memoryChart .= sprintf(
+                        '<text x="%d" y="%d" font-size="%d">%d kB</text>',
+                        $margin * 2,
+                        10 / 2 + $margin * 2,
+                        10,
+                        floor($metaData[ProfilerService::META_MEMORY_PEAK] / 1024)
+                    );
+                        $firstIteration = false;
+                }
             /** @noinspection PhpInternalEntityUsedInspection */
-            $thisX = floor(max(0, $time) / $metaData[ProfilerService::META_TIME_TOTAL] * $maxWidth);
-            if ($thisX == $prevX) {
-                return /* continue */;
+                $thisX = floor(max(0, $time) / $metaData[ProfilerService::META_TIME_TOTAL] * $maxWidth);
+                if ($thisX == $prevX) {
+                    return /* continue */;
+                }
+                $thisY = floor($maxHeight - $height * $maxHeight / 100);
+                $lines .= sprintf(
+                    '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke-width="1" stroke="%s" />',
+                    $prevX + $margin,
+                    $prevY + $margin,
+                    $thisX + $margin,
+                    $thisY + $margin,
+                    $colors['memoryUsage']
+                );
+                $points .= sprintf(
+                    '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke-width="1" stroke="%s" />'.
+                    '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke-width="1" stroke="%s" />',
+                    $thisX + $margin,
+                    $thisY + $margin - 3,
+                    $thisX + $margin,
+                    $thisY + $margin + 3,
+                    $colors['memoryUsagePoint'],
+                    $thisX + $margin - 3,
+                    $thisY + $margin,
+                    $thisX + $margin + 3,
+                    $thisY + $margin,
+                    $colors['memoryUsagePoint']
+                );
+                $prevX = $thisX;
+                $prevY = $thisY;
             }
-            $thisY = floor($maxHeight - $height * $maxHeight / 100);
-            $lines .= sprintf(
-                '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke-width="1" stroke="%s" />',
-                $prevX + $margin,
-                $prevY + $margin,
-                $thisX + $margin,
-                $thisY + $margin,
-                $colors['memoryUsage']
-            );
-            $points .= sprintf(
-                '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke-width="1" stroke="%s" />'.
-                '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke-width="1" stroke="%s" />',
-                $thisX + $margin,
-                $thisY + $margin - 3,
-                $thisX + $margin,
-                $thisY + $margin + 3,
-                $colors['memoryUsagePoint'],
-                $thisX + $margin - 3,
-                $thisY + $margin,
-                $thisX + $margin + 3,
-                $thisY + $margin,
-                $colors['memoryUsagePoint']
-            );
-            $prevX = $thisX;
-            $prevY = $thisY;
-        });
+        );
 
         $memoryChart .= $lines . $points;
 

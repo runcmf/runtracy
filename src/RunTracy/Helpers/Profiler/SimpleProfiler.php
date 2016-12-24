@@ -148,8 +148,10 @@ class SimpleProfiler
             $profile->meta[self::FINISH_MEMORY_USAGE] = $memoryUsage;
             $profile->absoluteDuration = $profile->meta[self::FINISH_TIME] - $profile->meta[self::START_TIME];
             $profile->duration = $profile->absoluteDuration - $profile->meta[self::TIME_OFFSET];
-            $profile->absoluteMemoryUsageChange = $profile->meta[self::FINISH_MEMORY_USAGE] - $profile->meta[self::START_MEMORY_USAGE];
-            $profile->memoryUsageChange = $profile->absoluteMemoryUsageChange - $profile->meta[self::MEMORY_USAGE_OFFSET];
+            $profile->absoluteMemoryUsageChange = $profile->meta[self::FINISH_MEMORY_USAGE] -
+                $profile->meta[self::START_MEMORY_USAGE];
+            $profile->memoryUsageChange = $profile->absoluteMemoryUsageChange -
+                $profile->meta[self::MEMORY_USAGE_OFFSET];
 
             if (!empty(static::$stack)) {
                 $timeOffset = &static::$stack[count(static::$stack) - 1]->meta[self::TIME_OFFSET];

@@ -15,11 +15,11 @@ namespace RunTracy\Helpers\Console;
 class BaseJsonRpcServer
 {
 
-    const ParseError = -32700,
-        InvalidRequest = -32600,
-        MethodNotFound = -32601,
-        InvalidParams = -32602,
-        InternalError = -32603;
+    const PARSEERROR = -32700,
+        INVALIDREQUEST = -32600,
+        METHODNOTFOUND = -32601,
+        INVALIDPARAMS = -32602,
+        INTERNALERROR = -32603;
 
     /**
      * Exposed Instances
@@ -88,11 +88,11 @@ class BaseJsonRpcServer
      * @var array
      */
     protected $errorMessages = [
-        self::ParseError => 'Parse error',
-        self::InvalidRequest => 'Invalid Request',
-        self::MethodNotFound => 'Method not found',
-        self::InvalidParams => 'Invalid params',
-        self::InternalError => 'Internal error',
+        self::PARSEERROR => 'Parse error',
+        self::INVALIDREQUEST => 'Invalid Request',
+        self::METHODNOTFOUND => 'Method not found',
+        self::INVALIDPARAMS => 'Invalid params',
+        self::INTERNALERROR => 'Internal error',
     ];
 
 
@@ -113,26 +113,26 @@ class BaseJsonRpcServer
 
         do {
             if (array_key_exists('REQUEST_METHOD', $_SERVER) && $_SERVER['REQUEST_METHOD'] != 'POST') {
-                $error = self::InvalidRequest;
+                $error = self::INVALIDREQUEST;
                 break;
             };
 
             $request = !empty($_GET['rawRequest']) ? $_GET['rawRequest'] : file_get_contents('php://input');
             $this->request = json_decode($request, false);
             if ($this->request === null) {
-                $error = self::ParseError;
+                $error = self::PARSEERROR;
                 break;
             }
 
             if ($this->request === []) {
-                $error = self::InvalidRequest;
+                $error = self::INVALIDREQUEST;
                 break;
             }
 
             // check for batch call
             if (is_array($this->request)) {
                 if (count($this->request) > $this->MaxBatchCalls) {
-                    $error = self::InvalidRequest;
+                    $error = self::INVALIDREQUEST;
                     break;
                 }
 
@@ -161,7 +161,8 @@ class BaseJsonRpcServer
             'id' => $id,
             'error' => [
                 'code' => $code,
-                'message' => isset($this->errorMessages[$code]) ? $this->errorMessages[$code] : $this->errorMessages[self::InternalError],
+                'message' => isset($this->errorMessages[$code]) ?
+                    $this->errorMessages[$code] : $this->errorMessages[self::INTERNALERROR],
                 'data' => $data,
             ],
         ];
@@ -181,7 +182,7 @@ class BaseJsonRpcServer
         $id = is_object($call) && property_exists($call, 'id') ? $call->id : null;
         do {
             if (!is_object($call)) {
-                $error = self::InvalidRequest;
+                $error = self::INVALIDREQUEST;
                 break;
             }
 
@@ -193,7 +194,7 @@ class BaseJsonRpcServer
             }
 
             if (!property_exists($call, 'jsonrpc') || $call->jsonrpc != '2.0') {
-                $error = self::InvalidRequest;
+                $error = self::INVALIDREQUEST;
                 break;
             }
 
@@ -201,8 +202,10 @@ class BaseJsonRpcServer
             $methodInfo = explode('.', $fullMethod, 2);
             $namespace = array_key_exists(1, $methodInfo) ? $methodInfo[0] : '';
             $method = $namespace ? $methodInfo[1] : $fullMethod;
-            if (!$method || !array_key_exists($namespace, $this->instances) || !method_exists($this->instances[$namespace], $method) || in_array(strtolower($method), $this->hiddenMethods)) {
-                $error = self::MethodNotFound;
+            if (!$method || !array_key_exists($namespace, $this->instances) ||
+                !method_exists($this->instances[$namespace], $method) ||
+                in_array(strtolower($method), $this->hiddenMethods)) {
+                $error = self::METHODNOTFOUND;
                 break;
             }
 
@@ -214,7 +217,7 @@ class BaseJsonRpcServer
             $params = property_exists($call, 'params') ? $call->params : null;
             $paramsType = gettype($params);
             if ($params !== null && $paramsType != 'array' && $paramsType != 'object') {
-                $error = self::InvalidParams;
+                $error = self::INVALIDPARAMS;
                 break;
             }
 
@@ -230,14 +233,18 @@ class BaseJsonRpcServer
                     }
 
                     if (count($params) < $totalRequired) {
-                        $error = self::InvalidParams;
-                        $data = sprintf('Check numbers of required params (got %d, expected %d)', count($params), $totalRequired);
+                        $error = self::INVALIDPARAMS;
+                        $data = sprintf(
+                            'Check numbers of required params (got %d, expected %d)',
+                            count($params),
+                            $totalRequired
+                        );
                     }
                     break;
                 case 'object':
                     foreach ($this->reflectionMethods[$fullMethod]->getParameters() as $param) {
                         if (!$param->isDefaultValueAvailable() && !array_key_exists($param->getName(), $params)) {
-                            $error = self::InvalidParams;
+                            $error = self::INVALIDPARAMS;
                             $data = $param->getName() . ' not found';
 
                             break 3;
@@ -246,7 +253,7 @@ class BaseJsonRpcServer
                     break;
                 case 'NULL':
                     if ($this->reflectionMethods[$fullMethod]->getNumberOfRequiredParameters() > 0) {
-                        $error = self::InvalidParams;
+                        $error = self::INVALIDPARAMS;
                         $data = 'Empty required params';
                         break 2;
                     }
@@ -312,9 +319,9 @@ class BaseJsonRpcServer
     public function __construct($instance = null)
     {
         if (get_parent_class($this)) {
-            $this->RegisterInstance($this, '');
+            $this->registerInstance($this, '');
         } elseif ($instance) {
-            $this->RegisterInstance($instance, '');
+            $this->registerInstance($instance, '');
         }
     }
 
@@ -325,7 +332,7 @@ class BaseJsonRpcServer
      * @param string $namespace default is empty string
      * @return $this
      */
-    public function RegisterInstance($instance, $namespace = '')
+    public function registerInstance($instance, $namespace = '')
     {
         $this->instances[$namespace] = $instance;
         $this->instances[$namespace]->errorMessages = $this->errorMessages;
@@ -337,7 +344,7 @@ class BaseJsonRpcServer
     /**
      * Handle Requests
      */
-    public function Execute()
+    public function execute()
     {
         do {
             // check for SMD Discovery request
@@ -423,7 +430,8 @@ class BaseJsonRpcServer
             'envelope' => 'JSON-RPC-2.0',
             'SMDVersion' => '2.0',
             'contentType' => 'application/json',
-            'target' => !empty($_SERVER['REQUEST_URI']) ? substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')) : '',
+            'target' => !empty($_SERVER['REQUEST_URI']) ?
+                substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')) : '',
             'services' => [],
             'description' => '',
         ];

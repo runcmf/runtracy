@@ -29,7 +29,8 @@ class AdvancedProfiler extends SimpleProfiler
     /**
      * Set post processor
      *
-     * Post processor is callable with one input argument (return from finish method) and is called at the end of finish method.
+     * Post processor is callable with one input argument (return from finish method)
+     * and is called at the end of finish method.
      *
      * @param callable $postProcessor
      */

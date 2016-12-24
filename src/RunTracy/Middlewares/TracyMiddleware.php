@@ -55,7 +55,9 @@ class TracyMiddleware
             ));
         }
         if (isset($cfg['showTwigPanel'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\TwigPanel($this->app->getContainer()->get('twig_profile')));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\TwigPanel(
+                $this->app->getContainer()->get('twig_profile')
+            ));
         }
         if (isset($cfg['showPhpInfoPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\PhpInfoPanel());
@@ -79,7 +81,9 @@ class TracyMiddleware
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\VendorVersionsPanel());
         }
         if (isset($cfg['showXDebugHelper'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\XDebugHelper($defcfg['configs']['XDebugHelperIDEKey']));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\XDebugHelper(
+                $defcfg['configs']['XDebugHelperIDEKey']
+            ));
         }
         if (isset($cfg['showIncludedFiles'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\IncludedFiles());
@@ -89,7 +93,9 @@ class TracyMiddleware
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\ConsolePanel($defcfg['configs']));
         }
         if (isset($cfg['showProfilerPanel'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\ProfilerPanel($defcfg['configs']['ProfilerPanel']));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\ProfilerPanel(
+                $defcfg['configs']['ProfilerPanel']
+            ));
         }
 
         // hardcoded without config prevent switch off

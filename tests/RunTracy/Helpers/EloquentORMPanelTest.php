@@ -53,7 +53,8 @@ class EloquentORMPanelTest extends BaseTestCase
 
             $data =
                 [
-                    'query' => 'update `mybb_sessions` set `uid` = ?, `time` = ?, `location` = ?, `useragent` = ?, `location1` = ?, `location2` = ?, `nopermission` = ? where `sid` = ?',
+                    'query' => 'update `mybb_sessions` set `uid` = ?, `time` = ?, `location` = ?,
+                    `useragent` = ?, `location1` = ?, `location2` = ?, `nopermission` = ? where `sid` = ?',
                     'bindings' =>
                         [
                             0 => 1,

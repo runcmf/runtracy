@@ -79,7 +79,7 @@ class BaseJsonRpcClient
      * Begin Batch Call
      * @return bool
      */
-    public function BeginBatch()
+    public function beginBatch()
     {
         if (!$this->isBatchCall) {
             $this->batchNotifications = [];
@@ -95,7 +95,7 @@ class BaseJsonRpcClient
     /**
      * Commit Batch
      */
-    public function CommitBatch()
+    public function commitBatch()
     {
         $result = false;
         if (!$this->isBatchCall || (!$this->batchCalls && !$this->batchNotifications)) {
@@ -103,7 +103,7 @@ class BaseJsonRpcClient
         }
 
         $result = $this->processCalls(array_merge($this->batchCalls, $this->batchNotifications));
-        $this->RollbackBatch();
+        $this->rollbackBatch();
 
         return $result;
     }
@@ -113,7 +113,7 @@ class BaseJsonRpcClient
      * Rollback Calls
      * @return bool
      */
-    public function RollbackBatch()
+    public function rollbackBatch()
     {
         $this->isBatchCall = false;
         $this->batchCalls = [];
@@ -168,7 +168,8 @@ class BaseJsonRpcClient
     {
         // Prepare Data
         $singleCall = !$this->isBatchCall ? reset($calls) : null;
-        $result = $this->batchCalls ? array_values(array_map('BaseJsonRpcCall::GetCallData', $calls)) : BaseJsonRpcCall::GetCallData($singleCall);
+        $result = $this->batchCalls ? array_values(array_map('BaseJsonRpcCall::getCallData', $calls)) :
+            BaseJsonRpcCall::getCallData($singleCall);
 
         // Send Curl Request
         $options = $this->CurlOptions + [CURLOPT_POSTFIELDS => json_encode($result)];
@@ -187,11 +188,11 @@ class BaseJsonRpcClient
             foreach ($data as $dataCall) {
                 // Problem place?
                 $key = $this->UseObjectsInResults ? $dataCall->id : $dataCall['id'];
-                $this->batchCalls[$key]->SetResult($dataCall, $this->UseObjectsInResults);
+                $this->batchCalls[$key]->setResult($dataCall, $this->UseObjectsInResults);
             }
         } else {
             // Process Results for Call
-            $singleCall->SetResult($data, $this->UseObjectsInResults);
+            $singleCall->setResult($data, $this->UseObjectsInResults);
         }
 
         return true;

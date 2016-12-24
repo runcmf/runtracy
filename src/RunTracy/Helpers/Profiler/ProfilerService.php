@@ -116,7 +116,8 @@ class ProfilerService implements SingletonInterface
         $metaData = $this->getMetaData();
         foreach ($this->profiles as $profile) {
             $profile->meta[static::TIME_LINE_BEFORE] = floor(
-                ($profile->meta[Profiler::START_TIME] - $metaData[self::META_TIME_ZERO]) / $metaData[self::META_TIME_TOTAL] * 100
+                ($profile->meta[Profiler::START_TIME] - $metaData[self::META_TIME_ZERO])
+                / $metaData[self::META_TIME_TOTAL] * 100
             );
             $profile->meta[static::TIME_LINE_ACTIVE] = floor(
                 $profile->duration / $metaData[self::META_TIME_TOTAL] * 100
@@ -124,7 +125,8 @@ class ProfilerService implements SingletonInterface
             $profile->meta[static::TIME_LINE_INACTIVE] = floor(
                 ($profile->absoluteDuration - $profile->duration) / $metaData[self::META_TIME_TOTAL] * 100
             );
-            $profile->meta[static::TIME_LINE_AFTER] = 100 - $profile->meta[static::TIME_LINE_BEFORE] - $profile->meta[static::TIME_LINE_ACTIVE] - $profile->meta[static::TIME_LINE_INACTIVE];
+            $profile->meta[static::TIME_LINE_AFTER] = 100 - $profile->meta[static::TIME_LINE_BEFORE] -
+                $profile->meta[static::TIME_LINE_ACTIVE] - $profile->meta[static::TIME_LINE_INACTIVE];
 
             call_user_func($callback, $profile, $metaData);
         }

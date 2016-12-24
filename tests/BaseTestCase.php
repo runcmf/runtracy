@@ -55,7 +55,6 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             [
                 'REQUEST_METHOD' => $requestMethod,
                 'REQUEST_URI'    => $requestUri,
-            //                'SCRIPT_NAME' => '/app.php',
             ]
         );
         $_SESSION = [];

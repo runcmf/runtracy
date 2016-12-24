@@ -39,7 +39,7 @@ class BaseJsonRpcCall
      * Has Error
      * @return bool
      */
-    public function HasError()
+    public function hasError()
     {
         return !empty($this->Error);
     }
@@ -63,7 +63,7 @@ class BaseJsonRpcCall
      * @param BaseJsonRpcCall $call
      * @return array
      */
-    public static function GetCallData(BaseJsonRpcCall $call)
+    public static function getCallData(BaseJsonRpcCall $call)
     {
         return [
             'jsonrpc' => '2.0',
@@ -79,7 +79,7 @@ class BaseJsonRpcCall
      * @param mixed $data
      * @param bool $useObjects
      */
-    public function SetResult($data, $useObjects = false)
+    public function setResult($data, $useObjects = false)
     {
         if ($useObjects) {
             $this->Error = property_exists($data, 'error') ? $data->error : null;

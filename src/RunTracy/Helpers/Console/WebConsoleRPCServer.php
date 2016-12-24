@@ -32,19 +32,19 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
     }
 
     // Authentication
-    private function authenticate_user($user, $password)
+    private function authenticateUser($user, $password)
     {
         $user = trim((string) $user);
         $password = trim((string) $password);
 
         if ($user && $password) {
-            if (isset($this->accounts[$user]) && !$this->is_empty_string($this->accounts[$user])) {
+            if (isset($this->accounts[$user]) && !$this->isEmptyString($this->accounts[$user])) {
                 if ($this->password_hash_algorithm) {
-                    $password = $this->get_hash($this->password_hash_algorithm, $password);
+                    $password = $this->getHash($this->password_hash_algorithm, $password);
                 }
 
-                if ($this->is_equal_strings($password, $this->accounts[$user])) {
-                    return $user . ':' . $this->get_hash('sha256', $password);
+                if ($this->isEqualStrings($password, $this->accounts[$user])) {
+                    return $user . ':' . $this->getHash('sha256', $password);
                 }
             }
         }
@@ -52,7 +52,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
         throw new \Exception("Incorrect user or password");
     }
 
-    private function authenticate_token($token)
+    private function authenticateToken($token)
     {
 
         if ($this->no_login) {
@@ -67,9 +67,9 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
             $password_hash = trim((string) $token_parts[1]);
 
             if ($user && $password_hash) {
-                if (isset($this->accounts[$user]) && !$this->is_empty_string($this->accounts[$user])) {
-                    $real_password_hash = $this->get_hash('sha256', $this->accounts[$user]);
-                    if ($this->is_equal_strings($password_hash, $real_password_hash)) {
+                if (isset($this->accounts[$user]) && !$this->isEmptyString($this->accounts[$user])) {
+                    $real_password_hash = $this->getHash('sha256', $this->accounts[$user]);
+                    if ($this->isEqualStrings($password_hash, $real_password_hash)) {
                         return $user;
                     }
                 }
@@ -79,15 +79,15 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
         throw new \Exception("Incorrect user or password");
     }
 
-    private function get_home_directory($user)
+    private function getHomeDirectory($user)
     {
         if (is_string($this->home_directory)) {
-            if (!$this->is_empty_string($this->home_directory)) {
+            if (!$this->isEmptyString($this->home_directory)) {
                 return $this->home_directory;
             }
-        } elseif (is_string($user) && !$this->is_empty_string($user)
+        } elseif (is_string($user) && !$this->isEmptyString($user)
             && isset($this->home_directory[$user])
-            && !$this->is_empty_string($this->home_directory[$user])) {
+            && !$this->isEmptyString($this->home_directory[$user])) {
             return $this->home_directory[$user];
         }
 
@@ -95,26 +95,28 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
     }
 
     // Environment
-    private function get_environment()
+    private function getEnvironment()
     {
         $hostname = function_exists('gethostname') ? gethostname() : null;
         return ['path' => getcwd(), 'hostname' => $hostname];
     }
 
-    private function set_environment($environment)
+    private function setEnvironment($environment)
     {
         $environment = !empty($environment) ? (array) $environment : [];
-        $path = (isset($environment['path']) && !$this->is_empty_string($environment['path'])) ? $environment['path'] : $this->home_directory;
+        $path = (isset($environment['path']) && !$this->isEmptyString($environment['path'])) ?
+            $environment['path'] : $this->home_directory;
 
-        if (!$this->is_empty_string($path)) {
+        if (!$this->isEmptyString($path)) {
             if (is_dir($path)) {
                 if (!@chdir($path)) {
-                    return ['output' => "Unable to change directory to current working directory, updating current directory",
-                    'environment' => $this->get_environment()];
+                    return ['output' => "Unable to change directory to current working directory, 
+                    updating current directory",
+                    'environment' => $this->getEnvironment()];
                 }
             } else {
                 return ['output' => "Current working directory not found, updating current directory",
-                'environment' => $this->get_environment()];
+                'environment' => $this->getEnvironment()];
             }
         }
     }
@@ -122,9 +124,9 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
     // Initialization
     private function initialize($token, $environment)
     {
-        $user = $this->authenticate_token($token);
-        $this->home_directory = $this->get_home_directory($user);
-        $result = $this->set_environment($environment);
+        $user = $this->authenticateToken($token);
+        $this->home_directory = $this->getHomeDirectory($user);
+        $result = $this->setEnvironment($environment);
 
         if ($result) {
             return $result;
@@ -134,11 +136,11 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
     // Methods
     public function login($user, $password)
     {
-        $result = ['token' => $this->authenticate_user($user, $password),
-            'environment' => $this->get_environment()];
+        $result = ['token' => $this->authenticateUser($user, $password),
+            'environment' => $this->getEnvironment()];
 
-        $home_directory = $this->get_home_directory($user);
-        if (!$this->is_empty_string($home_directory)) {
+        $home_directory = $this->getHomeDirectory($user);
+        if (!$this->isEmptyString($home_directory)) {
             if (is_dir($home_directory)) {
                 $result['environment']['path'] = $home_directory;
             } else {
@@ -157,11 +159,11 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
         }
 
         $path = trim((string) $path);
-        if ($this->is_empty_string($path)) {
+        if ($this->isEmptyString($path)) {
             $path = $this->home_directory;
         }
 
-        if (!$this->is_empty_string($path)) {
+        if (!$this->isEmptyString($path)) {
             if (is_dir($path)) {
                 if (!@chdir($path)) {
                     return ['output' => "cd: ". $path . ": Unable to change directory"];
@@ -171,7 +173,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
             }
         }
 
-        return ['environment' => $this->get_environment()];
+        return ['environment' => $this->getEnvironment()];
     }
 
     public function completion($token, $environment, $pattern, $command)
@@ -223,12 +225,12 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
             if (!empty($pattern) && !empty($completion)) {
                 // For PHP version that does not support anonymous functions (available since PHP 5.3.0)
                 $this->pattern = $pattern;
-                function filter_pattern($value)
+                function filterPattern($value)
                 {
                     return !strncmp($this->pattern, $value, strlen($this->pattern));
                 }
 
-                $completion = array_values(array_filter($completion, [$this, 'filter_pattern']));
+                $completion = array_values(array_filter($completion, [$this, 'filterPattern']));
             }
         }
 
@@ -242,7 +244,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
             return $result;
         }
 
-        $output = ($command && !$this->is_empty_string($command)) ? $this->execute_command($command) : '';
+        $output = ($command && !$this->isEmptyString($command)) ? $this->executeCommand($command) : '';
         if ($output && substr($output, -1) == "\n") {
             $output = substr($output, 0, -1);
         }
@@ -251,7 +253,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
     }
 
     // Command execution
-    private function execute_command($command)
+    private function executeCommand($command)
     {
         $descriptors = [
             0 => ['pipe', 'r'], // STDIN
@@ -284,7 +286,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
 //    {
 //        $value = ltrim((string) $command);
 //
-//        if (!$this->is_empty_string($value)) {
+//        if (!$this->isEmptyString($value)) {
 //            $values = explode(' ', $value);
 //            $values_total = count($values);
 //
@@ -304,17 +306,17 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
 //    }
 
     // Utilities
-    private function is_empty_string($string)
+    private function isEmptyString($string)
     {
         return strlen($string) <= 0;
     }
 
-    private function is_equal_strings($string1, $string2)
+    private function isEqualStrings($string1, $string2)
     {
         return strcmp($string1, $string2) == 0;
     }
 
-    private function get_hash($algorithm, $string)
+    private function getHash($algorithm, $string)
     {
         return hash($algorithm, trim((string) $string));
     }

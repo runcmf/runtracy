@@ -44,6 +44,6 @@ class RunTracyConsole extends WebConsoleRPCServer
         $this->password_hash_algorithm = $cfg['ConsoleHashAlgorithm'] ?: '';
         $this->home_directory = $cfg['ConsoleHomeDirectory'] ?: '';
 
-        return $response->withJson($this->Execute());
+        return $response->withJson($this->execute());
     }
 }
