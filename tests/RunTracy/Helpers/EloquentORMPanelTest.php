@@ -49,25 +49,40 @@ class EloquentORMPanelTest extends BaseTestCase
             $this->assertRegexp('#DB Query Info#', $panel->getTab());
             // test Tracy panel
             $this->assertRegexp('#Eloquent ORM#', $panel->getPanel());
-
-
-            $data =
-                [
-                    'query' => 'update `mybb_sessions` set `uid` = ?, `time` = ?, `location` = ?,
-                    `useragent` = ?, `location1` = ?, `location2` = ?, `nopermission` = ? where `sid` = ?',
-                    'bindings' =>
-                        [
-                            0 => 1,
-                            1 => 1482512713,
-                            2 => '/?',
-                            3 => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0',
-                            4 => 0,
-                            5 => 0,
-                            6 => 0,
-                            7 => '89a412a4ad6ad9df88b42ca4c12bb271',
-                        ],
-                    'time' => 4.9100000000000001,
-                ];
         }
+    }
+
+    public function testEloquentORMPanelParser()
+    {
+        $data =
+            [
+                'query' => 'update `mybb_sessions` set `uid` = ?, `time` = ?, `location` = ?,
+                    `useragent` = ?, `location1` = ?, `location2` = ?, `nopermission` = ? where `sid` = ?',
+                'bindings' =>
+                    [
+                        0 => 1,
+                        1 => 1482512713,
+                        2 => '/?',
+                        3 => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0',
+                        4 => 0,
+                        5 => 0,
+                        6 => 0,
+                        7 => '89a412a4ad6ad9df88b42ca4c12bb271',
+                    ],
+                'time' => 4.9100000000000001,
+            ];
+        // getHeader()
+        $headerRow = $this->callProtectedMethod('getHeader', '\RunTracy\Helpers\EloquentORMPanel', []);
+        // <thead><tr><th><b>Count</b></th><th><b>Time,&nbsp;ms</b></th><th>Query / Bindings</th></tr></thead>
+        $this->assertRegexp('#<thead><tr><th>#', $headerRow);
+
+        // getBaseRow()
+        $baseRow = $this->callProtectedMethod('getBaseRow', '\RunTracy\Helpers\EloquentORMPanel', []);
+        // <tr><td>%s</td><td>%s</td><td>%s</td></tr>
+        $this->assertRegexp('#<tr><td>#', $baseRow);
+
+        // parse($data)
+        $result = $this->callProtectedMethod('parse', '\RunTracy\Helpers\EloquentORMPanel', [[0 => $data]]);
+        $this->assertRegexp('#89a412a4ad6ad9df88b42ca4c12bb271#', $result);
     }
 }

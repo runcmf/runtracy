@@ -28,7 +28,7 @@ class EloquentORMPanel implements IBarPanel
 
     public function __construct($data = null)
     {
-        $this->data = $this->parse($data);
+        $this->data = $data;
         $this->count = count($data);
     }
 
@@ -70,7 +70,7 @@ class EloquentORMPanel implements IBarPanel
         <h1>'.$this->icon.' &nbsp; Slim 3 / Eloquent ORM</h1>
         <div class="tracy-inner">
             <p>
-                <table width="100%">' . $this->data . '
+                <table width="100%">' . $this->parse($this->data) . '
                     <tr class="yes">
                         <th><b>' . $this->count . '</b></th><th><b>' . $this->time . ' ms</b></th>
                         <th>Total</th>

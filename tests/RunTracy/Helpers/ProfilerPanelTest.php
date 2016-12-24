@@ -45,6 +45,9 @@ class ProfilerPanelTest extends BaseTestCase
         $this->assertFalse(Profiler::isEnabled());
         Profiler::enable();//effective
         $this->assertTrue(Profiler::isEnabled());
+        Profiler::disable();//test disable
+        $this->assertFalse(Profiler::isEnabled());
+        Profiler::enable();//effective
 
         $panel = new \RunTracy\Helpers\ProfilerPanel($this->cfg['settings']['tracy']['configs']['ProfilerPanel']);
         $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
@@ -62,6 +65,9 @@ class ProfilerPanelTest extends BaseTestCase
         $this->assertFalse(Profiler::isEnabled());
         Profiler::enable(1);//absolute
         $this->assertTrue(Profiler::isEnabled());
+        Profiler::disable();//test disable
+        $this->assertFalse(Profiler::isEnabled());
+        Profiler::enable(1);//effective
 
         $panel = new \RunTracy\Helpers\ProfilerPanel($this->cfg['settings']['tracy']['configs']['ProfilerPanel']);
         $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
