@@ -35,5 +35,16 @@ class VendorVersionsPanelTest extends BaseTestCase
         $this->assertRegexp('/Vendor Versions/s', $panel->getTab());
         // test Tracy panel
         $this->assertRegexp('/VendorVersionsPanel/s', $panel->getPanel());
+        unset($panel);
+    }
+
+    public function testVendorVersionsPanelWithData()
+    {
+        $path = realpath(__DIR__.'/../../../');
+
+        $panel = new \RunTracy\Helpers\VendorVersionsPanel($path);
+        $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
+
+        $this->assertRegexp('/phpunit\/php-code-coverage/s', $panel->getPanel());
     }
 }

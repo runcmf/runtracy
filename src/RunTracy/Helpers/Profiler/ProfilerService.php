@@ -2,11 +2,6 @@
 
 namespace RunTracy\Helpers\Profiler;
 
-//use Netpromotion\Profiler\Profiler;
-//use PetrKnap\Php\Profiler\Profile;
-//use PetrKnap\Php\Singleton\SingletonInterface;
-//use PetrKnap\Php\Singleton\SingletonTrait;
-
 /**
  * @internal
  */
