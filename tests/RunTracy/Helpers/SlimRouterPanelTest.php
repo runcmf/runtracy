@@ -35,7 +35,10 @@ class SlimRouterPanelTest extends BaseTestCase
             'slim' => \Slim\App::VERSION,
         ];
 
-        $panel = new \RunTracy\Helpers\SlimRouterPanel($app, $v);
+        $panel = new \RunTracy\Helpers\SlimRouterPanel(
+            \Tracy\Dumper::toHtml($app->getContainer()->get('router')),
+            $v
+        );
         $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
 
         // test Tracy tab

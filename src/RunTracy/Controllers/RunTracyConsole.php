@@ -41,8 +41,8 @@ class RunTracyConsole extends WebConsoleRPCServer
         foreach ($cfg['ConsoleAccounts'] as $u => $p) {
             $this->accounts[$u] = $p;
         }
-        $this->password_hash_algorithm = $cfg['ConsoleHashAlgorithm'] ?: '';
-        $this->home_directory = $cfg['ConsoleHomeDirectory'] ?: '';
+        $this->passwordHashAlgorithm = $cfg['ConsoleHashAlgorithm'] ?: '';
+        $this->homeDirectory = $cfg['ConsoleHomeDirectory'] ?: '';
 
         return $response->withJson($this->execute());
     }

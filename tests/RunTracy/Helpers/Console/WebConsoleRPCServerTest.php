@@ -67,8 +67,8 @@ class WebConsoleRPCServerTest extends BaseTestCase
         foreach ($cfg['ConsoleAccounts'] as $u => $p) {
             $console->setVar('accounts', $p, $u);
         }
-        $console->setVar('password_hash_algorithm', ($cfg['ConsoleHashAlgorithm'] ?: ''));
-        $console->setVar('home_directory', ($cfg['ConsoleHomeDirectory'] ?: ''));
+        $console->setVar('passwordHashAlgorithm', ($cfg['ConsoleHashAlgorithm'] ?: ''));
+        $console->setVar('homeDirectory', ($cfg['ConsoleHomeDirectory'] ?: ''));
 
         // normal user
         $ret = $console->authUser('dev', 'dev');
@@ -99,8 +99,8 @@ class WebConsoleRPCServerTest extends BaseTestCase
         foreach ($cfg['ConsoleAccounts'] as $u => $p) {
             $console->setVar('accounts', $p, $u);
         }
-        $console->setVar('password_hash_algorithm', ($cfg['ConsoleHashAlgorithm'] ?: ''));
-        $console->setVar('home_directory', ($cfg['ConsoleHomeDirectory'] ?: ''));
+        $console->setVar('passwordHashAlgorithm', ($cfg['ConsoleHashAlgorithm'] ?: ''));
+        $console->setVar('homeDirectory', ($cfg['ConsoleHomeDirectory'] ?: ''));
 
         // fake password
         $this->expectException(\RunTracy\Exceptions\IncorrectUserOrPassword::class);
@@ -118,19 +118,19 @@ class WebConsoleRPCServerTest extends BaseTestCase
         foreach ($cfg['ConsoleAccounts'] as $u => $p) {
             $console->setVar('accounts', $p, $u);
         }
-        $console->setVar('password_hash_algorithm', ($cfg['ConsoleHashAlgorithm'] ?: ''));
-        $console->setVar('home_directory', ($cfg['ConsoleHomeDirectory'] ?: ''));
+        $console->setVar('passwordHashAlgorithm', ($cfg['ConsoleHashAlgorithm'] ?: ''));
+        $console->setVar('homeDirectory', ($cfg['ConsoleHomeDirectory'] ?: ''));
 
         $ret = $console->getHomeDir('dev');
         $this->assertRegexp('#\/runcmf\/#s', $ret);
 
-        // check if (is_string($this->home_directory))
-        $console->setVar('home_directory', 123);
+        // check if (is_string($this->homeDirectory))
+        $console->setVar('homeDirectory', 123);
         $ret = $console->getHomeDir('dev');
         $this->assertRegexp('#\/runcmf\/#s', $ret);
 
         // return to def
-        $console->setVar('home_directory', ($cfg['ConsoleHomeDirectory'] ?: ''));
+        $console->setVar('homeDirectory', ($cfg['ConsoleHomeDirectory'] ?: ''));
 
         $ret = $console->getEnv();
         $this->assertArrayHasKey('path', $ret);
@@ -191,8 +191,8 @@ class WebConsoleRPCServerTest extends BaseTestCase
         foreach ($cfg['ConsoleAccounts'] as $u => $p) {
             $console->setVar('accounts', $p, $u);
         }
-        $console->setVar('password_hash_algorithm', ($cfg['ConsoleHashAlgorithm'] ?: ''));
-        $console->setVar('home_directory', ($cfg['ConsoleHomeDirectory'] ?: ''));
+        $console->setVar('passwordHashAlgorithm', ($cfg['ConsoleHashAlgorithm'] ?: ''));
+        $console->setVar('homeDirectory', ($cfg['ConsoleHomeDirectory'] ?: ''));
 
         // login
         $ret = $console->login('dev', 'dev');

@@ -1,7 +1,12 @@
 # CHANGELOG
 
+### 2016-12-26
+* small code cleanup
+* 80% test coverage
+
 ### 2016-12-23
-* add tests  
+* add tests
+
 vendor/bin/phpcs --report-file=./phpcs  
 vendor/bin/phpcbf  
 https://lint.travis-ci.org/

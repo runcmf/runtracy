@@ -19,17 +19,16 @@
 namespace RunTracy\Helpers;
 
 use Tracy\IBarPanel;
-use Tracy\Dumper;
 
 class SlimRouterPanel implements IBarPanel
 {
-    private $app;
+    private $content;
     private $ver;
     private $icon;
 
-    public function __construct($app = null, array $ver = [])
+    public function __construct($data = null, array $ver = [])
     {
-        $this->app = $app;
+        $this->content = $data;
         $this->ver = $ver;
     }
 
@@ -79,8 +78,6 @@ class SlimRouterPanel implements IBarPanel
     {
         return '
         <h1>'.$this->icon.' Slim '.$this->ver['slim'].' Router:</h1>
-        <div style="overflow: auto; max-height: 600px;">' .
-            Dumper::toHtml($this->app->getContainer()->get('router')) .
-        '</div>';
+        <div style="overflow: auto; max-height: 600px;">' . $this->content . '</div>';
     }
 }

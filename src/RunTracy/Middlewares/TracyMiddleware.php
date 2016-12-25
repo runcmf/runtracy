@@ -63,19 +63,34 @@ class TracyMiddleware
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\PhpInfoPanel());
         }
         if (isset($cfg['showSlimEnvironmentPanel'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimEnvironmentPanel($this->app, $v));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimEnvironmentPanel(
+                \Tracy\Dumper::toHtml($this->app->getContainer()->get('environment')),
+                $v
+            ));
         }
         if (isset($cfg['showSlimContainer'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimContainerPanel($this->app, $v));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimContainerPanel(
+                \Tracy\Dumper::toHtml($this->app->getContainer()),
+                $v
+            ));
         }
         if (isset($cfg['showSlimRouterPanel'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRouterPanel($this->app, $v));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRouterPanel(
+                \Tracy\Dumper::toHtml($this->app->getContainer()->get('router')),
+                $v
+            ));
         }
         if (isset($cfg['showSlimRequestPanel'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRequestPanel($this->app, $v));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRequestPanel(
+                \Tracy\Dumper::toHtml($this->app->getContainer()->get('request')),
+                $v
+            ));
         }
         if (isset($cfg['showSlimResponsePanel'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimResponsePanel($this->app, $v));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimResponsePanel(
+                \Tracy\Dumper::toHtml($this->app->getContainer()->get('response')),
+                $v
+            ));
         }
         if (isset($cfg['showVendorVersionsPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\VendorVersionsPanel());
@@ -90,7 +105,9 @@ class TracyMiddleware
         }
         // check if enabled or blink if active critical value
         if (isset($cfg['showConsolePanel']) || $defcfg['configs']['ConsoleNoLogin']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\ConsolePanel($defcfg['configs']));
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\ConsolePanel(
+                $defcfg['configs']
+            ));
         }
         if (isset($cfg['showProfilerPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\ProfilerPanel(

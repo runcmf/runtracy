@@ -23,13 +23,13 @@ use Tracy\Dumper;
 
 class SlimRequestPanel implements IBarPanel
 {
-    private $app;
+    private $content;
     private $ver;
     private $icon;
 
-    public function __construct($app = null, array $ver = [])
+    public function __construct($data = null, array $ver = [])
     {
-        $this->app = $app;
+        $this->content = $data;
         $this->ver = $ver;
     }
 
@@ -58,8 +58,6 @@ class SlimRequestPanel implements IBarPanel
     {
         return '
         <h1>'.$this->icon.' Slim '.$this->ver['slim'].' Request:</h1>
-        <div style="overflow: auto; max-height: 600px;">' .
-            Dumper::toHtml($this->app->getContainer()->get('request')) .
-        '</div>';
+        <div style="overflow: auto; max-height: 600px;">' . $this->content . '</div>';
     }
 }

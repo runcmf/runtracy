@@ -35,7 +35,10 @@ class SlimResponsePanelTest extends BaseTestCase
             'slim' => \Slim\App::VERSION,
         ];
 
-        $panel = new \RunTracy\Helpers\SlimResponsePanel($app, $v);
+        $panel = new \RunTracy\Helpers\SlimResponsePanel(
+            \Tracy\Dumper::toHtml($app->getContainer()->get('response')),
+            $v
+        );
         $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
 
         // test Tracy tab

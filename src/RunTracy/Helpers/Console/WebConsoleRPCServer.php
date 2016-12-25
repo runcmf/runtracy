@@ -21,11 +21,11 @@ use RunTracy\Exceptions\IncorrectUserOrPassword;
 
 class WebConsoleRPCServer extends BaseJsonRpcServer
 {
-    protected $home_directory = '';
+    protected $homeDirectory = '';
 
-    protected $no_login = false;
+    protected $noLogin = false;
     protected $accounts = [];
-    protected $password_hash_algorithm = '';
+    protected $passwordHashAlgorithm = '';
 
     // Authentication
     protected function authenticateUser($user, $password)
@@ -35,8 +35,8 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
 
         if ($user && $password) {
             if (isset($this->accounts[$user]) && !$this->isEmptyString($this->accounts[$user])) {
-                if ($this->password_hash_algorithm) {
-                    $password = $this->getHash($this->password_hash_algorithm, $password);
+                if ($this->passwordHashAlgorithm) {
+                    $password = $this->getHash($this->passwordHashAlgorithm, $password);
                 }
 
                 if ($this->isEqualStrings($password, $this->accounts[$user])) {
@@ -56,11 +56,11 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
         }
 
         $token = trim((string) $token);
-        $token_parts = explode(':', $token, 2);
+        $tokenParts = explode(':', $token, 2);
 
-        if (count($token_parts) == 2) {
-            $user = trim((string) $token_parts[0]);
-            $password_hash = trim((string) $token_parts[1]);
+        if (count($tokenParts) == 2) {
+            $user = trim((string) $tokenParts[0]);
+            $password_hash = trim((string) $tokenParts[1]);
 
             if ($user && $password_hash) {
                 if (isset($this->accounts[$user]) && !$this->isEmptyString($this->accounts[$user])) {
@@ -78,14 +78,14 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
 
     protected function getHomeDirectory($user)
     {
-        if (is_string($this->home_directory)) {
-            if (!$this->isEmptyString($this->home_directory)) {
-                return $this->home_directory;
+        if (is_string($this->homeDirectory)) {
+            if (!$this->isEmptyString($this->homeDirectory)) {
+                return $this->homeDirectory;
             }
         } elseif (is_string($user) && !$this->isEmptyString($user)
-            && isset($this->home_directory[$user])
-            && !$this->isEmptyString($this->home_directory[$user])) {
-            return $this->home_directory[$user];
+            && isset($this->homeDirectory[$user])
+            && !$this->isEmptyString($this->homeDirectory[$user])) {
+            return $this->homeDirectory[$user];
         }
 
         return getcwd();
@@ -102,17 +102,17 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
     {
         $environment = !empty($environment) ? (array) $environment : [];
         $path = (isset($environment['path']) && !$this->isEmptyString($environment['path'])) ?
-            $environment['path'] : $this->home_directory;
+            $environment['path'] : $this->homeDirectory;
 
         if (!$this->isEmptyString($path)) {
             if (is_dir($path)) {
                 if (!@chdir($path)) {
-                    return ['output' => "Unable to change directory to current working directory, 
-                    updating current directory",
+                    return ['output' => 'Unable to change directory to current working directory, '.
+                        'updating current directory',
                     'environment' => $this->getEnvironment()];
                 }
             } else {
-                return ['output' => "Current working directory not found, updating current directory",
+                return ['output' => 'Current working directory not found, updating current directory',
                 'environment' => $this->getEnvironment()];
             }
         }
@@ -123,7 +123,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
     protected function initialize($token, $environment)
     {
         $user = $this->authenticateToken($token);
-        $this->home_directory = $this->getHomeDirectory($user);
+        $this->homeDirectory = $this->getHomeDirectory($user);
         $result = $this->setEnvironment($environment);
 
         if ($result) {
@@ -138,12 +138,12 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
         $result = ['token' => $this->authenticateUser($user, $password),
             'environment' => $this->getEnvironment()];
 
-        $home_directory = $this->getHomeDirectory($user);
-        if (!$this->isEmptyString($home_directory)) {
-            if (is_dir($home_directory)) {
-                $result['environment']['path'] = $home_directory;
+        $homeDirectory = $this->getHomeDirectory($user);
+        if (!$this->isEmptyString($homeDirectory)) {
+            if (is_dir($homeDirectory)) {
+                $result['environment']['path'] = $homeDirectory;
             } else {
-                $result['output'] = "Home directory not found: ". $home_directory;
+                $result['output'] = 'Home directory not found: '. $homeDirectory;
             }
         }
 
@@ -159,16 +159,16 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
 
         $path = trim((string) $path);
         if ($this->isEmptyString($path)) {
-            $path = $this->home_directory;
+            $path = $this->homeDirectory;
         }
 
         if (!$this->isEmptyString($path)) {
             if (is_dir($path)) {
                 if (!@chdir($path)) {
-                    return ['output' => "cd: ". $path . ": Unable to change directory"];
+                    return ['output' => 'cd: '. $path . ': Unable to change directory'];
                 }
             } else {
-                return ['output' => "cd: ". $path . ": No such directory"];
+                return ['output' => 'cd: '. $path . ': No such directory'];
             }
         }
 
@@ -261,7 +261,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
 
         $process = proc_open($command . ' 2>&1', $descriptors, $pipes);
         if (!is_resource($process)) {
-            die("Can't execute command.");
+            die('Can\'t execute command.');
         }
 
         // Nothing to push to STDIN
@@ -273,7 +273,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[2]);
 
-        // All pipes must be closed before "proc_close"
+        // All pipes must be closed before 'proc_close'
         $code = proc_close($process);
 
         return $output;

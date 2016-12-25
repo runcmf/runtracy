@@ -35,7 +35,10 @@ class SlimEnvironmentPanelTest extends BaseTestCase
             'slim' => \Slim\App::VERSION,
         ];
 
-        $panel = new \RunTracy\Helpers\SlimEnvironmentPanel($app, $v);
+        $panel = new \RunTracy\Helpers\SlimEnvironmentPanel(
+            \Tracy\Dumper::toHtml($app->getContainer()->get('environment')),
+            $v
+        );
         $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
 
         // test Tracy tab
