@@ -14,12 +14,11 @@ namespace RunTracy\Helpers\Console;
  */
 class BaseJsonRpcServer
 {
-
-    const PARSEERROR = -32700,
-        INVALIDREQUEST = -32600,
-        METHODNOTFOUND = -32601,
-        INVALIDPARAMS = -32602,
-        INTERNALERROR = -32603;
+    const PARSEERROR = -32700;
+    const INVALIDREQUEST = -32600;
+    const METHODNOTFOUND = -32601;
+    const INVALIDPARAMS = -32602;
+    const INTERNALERROR = -32603;
 
     /**
      * Exposed Instances
@@ -98,7 +97,7 @@ class BaseJsonRpcServer
 
     /**
      * Cached Reflection Methods
-     * @var ReflectionMethod[]
+     * @var \ReflectionMethod[]
      */
     private $reflectionMethods = [];
 
@@ -346,6 +345,7 @@ class BaseJsonRpcServer
      */
     public function execute()
     {
+        $ret = [];
         do {
             // check for SMD Discovery request
             if (array_key_exists('smd', $_GET)) {
@@ -397,8 +397,8 @@ class BaseJsonRpcServer
 //            $ret = json_encode($this->response);
             $ret = $this->response;
             $this->resetVars();
-            return $ret;
         }
+        return $ret;
     }
 
 
@@ -445,7 +445,7 @@ class BaseJsonRpcServer
             }
 
             foreach ($rc->getMethods() as $method) {
-                /** @var ReflectionMethod $method */
+                /** @var \ReflectionMethod $method */
                 if (!$method->isPublic() || in_array(strtolower($method->getName()), $this->hiddenMethods)) {
                     continue;
                 }

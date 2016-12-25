@@ -108,8 +108,5 @@ class TracyMiddlewareTest extends BaseTestCase
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertRegexp('/Hello\, World/s', (string)$response->getBody());
-
-        // Return the response
-//        return $response;
     }
 }

@@ -51,7 +51,6 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
 
     protected function authenticateToken($token)
     {
-
         if ($this->no_login) {
             return true;
         }
@@ -224,10 +223,9 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
             // Pattern
             if (!empty($pattern) && !empty($completion)) {
                 // For PHP version that does not support anonymous functions (available since PHP 5.3.0)
-                $this->pattern = $pattern;
-                function filterPattern($value)
+                function filterPattern($value, $pattern)
                 {
-                    return !strncmp($this->pattern, $value, strlen($this->pattern));
+                    return !strncmp($pattern, $value, strlen($pattern));
                 }
 
                 $completion = array_values(array_filter($completion, [$this, 'filterPattern']));
