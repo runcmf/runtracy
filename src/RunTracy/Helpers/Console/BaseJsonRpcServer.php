@@ -334,11 +334,21 @@ class BaseJsonRpcServer
     public function registerInstance($instance, $namespace = '')
     {
         $this->instances[$namespace] = $instance;
-        $this->instances[$namespace]->errorMessages = $this->errorMessages;
+        if (is_object($this->instances[$namespace])) {
+            $this->instances[$namespace]->errorMessages = $this->errorMessages;
+        }
 
         return $this;
     }
 
+    /**
+     * Get Instances
+     * @return \object[]
+     */
+    public function getInstances()
+    {
+        return $this->instances;
+    }
 
     /**
      * Handle Requests

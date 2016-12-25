@@ -51,7 +51,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
 
     protected function authenticateToken($token)
     {
-        if ($this->no_login) {
+        if ($this->noLogin) {
             return true;
         }
 

@@ -21,6 +21,7 @@ use Tests\BaseTestCase;
 use RunTracy\Helpers\Console\BaseJsonRpcServer;
 
 /**
+ * Test BaseJsonRpcServer
  * @runTestsInSeparateProcesses
  * Class BaseJsonRpcServerTest
  * @package Tests\RunTracy\Helpers\Console
@@ -32,16 +33,58 @@ class BaseJsonRpcServerTest extends BaseTestCase
         $s = new BaseJsonRpcServer();
         $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $s);
 
-//        $ret = $this->callProtectedMethod('resetVars', '\RunTracy\Helpers\Console\BaseJsonRpcServer', []);
-
         // fake execute
         $ret = $s->execute();
         $this->assertEquals('2.0', $ret['jsonrpc']);
-        $this->assertTrue($ret['id'] === null);
+        $this->assertNull($ret['id']);
         $this->assertEquals(-32700, $ret['error']['code']);
         $this->assertEquals('Parse error', $ret['error']['message']);
-        $this->assertTrue($ret['error']['data'] === null);
+        $this->assertNull($ret['error']['data']);
+    }
 
-//fwrite(STDERR, '$ret: ' . var_export($ret, true) . " ###\n");
+    public function testBaseJsonRpcServerGetServiceMap()
+    {
+        $s = new BaseJsonRpcServer();
+        $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $s);
+
+        $ret = $this->callProtectedMethod('getServiceMap', '\RunTracy\Helpers\Console\BaseJsonRpcServer', []);
+        $this->assertEquals('POST', $ret['transport']);
+        $this->assertEquals('JSON-RPC-2.0', $ret['envelope']);
+        $this->assertEquals('2.0', $ret['SMDVersion']);
+        $this->assertEquals('application/json', $ret['contentType']);
+        $this->assertEquals('', $ret['target']);
+        $this->assertEquals([], $ret['services']);
+        $this->assertEquals('', $ret['description']);
+    }
+
+    public function testBaseJsonRpcServerGetDocDescription()
+    {
+        $s = new BaseJsonRpcServer();
+        $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $s);
+
+        $rc = new \ReflectionClass($s);
+
+        $ret = $this->callProtectedMethod(
+            'getDocDescription',
+            '\RunTracy\Helpers\Console\BaseJsonRpcServer',
+            [$rc->getDocComment(), 'test']
+        );
+        $this->assertRegexp('/JSON RPC Server/s', $ret);
+    }
+
+    public function testBaseJsonRpcServerRegisterInstance()
+    {
+        $s = new BaseJsonRpcServer();
+        $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $s);
+
+        $s->registerInstance($s, 'Self');
+        $ret = $s->registerInstance($s, 'OneMore');
+        $this->assertArrayHasKey('Self', $ret->getInstances());
+        $this->assertArrayHasKey('OneMore', $ret->getInstances());
+
+        $_GET['smd'] = 'bla-bla';
+        $ret = $s->execute();
+        $this->assertNotEmpty($ret['services']);
+        $this->assertCount(2, $ret['services']);
     }
 }

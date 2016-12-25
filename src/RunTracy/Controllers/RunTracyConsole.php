@@ -37,7 +37,7 @@ class RunTracyConsole extends WebConsoleRPCServer
     {
         $cfg = $this->ci->get('settings')['tracy']['configs'];
 
-        $this->no_login = $cfg['ConsoleNoLogin'] ?: false;
+        $this->noLogin = $cfg['ConsoleNoLogin'] ?: false;
         foreach ($cfg['ConsoleAccounts'] as $u => $p) {
             $this->accounts[$u] = $p;
         }

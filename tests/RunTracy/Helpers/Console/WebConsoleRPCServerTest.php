@@ -63,7 +63,7 @@ class WebConsoleRPCServerTest extends BaseTestCase
         $console = new FakeConsole;
         $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $console);
 
-        $console->setVar('no_login', ($cfg['ConsoleNoLogin'] ?: false));
+        $console->setVar('noLogin', ($cfg['ConsoleNoLogin'] ?: false));
         foreach ($cfg['ConsoleAccounts'] as $u => $p) {
             $console->setVar('accounts', $p, $u);
         }
@@ -78,12 +78,12 @@ class WebConsoleRPCServerTest extends BaseTestCase
         $this->assertEquals('dev', $user);
 
         // test without login
-        $console->setVar('no_login', true);
+        $console->setVar('noLogin', true);
         $user = $console->authToken($ret);
         $this->assertTrue($user);
 
         // fake token
-        $console->setVar('no_login', false);
+        $console->setVar('noLogin', false);
         $this->expectException(\RunTracy\Exceptions\IncorrectUserOrPassword::class);
         $console->authToken('dev:358e8');
     }
@@ -95,7 +95,7 @@ class WebConsoleRPCServerTest extends BaseTestCase
         $console = new FakeConsole;
         $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $console);
 
-        $console->setVar('no_login', ($cfg['ConsoleNoLogin'] ?: false));
+        $console->setVar('noLogin', ($cfg['ConsoleNoLogin'] ?: false));
         foreach ($cfg['ConsoleAccounts'] as $u => $p) {
             $console->setVar('accounts', $p, $u);
         }
@@ -114,7 +114,7 @@ class WebConsoleRPCServerTest extends BaseTestCase
         $console = new FakeConsole;
         $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $console);
 
-        $console->setVar('no_login', ($cfg['ConsoleNoLogin'] ?: false));
+        $console->setVar('noLogin', ($cfg['ConsoleNoLogin'] ?: false));
         foreach ($cfg['ConsoleAccounts'] as $u => $p) {
             $console->setVar('accounts', $p, $u);
         }
@@ -187,7 +187,7 @@ class WebConsoleRPCServerTest extends BaseTestCase
         $console = new FakeConsole;
         $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $console);
 
-        $console->setVar('no_login', ($cfg['ConsoleNoLogin'] ?: false));
+        $console->setVar('noLogin', ($cfg['ConsoleNoLogin'] ?: false));
         foreach ($cfg['ConsoleAccounts'] as $u => $p) {
             $console->setVar('accounts', $p, $u);
         }
