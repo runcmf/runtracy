@@ -223,17 +223,20 @@ $ cd vendor/runcmf/runtracy
 $ composer update
 $ vendor/bin/phpunit
 ```
----
-## Security
+---  
 
-If you discover any security related issues, please email to 1f7.wizard( at )gmail.com instead of using the issue tracker.
+## Security  
+
+If you discover any security related issues, please email to 1f7.wizard( at )gmail.com instead of using the issue tracker.  
+
 ---
 ## Credits
 
 * https://bitbucket.org/1f7
 * https://github.com/1f7
 * http://runetcms.ru
-* http://runcmf.ru
+* http://runcmf.ru  
+
 ---
 ## License
  
