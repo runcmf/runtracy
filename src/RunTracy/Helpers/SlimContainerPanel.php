@@ -18,7 +18,6 @@
 namespace RunTracy\Helpers;
 
 use Tracy\IBarPanel;
-use Tracy\Dumper;
 
 class SlimContainerPanel implements IBarPanel
 {

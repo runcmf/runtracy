@@ -60,12 +60,12 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
 
         if (count($tokenParts) == 2) {
             $user = trim((string) $tokenParts[0]);
-            $password_hash = trim((string) $tokenParts[1]);
+            $passwordHash = trim((string) $tokenParts[1]);
 
-            if ($user && $password_hash) {
+            if ($user && $passwordHash) {
                 if (isset($this->accounts[$user]) && !$this->isEmptyString($this->accounts[$user])) {
-                    $real_password_hash = $this->getHash('sha256', $this->accounts[$user]);
-                    if ($this->isEqualStrings($password_hash, $real_password_hash)) {
+                    $realPasswordHash = $this->getHash('sha256', $this->accounts[$user]);
+                    if ($this->isEqualStrings($passwordHash, $realPasswordHash)) {
                         return $user;
                     }
                 }
@@ -182,8 +182,8 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
             return $result;
         }
 
-        $scan_path = '';
-        $completion_prefix = '';
+        $scanPath = '';
+        $completionPrefix = '';
         $completion = [];
 
         if (!empty($pattern)) {
@@ -196,27 +196,27 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
 
             if (!empty($pattern)) {
                 if (is_dir($pattern)) {
-                    $scan_path = $completion_prefix = $pattern;
-                    if (substr($completion_prefix, -1) != '/') {
-                        $completion_prefix .= '/';
+                    $scanPath = $completionPrefix = $pattern;
+                    if (substr($completionPrefix, -1) != '/') {
+                        $completionPrefix .= '/';
                     }
                 }
             } else {
-                $scan_path = getcwd();
+                $scanPath = getcwd();
             }
         } else {
-            $scan_path = getcwd();
+            $scanPath = getcwd();
         }
 
-        if (!empty($scan_path)) {
+        if (!empty($scanPath)) {
             // Loading directory listing
-            $completion = array_values(array_diff(scandir($scan_path), ['..', '.']));
+            $completion = array_values(array_diff(scandir($scanPath), ['..', '.']));
             natsort($completion);
 
             // Prefix
-            if (!empty($completion_prefix) && !empty($completion)) {
+            if (!empty($completionPrefix) && !empty($completion)) {
                 foreach ($completion as &$value) {
-                    $value = $completion_prefix . $value;
+                    $value = $completionPrefix . $value;
                 }
             }
 
@@ -261,7 +261,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
 
         $process = proc_open($command . ' 2>&1', $descriptors, $pipes);
         if (!is_resource($process)) {
-            die('Can\'t execute command.');
+            return 'Can not execute command.';
         }
 
         // Nothing to push to STDIN

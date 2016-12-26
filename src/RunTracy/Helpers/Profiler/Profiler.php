@@ -26,11 +26,11 @@ class Profiler extends AdvancedProfiler
     /**
      * @inheritdoc
      */
-    public static function enable($real_usage = false)
+    public static function enable($realUsage = false)
     {
         /** @noinspection PhpInternalEntityUsedInspection */
         ProfilerService::init();
-        parent::enable($real_usage);
+        parent::enable($realUsage);
     }
 
     /**

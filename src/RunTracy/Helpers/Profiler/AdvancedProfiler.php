@@ -67,16 +67,16 @@ class AdvancedProfiler extends SimpleProfiler
     /**
      * @inheritdoc
      */
-    public static function start($labelOrFormat = null, $args = null, $_ = null)
+    public static function start($labelOrFormat = null, $args = null, $opt = null)
     {
         if (static::$enabled) {
             if ($labelOrFormat === null) {
                 $labelOrFormat = static::getCurrentFileHashLine(1);
                 $args = null;
-                $_ = null;
+                $opt = null;
             }
 
-            return parent::start($labelOrFormat, $args, $_);
+            return parent::start($labelOrFormat, $args, $opt);
         }
 
         return false;
@@ -85,16 +85,16 @@ class AdvancedProfiler extends SimpleProfiler
     /**
      * @inheritdoc
      */
-    public static function finish($labelOrFormat = null, $args = null, $_ = null)
+    public static function finish($labelOrFormat = null, $args = null, $opt = null)
     {
         if (static::$enabled) {
             if ($labelOrFormat === null) {
                 $labelOrFormat = static::getCurrentFileHashLine(1);
                 $args = null;
-                $_ = null;
+                $opt = null;
             }
 
-            $profile = parent::finish($labelOrFormat, $args, $_);
+            $profile = parent::finish($labelOrFormat, $args, $opt);
 
             if (static::$postProcessor === null) {
                 return $profile;

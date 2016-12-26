@@ -40,15 +40,15 @@ class SimpleProfiler
      *
      * @var boolean
      */
-    protected static $real_usage = false;
+    protected static $realUsage = false;
 
     /**
      * Enable profiler
      */
-    public static function enable($real_usage = false)
+    public static function enable($realUsage = false)
     {
         static::$enabled = true;
-        static::$real_usage = $real_usage ? true : false;
+        static::$realUsage = $realUsage ? true : false;
     }
 
     /**
@@ -68,11 +68,11 @@ class SimpleProfiler
     }
 
     /**
-     * @return boolean true if use real_usage memory, , otherwise false
+     * @return boolean true if use realUsage memory, , otherwise false
      */
     public static function isMemRealUsage()
     {
-        return static::$real_usage;
+        return static::$realUsage;
     }
 
     /**
@@ -80,10 +80,10 @@ class SimpleProfiler
      *
      * @param string $labelOrFormat
      * @param mixed $args [optional]
-     * @param mixed $_ [optional]
+     * @param mixed $opt [optional]
      * @return bool true on success or false on failure
      */
-    public static function start($labelOrFormat = null, $args = null, $_ = null)
+    public static function start($labelOrFormat = null, $args = null, $opt = null)
     {
         if (static::$enabled) {
             if ($args === null) {
@@ -95,7 +95,7 @@ class SimpleProfiler
 
             $now = microtime(true);
 
-            $memoryUsage = static::$real_usage ? memory_get_usage(true) : memory_get_usage();
+            $memoryUsage = static::$realUsage ? memory_get_usage(true) : memory_get_usage();
 
             $profile = new Profile();
             $profile->meta = [
@@ -119,16 +119,16 @@ class SimpleProfiler
      *
      * @param string $labelOrFormat
      * @param mixed $args [optional]
-     * @param mixed $_ [optional]
+     * @param mixed $opt [optional]
      * @return bool|Profile profile on success or false on failure
      * @throws ProfilerException
      */
-    public static function finish($labelOrFormat = null, $args = null, $_ = null)
+    public static function finish($labelOrFormat = null, $args = null, $opt = null)
     {
         if (static::$enabled) {
             $now = microtime(true);
 
-            $memoryUsage = static::$real_usage ? memory_get_usage(true) : memory_get_usage();
+            $memoryUsage = static::$realUsage ? memory_get_usage(true) : memory_get_usage();
 
             if (empty(static::$stack)) {
                 throw new EmptyStackException('The stack is empty. Call ' . get_called_class() . '::start() first.');

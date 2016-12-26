@@ -36,7 +36,7 @@ class TracyMiddleware
     public function __invoke($request, $response, $next)
     {
         $res = $next($request, $response);
-        $v = [
+        $ver = [
             'slim' => \Slim\App::VERSION,
         ];
 
@@ -65,31 +65,31 @@ class TracyMiddleware
         if (isset($cfg['showSlimEnvironmentPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimEnvironmentPanel(
                 \Tracy\Dumper::toHtml($this->app->getContainer()->get('environment')),
-                $v
+                $ver
             ));
         }
         if (isset($cfg['showSlimContainer'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimContainerPanel(
                 \Tracy\Dumper::toHtml($this->app->getContainer()),
-                $v
+                $ver
             ));
         }
         if (isset($cfg['showSlimRouterPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRouterPanel(
                 \Tracy\Dumper::toHtml($this->app->getContainer()->get('router')),
-                $v
+                $ver
             ));
         }
         if (isset($cfg['showSlimRequestPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRequestPanel(
                 \Tracy\Dumper::toHtml($this->app->getContainer()->get('request')),
-                $v
+                $ver
             ));
         }
         if (isset($cfg['showSlimResponsePanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimResponsePanel(
                 \Tracy\Dumper::toHtml($this->app->getContainer()->get('response')),
-                $v
+                $ver
             ));
         }
         if (isset($cfg['showVendorVersionsPanel'])) {

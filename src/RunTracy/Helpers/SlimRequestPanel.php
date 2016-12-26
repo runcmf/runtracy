@@ -19,7 +19,6 @@
 namespace RunTracy\Helpers;
 
 use Tracy\IBarPanel;
-use Tracy\Dumper;
 
 class SlimRequestPanel implements IBarPanel
 {

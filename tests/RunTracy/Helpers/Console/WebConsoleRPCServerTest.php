@@ -159,6 +159,7 @@ class WebConsoleRPCServerTest extends BaseTestCase
         $ret = $console->init($ret, $env);
         $this->assertFalse($ret);// false - all ok
 
+        // direct login
         $ret = $console->login('dev', 'dev');
         $this->assertArrayHasKey('token', $ret);
         $this->assertArrayHasKey('environment', $ret);
@@ -222,5 +223,35 @@ class WebConsoleRPCServerTest extends BaseTestCase
         // test php command
         $res = $console->run($ret['token'], $ret['environment'], 'php -r \'echo sha1("dev");\'');
         $this->assertEquals('34c6fceca75e456f25e7e99531e2425c6c1de443', $res['output']);
+    }
+
+    public function testWebConsoleRPCServerJsonCall()
+    {
+        $cfg = $this->cfg['settings']['tracy']['configs'];
+
+        $console = new FakeConsole;
+        $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $console);
+
+        $console->setVar('noLogin', ($cfg['ConsoleNoLogin'] ?: false));
+        foreach ($cfg['ConsoleAccounts'] as $u => $p) {
+            $console->setVar('accounts', $p, $u);
+        }
+        $console->setVar('passwordHashAlgorithm', ($cfg['ConsoleHashAlgorithm'] ?: ''));
+        $console->setVar('homeDirectory', ($cfg['ConsoleHomeDirectory'] ?: ''));
+
+        // json login
+        $_GET['rawRequest'] = '{"jsonrpc":"2.0","method":"login","params":["dev","dev"],"id":1}';
+        $ret = $console->execute();
+        $this->assertEquals(
+            'dev:358e86472ec7619731baf6950db699b26e2c2df8d51a31159d40ae4987f6fbab',
+            $ret['result']['token']
+        );
+
+        // echo command
+        $_GET['rawRequest'] = '{"jsonrpc":"2.0","method":"run","params":'.
+            '["dev:358e86472ec7619731baf6950db699b26e2c2df8d51a31159d40ae4987f6fbab",'.
+            '{"user":"dev","path":"/"},"echo \'HelloWorld!!!\'"],"id":2}';
+        $ret = $console->execute();
+        $this->assertEquals('HelloWorld!!!', $ret['result']['output']);
     }
 }
