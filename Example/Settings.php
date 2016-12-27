@@ -32,7 +32,7 @@ return [
         'displayErrorDetails' => true,
         'determineRouteBeforeAppMiddleware' => true,
         'addContentLengthHeader' => false,// if true = Unexpected data in output buffer
-//        'routerCacheFile' => DIR . 'var/cache/fastroute.cache',//TODO uncomment after debug
+//        'routerCacheFile' => DIR . 'var/cache/fastroute.cache',// uncomment after debug
 
         'db' => [// multi database configuration
             'default' => 'mysql',

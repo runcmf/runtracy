@@ -45,7 +45,6 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
             }
         }
 
-//        throw new \Exception('Incorrect user or password');
         throw new IncorrectUserOrPassword();
     }
 
@@ -72,7 +71,6 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
             }
         }
 
-//        throw new \Exception('Incorrect user or password');
         throw new IncorrectUserOrPassword();
     }
 

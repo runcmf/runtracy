@@ -22,7 +22,7 @@ $c['twig_profile'] = function () {
     return new Twig_Profiler_Profile();
 };
 
-$c['view'] = function ($c) {
+$c['view'] = function (\Slim\Container $c) {
     $settings = $c->get('settings')['view'];
     $view = new \Slim\Views\Twig($settings['template_path'], $settings['twig']);
     // Add extensions
@@ -33,7 +33,7 @@ $c['view'] = function ($c) {
 };
 
 // monolog
-$c['logger'] = function ($c) {
+$c['logger'] = function (\Slim\Container $c) {
     $settings = $c->get('settings')['logger'];
     $logger = new Monolog\Logger($settings['name']);
     $logger->pushProcessor(new Monolog\Processor\UidProcessor());
@@ -43,7 +43,7 @@ $c['logger'] = function ($c) {
 };
 
 //Override the default Not Found Handler
-$c['notFoundHandler'] = function ($c) {
+$c['notFoundHandler'] = function (\Slim\Container $c) {
     return function ($request, $response) use ($c) {
         $c->view->offsetSet('erno', '404');
         $c->view->offsetSet('ermes', 'Page not found');
@@ -52,7 +52,7 @@ $c['notFoundHandler'] = function ($c) {
     };
 };
 //Override the default Not Allowed Handler
-$c['notAllowedHandler'] = function ($c) {
+$c['notAllowedHandler'] = function (\Slim\Container $c) {
     return function ($request, $response, $methods) use ($c) {
         $c->view->offsetSet('erno', '405');
         $c->view->offsetSet('ermes', 'Can not route with method{s}: ' . implode(', ', $methods));

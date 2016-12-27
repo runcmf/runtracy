@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 2016-12-27
+* Fix insight.sensiolabs.com compliance
+
 ### 2016-12-26
 * small code cleanup
 * 80% test coverage

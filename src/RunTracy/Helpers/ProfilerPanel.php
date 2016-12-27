@@ -97,8 +97,7 @@ class ProfilerPanel implements IBarPanel
         if ($this->config[self::CONFIG_SHOW][self::CONFIG_SHOW_MEMORY_USAGE_CHART]) {
             $table .= '<tr><td colspan="4" style="text-align: center">' . $this->getMemoryChart() . '</td></tr>';
         }
-//dump($this->config[self::CONFIG_PRIMARY_VALUE]);
-//        if ($this->config[self::CONFIG_PRIMARY_VALUE] == self::CONFIG_PRIMARY_VALUE_EFFECTIVE) {
+
         if ($this->config[self::CONFIG_PRIMARY_VALUE] == self::CONFIG_PRIMARY_VALUE_ABSOLUTE) {
             $table .= '
             <tr><th>Start</th><th>Finish</th><th>Time (absolute)</th><th>Memory change (absolute)</th></tr>';
@@ -127,7 +126,6 @@ class ProfilerPanel implements IBarPanel
                 );
             }
 
-//            if ($this->config[self::CONFIG_PRIMARY_VALUE] == self::CONFIG_PRIMARY_VALUE_EFFECTIVE) {
             if ($this->config[self::CONFIG_PRIMARY_VALUE] == self::CONFIG_PRIMARY_VALUE_ABSOLUTE) {
                 $table .= sprintf(
                     '<tr>%s<td>%d&nbsp;ms (%d&nbsp;ms)</td><td>%d&nbsp;kB (%d&nbsp;kB)</td></tr>',
