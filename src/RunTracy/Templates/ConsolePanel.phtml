@@ -1,7 +1,6 @@
 <style type="text/css">
     #tracy-debug-panel-RunTracy-Helpers-ConsolePanel {
         width: 700px !important;
-        /*bottom: 21px !important;*/
     }
     .terminal, textarea, .cmd, .terminal .terminal-output div div, .terminal .prompt {
         background: #000000 !important;
@@ -15,19 +14,15 @@
         max-height: 550px;
         overflow-y:scroll;
     }
-
     .spaced { margin: 15px 0; }
     .spaced-top { margin: 15px 0 0 0; }
     .spaced-bottom { margin: 0 0 15px 0; }
-
     .configure { margin: 20px; }
     .configure .variable { color: #d33682; }
     .configure p, .configure ul { margin: 5px 0 0 0; }
-
     #tipscontainer { width:100%; }
     #tipsleft { display:inline-block; width: 400px; }
     #tipsright { display:inline-block; }
-
     #containerHeader h1,
     #containerHeader p {
         display: inline;
@@ -35,23 +30,18 @@
     }
     .error{color:red  !important}
 </style>
-<link rel="stylesheet" href="<?php echo $this->TerminalCss ?>">
-
+<link rel="stylesheet" href="<?php echo $this->terminalCss ?>">
 <div id="containerHeader">
     <h1><?php echo $this->icon; ?> PTY Console &nbsp; </h1>
     <p><span class="warn warn_blink"> &nbsp; 'ConsoleNoLogin' => true &nbsp; </span></p>
 </div>
-
 <div>
     <div id="term"></div>
     <p><strong>Attention:</strong> Do not kill your server! Exposing to the public as is would introduce security risks for the host.</p>
 </div>
-
-
 <script type="text/javascript">
-    $.getScript( "<?php echo $this->TerminalJs; ?>" )
+    $.getScript( "<?php echo $this->terminalJs; ?>" )
         .done(function () {
-//            $.getScript( "/assets/js/unix_formatting.js" );
             var settings = {'url': '/console',
                 'prompt_path_length': 32,
                 'domain': document.domain || window.location.host
@@ -61,7 +51,6 @@
             var silent_mode = false;
             // Default banner
             var banner_main = "Welcome to PTY Console. Run 'tricks' to see example commands";
-
             // Output
             function show_output(output) {
                 if (output) {
@@ -73,7 +62,6 @@
                     else terminal.echo(output);
                 }
             }
-
             // Prompt
             function make_prompt() {
                 var path = environment.path;
@@ -85,11 +73,9 @@
                     (path || '~') +
                     '$ ';
             }
-
             function update_prompt(terminal) {
                 terminal.set_prompt(make_prompt());
             }
-
             // Environment
             function update_environment(terminal, data) {
                 if (data) {
@@ -97,7 +83,6 @@
                     update_prompt(terminal);
                 }
             }
-
             // Service
             function service(terminal, method, parameters, success, error, options) {
                 options = $.extend({'pause': true}, options);
@@ -140,7 +125,6 @@
                         }
                     });
             }
-
             function service_authenticated(terminal, method, parameters, success, error, options) {
                 var token = terminal.token();
                 if (token || no_login) {
@@ -154,12 +138,10 @@
                     terminal.error('&#91;ERROR&#93; Access denied (no authentication token found)');
                 }
             }
-
             // Interpreter
             function interpreter(command, terminal) {
                 command = $.trim(command || '');
                 if (!command) return;
-
                 if (command === 'tricks') {
                     terminal.echo("[[;green;;]" +
                     "\twget -q https://getcomposer.org/composer.phar\n" +
@@ -173,19 +155,16 @@
                     "");//,{raw:true, keepWords:true});
                     return;
                 }
-
                 var command_parsed = $.terminal.splitCommand(command),
                     method = null, parameters = [];
 
                 if (command_parsed.name.toLowerCase() === 'cd') {
                     method = 'cd';
                     parameters = [command_parsed.args.length ? command_parsed.args[0] : ''];
-                }
-                else {
+                } else {
                     method = 'run';
                     parameters = [command];
                 }
-
                 if (method) {
                     service_authenticated(terminal, method, parameters, function(result) {
                         update_environment(terminal, result.environment);
@@ -193,7 +172,6 @@
                     });
                 }
             }
-
             // Login
             function login(user, password, callback) {
                 user = $.trim(user || '');
@@ -212,26 +190,21 @@
                 }
                 else callback(null);
             }
-
             // Completion
             function completion(terminal, pattern, callback) {
                 var view = terminal.export_view();
                 var command = view.command.substring(0, view.position);
-
                 service_authenticated(terminal, 'completion', [pattern, command], function(result) {
                     show_output(result.output);
-
                     if (result.completion && result.completion.length) {
                         result.completion.reverse();
                         callback(result.completion);
                     }
                 }, null, {pause: false});
             }
-
             // Logout
             function logout() {
                 silent_mode = true;
-
                 try {
                     terminal.clear();
                     terminal.logout();
@@ -240,7 +213,6 @@
 
                 silent_mode = false;
             }
-
             // Terminal
             var terminal = $('#term').terminal(interpreter, {
                 login: !no_login ? login : false,
@@ -253,16 +225,13 @@
                     if (!silent_mode) terminal.exception(exception);
                 }
             });
-
             // Logout
             if (no_login) {
 //                terminal.set_token('__NO_LOGIN__');
             } else {
                 logout();
                 $('#term').on('unload', function(){ logout(); });
-//                $('#term').on('beforeunload', function(){ logout(); });
             }
-
             // Banner
             if (banner_main) terminal.echo(banner_main);
         });

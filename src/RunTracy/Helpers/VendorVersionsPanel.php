@@ -28,7 +28,7 @@ class VendorVersionsPanel implements IBarPanel
     {
         $composerLockDir = $composerLockDir ?: __DIR__ . '/../../../../../../';
 
-        if (!is_dir($dir = @realpath($composerLockDir))) {
+        if (!is_dir($dir = realpath($composerLockDir))) {
             $this->error = 'Path "'.$composerLockDir.'" is not a directory.';
         } elseif (!is_file($dir . DIRECTORY_SEPARATOR . 'composer.lock')) {
             $this->error = "Directory '$dir' does not contain the composer.lock file.";
@@ -73,7 +73,7 @@ class VendorVersionsPanel implements IBarPanel
 
         $error = $this->error;
 
-        require @realpath(__DIR__) .'../../Templates/VendorVersionsPanel.phtml';
+        require __DIR__ .'../../Templates/VendorVersionsPanel.phtml';
         return ob_get_clean();
     }
 
@@ -107,13 +107,13 @@ class VendorVersionsPanel implements IBarPanel
      */
     private function decode($file)
     {
-        $json = @file_get_contents($file);
+        $json = file_get_contents($file);
         if ($json === false) {
             $this->error = error_get_last()['message'];
             return null;
         }
 
-        $decoded = @json_decode($json, true);
+        $decoded = json_decode($json, true);
         if (!is_array($decoded)) {
             $this->error = error_get_last()['message'];
             return null;

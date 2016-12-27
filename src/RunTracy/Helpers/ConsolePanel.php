@@ -23,9 +23,8 @@ class ConsolePanel implements IBarPanel
 {
     private $icon;
     private $cfg;
-//    private $MousewheelJs = '';
-    private $TerminalJs = '';
-    private $TerminalCss = '';
+    private $terminalJs = '';
+    private $terminalCss = '';
     private $noLogin = 0;
 
     public function __construct(array $cfg = [])
@@ -91,13 +90,12 @@ class ConsolePanel implements IBarPanel
 
     public function getPanel()
     {
-//        $this->MousewheelJs = $this->cfg['ConsoleMousewheelJs'];
         $this->noLogin = $this->cfg['ConsoleNoLogin'];
-        $this->TerminalJs = $this->cfg['ConsoleTerminalJs'];
-        $this->TerminalCss = $this->cfg['ConsoleTerminalCss'];
+        $this->terminalJs = $this->cfg['ConsoleTerminalJs'];
+        $this->terminalCss = $this->cfg['ConsoleTerminalCss'];
 
         ob_start();
-        require @realpath(__DIR__) .'../../Templates/ConsolePanel.phtml';
+        require __DIR__ .'../../Templates/ConsolePanel.phtml';
         return ob_get_clean();
     }
 }

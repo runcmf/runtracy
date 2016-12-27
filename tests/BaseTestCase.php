@@ -2,14 +2,6 @@
 
 namespace Tests;
 
-//use Slim\App;
-//use Slim\Http\Environment;
-//use Slim\Http\Uri;
-//use Slim\Http\Body;
-//use Slim\Http\Headers;
-//use Slim\Http\Request;
-//use Slim\Http\Response;
-
 /**
  * Class BaseTestCase
  * @package Tests

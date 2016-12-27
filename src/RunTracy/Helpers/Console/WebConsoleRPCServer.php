@@ -104,14 +104,17 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
 
         if (!$this->isEmptyString($path)) {
             if (is_dir($path)) {
-                if (!@chdir($path)) {
-                    return ['output' => 'Unable to change directory to current working directory, '.
-                        'updating current directory',
-                    'environment' => $this->getEnvironment()];
+                if (!chdir($path)) {
+                    return [
+                    'output' => 'Unable to change directory to current working directory, updating current directory',
+                    'environment' => $this->getEnvironment()
+                    ];
                 }
             } else {
-                return ['output' => 'Current working directory not found, updating current directory',
-                'environment' => $this->getEnvironment()];
+                return [
+                'output' => 'Current working directory not found, updating current directory',
+                'environment' => $this->getEnvironment()
+                ];
             }
         }
         return false;
@@ -162,7 +165,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
 
         if (!$this->isEmptyString($path)) {
             if (is_dir($path)) {
-                if (!@chdir($path)) {
+                if (!chdir($path)) {
                     return ['output' => 'cd: '. $path . ': Unable to change directory'];
                 }
             } else {
@@ -274,32 +277,11 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
         // All pipes must be closed before 'proc_close'
         $code = proc_close($process);
 
+        if (!empty($error)) {
+            $output .= ', exit wit error:' . $error . ', code: ' . $code;
+        }
         return $output;
     }
-
-//    // Command parsing
-//    function parse_command($command)
-//    {
-//        $value = ltrim((string) $command);
-//
-//        if (!$this->isEmptyString($value)) {
-//            $values = explode(' ', $value);
-//            $values_total = count($values);
-//
-//            if ($values_total > 1) {
-//                $value = $values[$values_total - 1];
-//
-//                for ($index = $values_total - 2; $index >= 0; $index--) {
-//                    $value_item = $values[$index];
-//
-//                    if (substr($value_item, -1) == '\\') $value = $value_item . ' ' . $value;
-//                    else break;
-//                }
-//            }
-//        }
-//
-//        return $value;
-//    }
 
     // Utilities
     private function isEmptyString($string)

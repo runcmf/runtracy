@@ -393,10 +393,6 @@ class BaseJsonRpcServer
             }
 
             if (!headers_sent()) {
-                // Set Content Type
-//                if ($this->ContentType) {
-//                    header('Content-Type: ' . $this->ContentType);
-//                }
                 // Allow Cross Domain Requests
                 if ($this->IsXDR) {
                     header('Access-Control-Allow-Origin: *');
@@ -404,7 +400,6 @@ class BaseJsonRpcServer
                 }
             }
 
-//            $ret = json_encode($this->response);
             $ret = $this->response;
             $this->resetVars();
         }

@@ -1,7 +1,7 @@
 {
   "name": "runcmf/runtracy",
   "description": "Slim Framework Debugger",
-  "license": "Apache 2",
+  "license": "Apache-2.0",
   "type": "library",
   "keywords": [
     "Slim Framework",
@@ -28,6 +28,7 @@
     "tracy/tracy": "~2.4"
   },
   "require-dev": {
+    "satooshi/php-coveralls": "1.*",
     "squizlabs/php_codesniffer": "^2.5",
     "phpunit/phpunit": "^5.7",
     "illuminate/database": "^5.3",

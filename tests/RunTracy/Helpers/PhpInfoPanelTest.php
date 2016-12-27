@@ -42,11 +42,6 @@ class PhpInfoPanelTest extends BaseTestCase
      */
     public function testRemoveElementsByTagName()
     {
-//        ob_start();
-//        phpinfo();
-//        $phpInfo = ob_get_contents();
-//        ob_get_clean();
-        // FIXME buffer not work in phpunit ????
         $html = '
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
         <html xmlns="http://www.w3.org/1999/xhtml">
