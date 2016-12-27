@@ -80,10 +80,9 @@ class SimpleProfiler
      *
      * @param string $labelOrFormat
      * @param mixed $args [optional]
-     * @param mixed $opt [optional]
      * @return bool true on success or false on failure
      */
-    public static function start($labelOrFormat = null, $args = null, $opt = null)
+    public static function start($labelOrFormat = null, $args = null)
     {
         if (static::$enabled) {
             if ($args === null) {
@@ -119,11 +118,10 @@ class SimpleProfiler
      *
      * @param string $labelOrFormat
      * @param mixed $args [optional]
-     * @param mixed $opt [optional]
      * @return bool|Profile profile on success or false on failure
      * @throws ProfilerException
      */
-    public static function finish($labelOrFormat = null, $args = null, $opt = null)
+    public static function finish($labelOrFormat = null, $args = null)
     {
         if (static::$enabled) {
             $now = microtime(true);

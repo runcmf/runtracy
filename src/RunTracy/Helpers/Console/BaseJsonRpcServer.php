@@ -270,7 +270,7 @@ class BaseJsonRpcServer
 
     /**
      * Process Call
-     * @param $call
+     * @param object $call
      * @return array|null
      */
     private function processCall($call)

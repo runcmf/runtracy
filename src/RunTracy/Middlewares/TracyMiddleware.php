@@ -33,6 +33,12 @@ class TracyMiddleware
         $this->app = $app;
     }
 
+    /**
+     * @param $request \Psr\Http\Message\RequestInterface
+     * @param $response \Psr\Http\Message\ResponseInterface
+     * @param $next Callable
+     * @return mixed
+     */
     public function __invoke($request, $response, $next)
     {
         $res = $next($request, $response);

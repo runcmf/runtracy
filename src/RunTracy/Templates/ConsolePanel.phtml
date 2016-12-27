@@ -67,7 +67,6 @@
                 var path = environment.path;
                 if (path && path.length > settings.prompt_path_length)
                     path = '...' + path.slice(path.length - settings.prompt_path_length + 3);
-
                 return '[[b;#d33682;]' + (environment.user || 'user') + ']' +
                     '@[[b;#6c71c4;]' + (environment.hostname || settings.domain || 'console') + '] ' +
                     (path || '~') +
@@ -87,11 +86,9 @@
             function service(terminal, method, parameters, success, error, options) {
                 options = $.extend({'pause': true}, options);
                 if (options.pause) terminal.pause();
-
                 $.jrpc(settings.url, method, parameters,
                     function(json) {
                         if (options.pause) terminal.resume();
-
                         if (!json.error) {
                             if (success) success(json.result);
                         }
@@ -99,12 +96,10 @@
                         else {
                             var message = $.trim(json.error.message || '');
                             var data =  $.trim(json.error.data || '');
-
                             if (!message && data) {
                                 message = data;
                                 data = '';
                             }
-
                             terminal.error('&#91;ERROR&#93;' +
                                 ' RPC: ' + (message || 'Unknown error') +
                                 (data ? (" (" + data + ")") : ''));
@@ -112,7 +107,6 @@
                     },
                     function(xhr, status, error_data) {
                         if (options.pause) terminal.resume();
-
                         if (error) error();
                         else {
                             if (status !== 'abort') {
@@ -132,8 +126,7 @@
                     if (parameters && parameters.length)
                         service_parameters.push.apply(service_parameters, parameters);
                     service(terminal, method, service_parameters, success, error, options);
-                }
-                else {
+                } else {
                     // Should never happen
                     terminal.error('&#91;ERROR&#93; Access denied (no authentication token found)');
                 }

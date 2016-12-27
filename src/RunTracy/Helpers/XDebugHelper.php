@@ -22,7 +22,7 @@ use Tracy\IBarPanel;
 
 class XDebugHelper implements IBarPanel
 {
-    private $ideKey;
+    protected $ideKey;
 
 
     public function __construct($ideKey = 'PHPSTORM')

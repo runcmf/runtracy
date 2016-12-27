@@ -21,11 +21,11 @@ use Tracy\IBarPanel;
 
 class ConsolePanel implements IBarPanel
 {
-    private $icon;
-    private $cfg;
-    private $terminalJs = '';
-    private $terminalCss = '';
-    private $noLogin = 0;
+    protected $icon;
+    protected $cfg;
+    protected $terminalJs;
+    protected $terminalCss;
+    protected $noLogin;
 
     public function __construct(array $cfg = [])
     {
