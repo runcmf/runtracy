@@ -170,10 +170,10 @@ class BaseJsonRpcServer
 
     /**
      * Check for jsonrpc version and correct method
-     * @param Json object $call
+     * @param \stdClass $call
      * @return array|null
      */
-    private function validateCall($call)
+    private function validateCall(\stdClass $call)
     {
         $result = null;
         $error = null;
@@ -217,6 +217,7 @@ class BaseJsonRpcServer
             $paramsType = gettype($params);
             if ($params !== null && $paramsType != 'array' && $paramsType != 'object') {
                 $error = self::INVALIDPARAMS;
+                $data = 'Cast of params error';
                 break;
             }
 
@@ -270,10 +271,10 @@ class BaseJsonRpcServer
 
     /**
      * Process Call
-     * @param Json object $call
+     * @param \stdClass $call
      * @return array|null
      */
-    private function processCall($call)
+    private function processCall(\stdClass $call)
     {
         $id = property_exists($call, 'id') ? $call->id : null;
         $params = property_exists($call, 'params') ? $call->params : [];

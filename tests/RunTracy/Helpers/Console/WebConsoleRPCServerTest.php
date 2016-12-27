@@ -253,5 +253,26 @@ class WebConsoleRPCServerTest extends BaseTestCase
             '{"user":"dev","path":"/"},"echo \'HelloWorld!!!\'"],"id":2}';
         $ret = $console->execute();
         $this->assertEquals('HelloWorld!!!', $ret['result']['output']);
+
+        // test sequence of params - 1 instead 2
+        $_GET['rawRequest'] = '{"jsonrpc":"2.0","method":"login","params":["dev"],"id":1}';
+        $ret = $console->execute();
+        $this->assertEquals(-32602, $ret['error']['code']);
+        $this->assertRegexp('#Invalid params#s', $ret['error']['message']);
+        $this->assertRegexp('#Check numbers of required params#s', $ret['error']['data']);
+
+        // test params cast - not array
+        $_GET['rawRequest'] = '{"jsonrpc":"2.0","method":"login","params":"dev","id":1}';
+        $ret = $console->execute();
+        $this->assertEquals(-32602, $ret['error']['code']);
+        $this->assertRegexp('#Invalid params#s', $ret['error']['message']);
+        $this->assertRegexp('#Cast of params error#s', $ret['error']['data']);
+
+        // test params - null
+        $_GET['rawRequest'] = '{"jsonrpc":"2.0","method":"login","params":null,"id":1}';
+        $ret = $console->execute();
+        $this->assertEquals(-32602, $ret['error']['code']);
+        $this->assertRegexp('#Invalid params#s', $ret['error']['message']);
+        $this->assertRegexp('#Empty required params#s', $ret['error']['data']);
     }
 }
