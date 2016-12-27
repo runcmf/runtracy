@@ -3,7 +3,8 @@
 [![Code Climate](https://codeclimate.com/github/runcmf/runtracy/badges/gpa.svg)](https://codeclimate.com/github/runcmf/runtracy)
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
-[![Software License][ico-license]][link-license]
+[![Software License][ico-license]][link-license]  
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/2d080724-9e10-4770-9220-0678381eb341/big.png)](https://insight.sensiolabs.com/projects/2d080724-9e10-4770-9220-0678381eb341)
 
 # Slim Framework Tracy Debugger Bar #
 ## configure it by mouse

@@ -17,6 +17,8 @@
 
 namespace RunTracy\Middlewares;
 
+use Psr\Http\Message\RequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 use Tracy\Debugger;
 use RunTracy\Helpers\PanelSelector;
 
@@ -39,7 +41,7 @@ class TracyMiddleware
      * @param $next Callable
      * @return mixed
      */
-    public function __invoke($request, $response, $next)
+    public function __invoke(Request $request, Response $response, callable $next)
     {
         $res = $next($request, $response);
         $ver = [

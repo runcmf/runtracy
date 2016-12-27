@@ -170,7 +170,7 @@ class BaseJsonRpcServer
 
     /**
      * Check for jsonrpc version and correct method
-     * @param object $call
+     * @param Json object $call
      * @return array|null
      */
     private function validateCall($call)
@@ -270,7 +270,7 @@ class BaseJsonRpcServer
 
     /**
      * Process Call
-     * @param object $call
+     * @param Json object $call
      * @return array|null
      */
     private function processCall($call)
