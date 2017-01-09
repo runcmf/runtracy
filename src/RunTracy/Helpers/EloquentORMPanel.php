@@ -44,6 +44,7 @@ class EloquentORMPanel implements IBarPanel
 
     public function getTab()
     {
+        $this->data = $this->parse($this->data);
         $this->icon = '
         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px"
             viewBox="0 0 284.207 284.207" style="enable-background:new 0 0 284.207 284.207;"
@@ -70,7 +71,7 @@ class EloquentORMPanel implements IBarPanel
         <h1>'.$this->icon.' &nbsp; Slim 3 / Eloquent ORM</h1>
         <div class="tracy-inner">
             <p>
-                <table width="100%">' . $this->parse($this->data) . '
+                <table width="100%">' . $this->data . '
                     <tr class="yes">
                         <th><b>' . $this->count . '</b></th><th><b>' . $this->time . ' ms</b></th>
                         <th>Total</th>
