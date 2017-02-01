@@ -18,6 +18,7 @@
 namespace Tests\RunTracy\Helpers;
 
 use Tests\BaseTestCase;
+use RunTracy\Collectors\IdormCollector;
 
 /**
  * @runTestsInSeparateProcesses
@@ -26,7 +27,7 @@ use Tests\BaseTestCase;
  */
 class IdiormPanelTest extends BaseTestCase
 {
-    public function testEloquentORMPanel()
+    public function testIdiormPanel()
     {
         if (!class_exists('\ORM')) {
             $this->markTestSkipped('Idiorm not installed and all tests in this file are invactive!');
@@ -41,6 +42,48 @@ class IdiormPanelTest extends BaseTestCase
             // test Tracy panel
             $this->assertRegexp('#Slim 3 / Idiorm#', $panel->getPanel());
         }
+    }
+
+    public function testIdiormPanelParser()
+    {
+        // empty data
+        $result = $this->callProtectedMethod('parse', '\RunTracy\Helpers\IdiormPanel', []);
+        $this->assertRegexp('#No Logs#', $result);
+
+        // some as in collector test
+        $collector = new IdormCollector();
+        $this->assertInstanceOf('\RunTracy\Collectors\IdormCollector', $collector);
+
+        IdormCollector::setLog($this->getFakeData());
+
+        $logs = IdormCollector::getLog();
+        $this->assertEquals(3, count($logs));
+
+        // now with data
+        $result = $this->callProtectedMethod('parse', '\RunTracy\Helpers\IdiormPanel', []);
+        $this->assertRegexp('#0.00042415#', $result);// number_format len = 8
+        $this->assertRegexp('#0.00013685#', $result);// number_format len = 8
+        $this->assertRegexp('#0.00020099#', $result);// number_format len = 8
+    }
+
+    protected function getFakeData()
+    {
+        return [
+            0 => [
+                'time' => 0.00042414665222168,
+                'query' => "SELECT `u`.*, `g`.*, `o`.`logged`, `o`.`idle` FROM `users` `u` 
+                INNER JOIN `groups` `g` ON `u`.`group_id` = `g`.`g_id` 
+                LEFT JOIN online `o` ON o.user_id='u.id' WHERE `u`.`id` = '2'"
+            ],
+            1 => [
+                'time' => 0.0001368522644043,
+                'query' => "REPLACE INTO online (user_id, ident, logged) VALUES('2', 'admin', '1485932309')"
+            ],
+            2 => [
+                'time' => 0.00020098686218262,
+                'query' => "SELECT `user_id`, `ident`, `logged`, `idle` FROM `online` WHERE `logged` < '1485932009'"
+            ]
+        ];
     }
 
     public function initIdiorm()

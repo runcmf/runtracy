@@ -17,6 +17,7 @@
 
 namespace RunTracy\Middlewares;
 
+use Slim\App;
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Tracy\Debugger;
@@ -32,11 +33,11 @@ class TracyMiddleware
     private $defcfg;
     private $versions;
 
-    public function __construct($app)
+    public function __construct(App $app = null)
     {
         $this->container = $app->getContainer();
         $this->versions = [
-            'slim' => \Slim\App::VERSION,
+            'slim' => App::VERSION,
         ];
         $this->defcfg = $this->container['settings']['tracy'];
         $this->runCollectors();

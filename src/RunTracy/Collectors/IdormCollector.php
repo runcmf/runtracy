@@ -23,6 +23,7 @@ class IdormCollector
 
     public function __construct()
     {
+        self::$qLog = [];
         // enable logging
         \ORM::configure('logging', true);
         // Collect query info
@@ -37,5 +38,10 @@ class IdormCollector
     public static function getLog()
     {
         return self::$qLog;
+    }
+
+    public static function setLog(array $data = [])
+    {
+        self::$qLog = array_merge(self::$qLog, $data);
     }
 }

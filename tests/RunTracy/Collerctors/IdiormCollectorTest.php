@@ -36,5 +36,31 @@ class IdiormCollectorTest extends BaseTestCase
 
         // empty without DB
         $this->assertEmpty(IdormCollector::getLog());
+
+        // fill fake data
+        IdormCollector::setLog($this->getFakeData());
+
+        $logs = IdormCollector::getLog();
+        $this->assertEquals(3, count($logs));
+    }
+
+    protected function getFakeData()
+    {
+        return [
+            0 => [
+                'time' => 0.00042414665222168,
+                'query' => "SELECT `u`.*, `g`.*, `o`.`logged`, `o`.`idle` FROM `users` `u` 
+                INNER JOIN `groups` `g` ON `u`.`group_id` = `g`.`g_id` 
+                LEFT JOIN online `o` ON o.user_id='u.id' WHERE `u`.`id` = '2'"
+            ],
+            1 => [
+                'time' => 0.0001368522644043,
+                'query' => "REPLACE INTO online (user_id, ident, logged) VALUES('2', 'admin', '1485932309')"
+            ],
+            2 => [
+                'time' => 0.00020098686218262,
+                'query' => "SELECT `user_id`, `ident`, `logged`, `idle` FROM `online` WHERE `logged` < '1485932009'"
+            ]
+        ];
     }
 }
