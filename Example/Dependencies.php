@@ -85,3 +85,26 @@ $capsule->setAsGlobal();
 $capsule->bootEloquent();
 $capsule::connection()->enableQueryLog();
 //RunTracy\Helpers\Profiler\Profiler::finish('init_EloquentORM');
+
+// Doctrine DBAL
+$c['dbalLogger'] = function () {
+    $config = new \Doctrine\DBAL\Configuration;
+    $config->setSQLLogger(new \Doctrine\DBAL\Logging\DebugStack());
+    return $config;
+};
+
+$c['dbal'] = function ($c) {
+    $conn = \Doctrine\DBAL\DriverManager::getConnection(
+        [
+            'driver' => 'pdo_mysql',
+            'host' => '127.0.0.1',
+            'user' => 'dbuser',
+            'password' => '123',
+            'dbname' => 'bookshelf',
+            'port' => 3306,
+            'charset' => 'utf8',
+        ],
+        $c['dbalLogger']
+    );
+    return $conn->createQueryBuilder();
+};

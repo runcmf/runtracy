@@ -7,37 +7,50 @@
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/2d080724-9e10-4770-9220-0678381eb341/big.png)](https://insight.sensiolabs.com/projects/2d080724-9e10-4770-9220-0678381eb341)
 
 # Slim Framework Tracy Debugger Bar #
-## configure it by mouse
-
+configure it by mouse
+---
 ![example](ss/tracy_panel.png "Tracy Panel")
 
 now in package:  
-PhpInfoPanel - full phpinfo(),  
-SlimEnvironmentPanel - RAW data Slim Environments,  
-SlimContainer - RAW data Slim Container   
-SlimRequestPanel - RAW data Slim Request,  
-SlimResponsePanel - RAW data Slim Response,  
-SlimRouterPanel - RAW data Slim Router,  
-EloquentORMPanel - Eloquent ORM Query / Bindings log  
-TwigPanel - Twig_Profiler_Dumper_Html()  
-VendorVersionsPanel - version info from composer.json and composer.lock (fork from https://github.com/milo/vendor-versions)  
-XDebugHelper - start and stop a Xdebug session (fork from https://github.com/jsmitka/Nette-XDebug-Helper)  
-IncludedFiles - Included Files list  
-PanelSelector - easy configure (part of fork from https://github.com/adrianbj/TracyDebugger)  
-ConsolePanel - PTY (pseudo TTY) console (fork from https://github.com/nickola/web-console)  
-ProfilerPanel - time, mem usage, timeline (fork from https://github.com/netpromotion/profiler)  
+---
+| Panel | Description |
+| --- | --- |
+| - | **Slim Framework** |
+| Slim Environment | RAW data |
+| Slim Container | RAW data |
+| Slim Request | RAW data |
+| Slim Response | RAW data |
+| Slim Router | RAW data |
+| - | **DB** |
+| [Doctrine DBAL](https://github.com/doctrine/dbal) | time, sql, params, types |
+| [Idiorm](https://github.com/j4mie/idiorm) | time, sql. panel & collector. **Note:** Idiorm support only one collector and if you use own this will not work. |
+| [Illuminate Database](https://github.com/illuminate/database) | sql, bindings |
+| - | **Template** |
+| [Twig](https://github.com/twigphp/Twig) | Twig_Profiler_Dumper_Html() |
+| - | **Common** |
+| PanelSelector | easy configure (part of fork from [TracyDebugger](https://github.com/adrianbj/TracyDebugger)) | 
+| PhpInfo | full phpinfo() |
+| Console | PTY (pseudo TTY) console (fork from [web-console](https://github.com/nickola/web-console)) |
+| Profiler | time, mem usage, timeline (fork from [profiler](https://github.com/netpromotion/profiler)) |
+| Included Files | Included Files list |
+| XDebug | start and stop a Xdebug session (fork from [Nette-XDebug-Helper](https://github.com/jsmitka/Nette-XDebug-Helper)) |
+| VendorVersions | version info from composer.json and composer.lock (fork from [vendor-versions](https://github.com/milo/vendor-versions)) | 
+
+---
+
 
 # Install
 **1.**
 ``` bash
 $ composer require runcmf/runtracy
 ```
-**2.** goto 3 or if need twig and/or Eloquent ORM then:
+**2.** goto 3 or if need Twig, Doctrine DBAL, Eloquent ORM then:
 
 **2.1** install it
 ``` bash
-$ composer require illuminate/database
+$ composer require doctrine/dbal
 $ composer require slim/twig-view
+$ composer require illuminate/database
 ```
 
 **2.2** add to your dependencies (Twig, Twig_Profiler) and/or Eloquent ORM like:
@@ -63,6 +76,30 @@ $capsule->addConnection($cfg['settings']['db']['connections']['mysql']);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 $capsule::connection()->enableQueryLog();
+
+// Doctrine DBAL
+$container['dbalLogger'] = function () {
+    $config = new \Doctrine\DBAL\Configuration;
+    $config->setSQLLogger(new \Doctrine\DBAL\Logging\DebugStack());
+    return $config;
+};
+
+$container['dbal'] = function ($c) {
+    $conn = \Doctrine\DBAL\DriverManager::getConnection(
+        [
+            'driver' => 'pdo_mysql',
+            'host' => '127.0.0.1',
+            'user' => 'dbuser',
+            'password' => '123',
+            'dbname' => 'bookshelf',
+            'port' => 3306,
+            'charset' => 'utf8',
+        ],
+        $c['dbalLogger']
+    );
+    return $conn->createQueryBuilder();
+};
+
 ```
 
 **3.** register middleware
@@ -108,6 +145,9 @@ return [
             'showSlimContainer' => 0,
 //            'showEloquentORMPanel' => 0,
 //            'showTwigPanel' => 0,
+            'showIdiormPanel' => 0,// > 0 mean you enable logging
+            // but show or not panel you decide in browser in panel selector
+            'showDoctrineDBALPanel' => 0,
             'showProfilerPanel' => 0,
             'showVendorVersionsPanel' => 0,
             'showXDebugHelper' => 0,
@@ -217,6 +257,8 @@ RunTracy\Helpers\Profiler\Profiler::finish('App');
 ```
 ![example](ss/profiler_panel.png "Profiler Panel")
 
+![idormDBAL](ss/idiorm_and_dbal.png "Idiorm and Doctrine DBAL Panels")
+
 ---
 ## Tests
 ```bash
@@ -257,9 +299,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 
-[ico-version]: https://img.shields.io/packagist/v/runcmf/runtracy.svg?style=flat-square
-[ico-license]: https://img.shields.io/badge/license-Apache%202-green.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/runcmf/runtracy.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/runcmf/runtracy.svg
+[ico-license]: https://img.shields.io/badge/license-Apache%202-green.svg
+[ico-downloads]: https://img.shields.io/packagist/dt/runcmf/runtracy.svg
 
 [link-packagist]: https://packagist.org/packages/runcmf/runtracy
 [link-license]: http://www.apache.org/licenses/LICENSE-2.0

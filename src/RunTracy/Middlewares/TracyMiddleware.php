@@ -28,11 +28,18 @@ use RunTracy\Helpers\PanelSelector;
  */
 class TracyMiddleware
 {
-    private $app;
+    private $container;
+    private $defcfg;
+    private $versions;
 
     public function __construct($app)
     {
-        $this->app = $app;
+        $this->container = $app->getContainer();
+        $this->versions = [
+            'slim' => \Slim\App::VERSION,
+        ];
+        $this->defcfg = $this->container['settings']['tracy'];
+        $this->runCollectors();
     }
 
     /**
@@ -44,27 +51,28 @@ class TracyMiddleware
     public function __invoke(Request $request, Response $response, callable $next)
     {
         $res = $next($request, $response);
-        $ver = [
-            'slim' => \Slim\App::VERSION,
-        ];
 
-        $defcfg = $this->app->getContainer()['settings']['tracy'];
         $cookies = json_decode($request->getCookieParam('tracyPanelsEnabled'));
         if (!empty($cookies)) {
-            $def = array_fill_keys(array_keys($defcfg), null);
+            $def = array_fill_keys(array_keys($this->defcfg), null);
             $cookies = array_fill_keys($cookies, 1);
             $cfg = array_merge($def, $cookies);
         } else {
             $cfg = [];
         }
         if (isset($cfg['showEloquentORMPanel'])) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\EloquentORMPanel(
-                \Illuminate\Database\Capsule\Manager::getQueryLog()
-            ));
+            if (class_exists('\Illuminate\Database\Capsule\Manager')) {
+                Debugger::getBar()->addPanel(new \RunTracy\Helpers\EloquentORMPanel(
+                    \Illuminate\Database\Capsule\Manager::getQueryLog()
+                ));
+            } else {
+                // do not show in panel selector
+                unset($this->defcfg['showEloquentORMPanel']);
+            }
         }
         if (isset($cfg['showTwigPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\TwigPanel(
-                $this->app->getContainer()->get('twig_profile')
+                $this->container['twig_profile']
             ));
         }
         if (isset($cfg['showPhpInfoPanel'])) {
@@ -72,32 +80,32 @@ class TracyMiddleware
         }
         if (isset($cfg['showSlimEnvironmentPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimEnvironmentPanel(
-                \Tracy\Dumper::toHtml($this->app->getContainer()->get('environment')),
-                $ver
+                \Tracy\Dumper::toHtml($this->container['environment']),
+                $this->versions
             ));
         }
         if (isset($cfg['showSlimContainer'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimContainerPanel(
-                \Tracy\Dumper::toHtml($this->app->getContainer()),
-                $ver
+                \Tracy\Dumper::toHtml($this->container),
+                $this->versions
             ));
         }
         if (isset($cfg['showSlimRouterPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRouterPanel(
-                \Tracy\Dumper::toHtml($this->app->getContainer()->get('router')),
-                $ver
+                \Tracy\Dumper::toHtml($this->container['router']),
+                $this->versions
             ));
         }
         if (isset($cfg['showSlimRequestPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRequestPanel(
-                \Tracy\Dumper::toHtml($this->app->getContainer()->get('request')),
-                $ver
+                \Tracy\Dumper::toHtml($this->container['request']),
+                $this->versions
             ));
         }
         if (isset($cfg['showSlimResponsePanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimResponsePanel(
-                \Tracy\Dumper::toHtml($this->app->getContainer()->get('response')),
-                $ver
+                \Tracy\Dumper::toHtml($this->container['response']),
+                $this->versions
             ));
         }
         if (isset($cfg['showVendorVersionsPanel'])) {
@@ -105,27 +113,55 @@ class TracyMiddleware
         }
         if (isset($cfg['showXDebugHelper'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\XDebugHelper(
-                $defcfg['configs']['XDebugHelperIDEKey']
+                $this->defcfg['configs']['XDebugHelperIDEKey']
             ));
         }
         if (isset($cfg['showIncludedFiles'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\IncludedFiles());
         }
         // check if enabled or blink if active critical value
-        if (isset($cfg['showConsolePanel']) || $defcfg['configs']['ConsoleNoLogin']) {
+        if (isset($cfg['showConsolePanel']) || $this->defcfg['configs']['ConsoleNoLogin']) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\ConsolePanel(
-                $defcfg['configs']
+                $this->defcfg['configs']
             ));
         }
         if (isset($cfg['showProfilerPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\ProfilerPanel(
-                $defcfg['configs']['ProfilerPanel']
+                $this->defcfg['configs']['ProfilerPanel']
             ));
+        }
+        if (isset($cfg['showIdiormPanel'])) {
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\IdiormPanel());
+        }
+        if (isset($cfg['showDoctrineDBALPanel'])) {
+            if (class_exists('\Doctrine\DBAL\Logging\DebugStack')) {
+                Debugger::getBar()->addPanel(
+                    new \RunTracy\Helpers\DoctrineDBALPanel(
+                        $this->container['dbalLogger']->getSQLLogger()->queries
+                    )
+                );
+            } else {
+                // do not show in panel selector
+                unset($this->defcfg['showDoctrineDBALPanel']);
+            }
         }
 
         // hardcoded without config prevent switch off
-        Debugger::getBar()->addPanel(new PanelSelector($cfg, array_diff_key($defcfg, ['configs' => null])));
+        Debugger::getBar()->addPanel(new PanelSelector(
+            $cfg,
+            array_diff_key($this->defcfg, ['configs' => null])
+        ));
 
         return $res;
+    }
+
+    private function runCollectors()
+    {
+        if ($this->defcfg['showIdiormPanel'] > 0) {
+            if (class_exists('\ORM')) {
+                // no return values
+                new \RunTracy\Collectors\IdormCollector();
+            }
+        }
     }
 }

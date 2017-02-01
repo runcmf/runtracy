@@ -99,6 +99,9 @@ return [
             'showSlimResponsePanel' => 1,
             'showSlimContainer' => 0,
             'showEloquentORMPanel' => 0,
+            'showIdiormPanel' => 1,// > 0 mean you enable logging
+            // but show or not show panel you decide in browser in panel selector
+            'showDoctrineDBALPanel' => 0,
             'showTwigPanel' => 0,
             'showProfilerPanel' => 0,
             'showVendorVersionsPanel' => 0,

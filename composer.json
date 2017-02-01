@@ -11,9 +11,13 @@
     "Debugbar",
     "Debugger",
     "Eloquent ORM",
+    "illuminate database",
     "PTY Terminal",
     "Profiler",
-    "Slim3", "Slim 3"
+    "Slim3", "Slim 3",
+    "Twig",
+    "Idorm",
+    "Doctrine DBAL"
   ],
   "authors": [
     {
@@ -33,7 +37,9 @@
     "phpunit/phpunit": "^5.7",
     "illuminate/database": "^5.3",
     "twig/twig": "~1.24",
-    "slim/twig-view": "~2.1"
+    "slim/twig-view": "~2.1",
+    "j4mie/idiorm": "^1.5",
+    "doctrine/dbal": "^2.5"
   },
   "autoload": {
     "psr-4": {
