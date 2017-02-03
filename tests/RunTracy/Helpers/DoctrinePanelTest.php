@@ -21,12 +21,12 @@ use Tests\BaseTestCase;
 
 /**
  * @runTestsInSeparateProcesses
- * Class DoctrineDBALTanelTest
+ * Class DoctrinePanelTest
  * @package Tests\RunTracy\Helpers
  */
-class DoctrineDBALPanelTest extends BaseTestCase
+class DoctrinePanelTest extends BaseTestCase
 {
-    public function testDoctrineDBALPanel()
+    public function testDoctrinePanel()
     {
         if (!class_exists('\Doctrine\DBAL\Configuration')) {
             $this->markTestSkipped('Doctrine DBAL not installed and all tests in this file are invactive!');
@@ -37,7 +37,7 @@ class DoctrineDBALPanelTest extends BaseTestCase
             $dbal = $this->initDBAL();
             $this->assertInstanceOf('\Doctrine\DBAL\Query\QueryBuilder', $dbal);
 
-            $panel = new \RunTracy\Helpers\DoctrineDBALPanel(
+            $panel = new \RunTracy\Helpers\DoctrinePanel(
                 $logger
             );
             $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
@@ -49,7 +49,7 @@ class DoctrineDBALPanelTest extends BaseTestCase
         }
     }
 
-    public function testDoctrineDBALPanelParser()
+    public function testDoctrinePanelParser()
     {
 
         $data = [
@@ -79,11 +79,11 @@ class DoctrineDBALPanelTest extends BaseTestCase
 
 
         // formatArrayData($data)
-        $result = $this->callProtectedMethod('formatArrayData', '\RunTracy\Helpers\DoctrineDBALPanel', [
+        $result = $this->callProtectedMethod('formatArrayData', '\RunTracy\Helpers\DoctrinePanel', [
             $data[1]['params']
         ]);
         $this->assertRegexp('#":id": 22#', $result);
-        $result = $this->callProtectedMethod('formatArrayData', '\RunTracy\Helpers\DoctrineDBALPanel', [
+        $result = $this->callProtectedMethod('formatArrayData', '\RunTracy\Helpers\DoctrinePanel', [
             $data[2]['params']
         ]);
         // one param
@@ -94,19 +94,19 @@ class DoctrineDBALPanelTest extends BaseTestCase
 
         // transformNumericType($data)
         // prepare array for transformNumericType
-        $result1 = $this->callProtectedMethod('formatArrayData', '\RunTracy\Helpers\DoctrineDBALPanel', [
+        $result1 = $this->callProtectedMethod('formatArrayData', '\RunTracy\Helpers\DoctrinePanel', [
             $data[1]['types']
         ]);
         $this->assertRegexp('#":id": "integer"#', $result1);
         // then transformNumericType
-        $result2 = $this->callProtectedMethod('transformNumericType', '\RunTracy\Helpers\DoctrineDBALPanel', [
+        $result2 = $this->callProtectedMethod('transformNumericType', '\RunTracy\Helpers\DoctrinePanel', [
             $result1
         ]);
         // some
         $this->assertRegexp('#":id": "integer"#', $result2);
 
         // some twice
-        $result3 = $this->callProtectedMethod('formatArrayData', '\RunTracy\Helpers\DoctrineDBALPanel', [
+        $result3 = $this->callProtectedMethod('formatArrayData', '\RunTracy\Helpers\DoctrinePanel', [
             $data[2]['types']
         ]);
         // one param
@@ -115,7 +115,7 @@ class DoctrineDBALPanelTest extends BaseTestCase
         // all together
         $this->assertRegexp('#":id": "integer",\n":title": "string"#', $result3);
         // then transformNumericType
-        $result4 = $this->callProtectedMethod('transformNumericType', '\RunTracy\Helpers\DoctrineDBALPanel', [
+        $result4 = $this->callProtectedMethod('transformNumericType', '\RunTracy\Helpers\DoctrinePanel', [
             $result3
         ]);
         // some
@@ -124,7 +124,7 @@ class DoctrineDBALPanelTest extends BaseTestCase
         $this->assertRegexp('#":id": "integer",\n":title": "string"#', $result4);
 
         // parse($data)
-        $result = $this->callProtectedMethod('parse', '\RunTracy\Helpers\DoctrineDBALPanel', [$data]);
+        $result = $this->callProtectedMethod('parse', '\RunTracy\Helpers\DoctrinePanel', [$data]);
         $this->assertRegexp('#FROM authors WHERE#', $result);
         $this->assertRegexp('#0.01043510#', $result);
         $this->assertRegexp('#FROM authors, books WHERE#', $result);

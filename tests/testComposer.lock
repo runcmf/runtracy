@@ -1,0 +1,15 @@
+{
+    "_readme": [
+        "This file is @generated automatically"
+    ],
+    "packages": [
+        {
+            "name": "test/test",
+            "version": "0.7.0"
+        }
+    ],
+    "packages-dev": [
+        {
+        }
+    ]
+}

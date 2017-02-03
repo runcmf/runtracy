@@ -17,9 +17,10 @@
 
 namespace Tests\RunTracy\Middlewares;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 use Tests\BaseTestCase;
+use RunTracy\Middlewares\TracyMiddleware;
 
 /**
  * @runTestsInSeparateProcesses
@@ -38,9 +39,8 @@ class TracyMiddlewareTest extends BaseTestCase
         $cookie .= '["showPhpInfoPanel","showSlimRouterPanel","showSlimEnvironmentPanel",'.
             '"showSlimRequestPanel","showSlimResponsePanel","showSlimContainer",'.
             '"showEloquentORMPanel","showTwigPanel","showProfilerPanel","showVendorVersionsPanel"'.
-            ',"showXDebugHelper","showIncludedFiles","showConsolePanel"]';
+            ',"showXDebugHelper","showIncludedFiles","showConsolePanel","showIdiormPanel","showDoctrinePanel"]';
 
-        // Create a mock environment for testing with
         $environment = \Slim\Http\Environment::mock(
             [
                 'REQUEST_METHOD' => 'GET',
@@ -49,19 +49,11 @@ class TracyMiddlewareTest extends BaseTestCase
                 'HTTP_CONTENT_TYPE' => 'text/html; charset=utf-8'// Tracy check content-type
             ]
         );
-//        $_SESSION = [];
-        // Set up a request object based on the environment
         $request = \Slim\Http\Request::createFromEnvironment($environment);
-
-        // Set up a response object
         $response = new \Slim\Http\Response();
 
-        // Use the application settings
-//        $cfg = require __DIR__ . '/Settings.php';
-        // Instantiate the application
         $app = new \Slim\App($this->cfg);
-        // Set up dependencies
-//        require __DIR__ . '/../app/Config/Dependencies.php';
+
         $c = $app->getContainer();
         // Twig
         $c['twig_profile'] = function () {
@@ -83,12 +75,18 @@ class TracyMiddlewareTest extends BaseTestCase
         $capsule->bootEloquent();
         $capsule::connection()->enableQueryLog();
 
-        // Register middleware
-//        require __DIR__ . '/../app/Config/Middleware.php';
-        $app->add(new \RunTracy\Middlewares\TracyMiddleware($app));
+        $c['dbal'] = function () {
+            $conn = \Doctrine\DBAL\DriverManager::getConnection(
+                $this->getDoctrineDBALConfig(),
+                new \Doctrine\DBAL\Configuration
+            );
+            // return DBAL\Connection
+            return $conn;
+        };
+        $this->assertInstanceOf('\Doctrine\DBAL\Connection', $c->get('dbal'));
 
-        // Register routes
-//        require __DIR__ . '/../app/Config/Routes.php';
+        $app->add(new TracyMiddleware($app));
+
         $app->get('/hello/{name}', function (Request $request, Response $response) {
             return '
         <!DOCTYPE html>
@@ -108,5 +106,120 @@ class TracyMiddlewareTest extends BaseTestCase
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertRegexp('/Hello\, World/s', (string)$response->getBody());
+
+        // try unset Manager
+        $capsule = new \Illuminate\Database\Capsule\Manager;
+        unset($capsule);
+        // check all work
+        $response = $app->process($request, $response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertRegexp('/Hello\, World/s', (string)$response->getBody());
+
+        // try unset container
+        unset($c['dbal']);
+        // check all work
+        $response = $app->process($request, $response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertRegexp('/Hello\, World/s', (string)$response->getBody());
+    }
+
+    public function testTracyMiddlewareWithoutCookies()
+    {
+        $environment = \Slim\Http\Environment::mock(
+            [
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI'    => '/hello/World',
+                'HTTP_COOKIE'    => '',
+                'HTTP_CONTENT_TYPE' => 'text/html; charset=utf-8'
+            ]
+        );
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $response = new \Slim\Http\Response();
+
+        $app = new \Slim\App($this->cfg);
+        $c = $app->getContainer();
+
+        $app->add(new TracyMiddleware($app));
+
+        $app->get('/hello/{name}', function (Request $request, Response $response) {
+            return '
+        <!DOCTYPE html>
+        <html lang="en">
+            <head>
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            </head>
+            <body>
+                <div>Hello, '.$request->getAttribute('name').'</div>
+            </body>
+        </html>';
+        });
+
+        // Process the application
+        $response = $app->process($request, $response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertRegexp('/Hello\, World/s', (string)$response->getBody());
+    }
+
+    public function testTracyMiddlewareDirectly()
+    {
+        $app = new \Slim\App();
+
+        $mid = new \RunTracy\Middlewares\TracyMiddleware();
+
+        $this->assertInstanceOf('\RunTracy\Middlewares\TracyMiddleware', $mid);
+
+        $environment = \Slim\Http\Environment::mock(
+            [
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI'    => '/hello/World',
+                'HTTP_COOKIE'    => '',// to TracyMiddleware
+                'HTTP_CONTENT_TYPE' => 'text/html; charset=utf-8'// Tracy check content-type
+            ]
+        );
+        $req = \Slim\Http\Request::createFromEnvironment($environment);
+        $res = new \Slim\Http\Response();
+
+        $this->assertNull($mid->__invoke($req, $res, $this->fakeReturn($req, $res)));
+//fwrite(STDERR, '$mid: ' . var_export($mid->__invoke($req, $res, $this->fakeReturn()), true) . " ###\n");
+        //__invoke(Request $request, Response $response, callable $next)
+
+
+//fwrite(STDERR, '$mid: ' . var_export($foo->invokeArgs($obj, [$req, $res]), true) . " ###\n");
+    }
+
+    public function testRunCollectorsReturnNull()
+    {
+        $foo = self::getMethod('runCollectors');
+        $obj = new TracyMiddleware;
+
+        $this->assertNull($foo->invokeArgs($obj, []));
+    }
+
+    protected static function getMethod($name)
+    {
+        $class = new \ReflectionClass('\RunTracy\Middlewares\TracyMiddleware');
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+        return $method;
+    }
+
+    protected function fakeReturn(Request $req, Response $res)
+    {
+        return function ($req, $res) {
+            return null;
+        };
+    }
+
+    protected function getDoctrineDBALConfig()
+    {
+        return [
+            'driver' => 'pdo_mysql',
+            'host' => '127.0.0.1',
+            'user' => 'dbuser',
+            'password' => '123',
+            'dbname' => 'bookshelf',
+            'port' => 3306,
+            'charset' => 'utf8',
+        ];
     }
 }

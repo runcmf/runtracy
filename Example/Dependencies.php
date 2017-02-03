@@ -77,23 +77,17 @@ $c['notAllowedHandler'] = function (\Slim\Container $c) {
 //$capsule->bootEloquent();
 //$capsule::connection()->enableQueryLog();
 
-//RunTracy\Helpers\Profiler\Profiler::start('init_EloquentORM');
+
 // Register Eloquent single connections
 $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($cfg['settings']['db']['connections']['mysql']);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 $capsule::connection()->enableQueryLog();
-//RunTracy\Helpers\Profiler\Profiler::finish('init_EloquentORM');
 
-// Doctrine DBAL
-$c['dbalLogger'] = function () {
-    $config = new \Doctrine\DBAL\Configuration;
-    $config->setSQLLogger(new \Doctrine\DBAL\Logging\DebugStack());
-    return $config;
-};
 
-$c['dbal'] = function ($c) {
+// Both Doctrine DBAL & ORM
+$c['dbal'] = function () {
     $conn = \Doctrine\DBAL\DriverManager::getConnection(
         [
             'driver' => 'pdo_mysql',
@@ -104,7 +98,25 @@ $c['dbal'] = function ($c) {
             'port' => 3306,
             'charset' => 'utf8',
         ],
-        $c['dbalLogger']
+        new \Doctrine\DBAL\Configuration
     );
+    // possible return or DBAL\Query\QueryBuilder or DBAL\Connection
     return $conn->createQueryBuilder();
 };
+
+// this example from https://github.com/vhchung/slim3-skeleton-mvc
+// doctrine EntityManager
+$c['em'] = function ($c) {
+    $settings = $c->get('settings');
+    $config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration(
+        $settings['doctrine']['meta']['entity_path'],
+        $settings['doctrine']['meta']['auto_generate_proxies'],
+        $settings['doctrine']['meta']['proxy_dir'],
+        $settings['doctrine']['meta']['cache'],
+        false
+    );
+    // possible return or ORM\EntityManager or ORM\QueryBuilder
+    return \Doctrine\ORM\EntityManager::create($settings['doctrine']['connection'], $config);
+};
+
+

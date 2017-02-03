@@ -1,0 +1,22 @@
+{
+  "name": "runcmf/runtracy",
+  "description": "Slim Framework Debugger",
+  "license": "Apache-2.0",
+  "type": "library",
+  "keywords": [
+    "Slim Framework",
+    "runtracy",
+    "Tracy",
+    "Debug bar",
+    "Debugbar",
+    "Debugger",
+    "Eloquent ORM",
+    "illuminate database",
+    "PTY Terminal",
+    "Profiler",
+    "Slim3", "Slim 3",
+    "Twig",
+    "Idorm",
+    "Doctrine DBAL"
+  ]
+}

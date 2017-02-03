@@ -26,7 +26,9 @@ class VendorVersionsPanel implements IBarPanel
 
     public function __construct($composerLockDir = null)
     {
-        $composerLockDir = $composerLockDir ?: __DIR__ . '/../../../../../../';
+        if ($composerLockDir === null || !is_string($composerLockDir)) {
+            $composerLockDir = realpath(__DIR__ . '/../../../../../../');
+        }
 
         if (!is_dir($dir = realpath($composerLockDir))) {
             $this->error = 'Path "'.$composerLockDir.'" is not a directory.';
@@ -115,10 +117,16 @@ class VendorVersionsPanel implements IBarPanel
 
         $decoded = json_decode($json, true);
         if (!is_array($decoded)) {
-            $this->error = error_get_last()['message'];
+            $this->error = json_last_error_msg();
             return null;
         }
 
         return $decoded;
+    }
+
+    // test case
+    public function getError()
+    {
+        return $this->error;
     }
 }

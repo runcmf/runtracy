@@ -101,7 +101,8 @@ return [
             'showEloquentORMPanel' => 0,
             'showIdiormPanel' => 1,// > 0 mean you enable logging
             // but show or not show panel you decide in browser in panel selector
-            'showDoctrineDBALPanel' => 0,
+            'showDoctrinePanel' => 'dbal',// here also enable logging and you must enter your Doctrine container name
+            // and also as above show or not panel you decide in browser in panel selector
             'showTwigPanel' => 0,
             'showProfilerPanel' => 0,
             'showVendorVersionsPanel' => 0,

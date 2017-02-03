@@ -35,12 +35,14 @@ class TracyMiddleware
 
     public function __construct(App $app = null)
     {
-        $this->container = $app->getContainer();
-        $this->versions = [
-            'slim' => App::VERSION,
-        ];
-        $this->defcfg = $this->container['settings']['tracy'];
-        $this->runCollectors();
+        if ($app instanceof App) {
+            $this->container = $app->getContainer();
+            $this->versions = [
+                'slim' => App::VERSION,
+            ];
+            $this->defcfg = $this->container['settings']['tracy'];
+            $this->runCollectors();
+        }
     }
 
     /**
@@ -134,20 +136,23 @@ class TracyMiddleware
         if (isset($cfg['showIdiormPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\IdiormPanel());
         }
-        if (isset($cfg['showDoctrineDBALPanel'])) {
-            if (class_exists('\Doctrine\DBAL\Logging\DebugStack')) {
+        if (isset($cfg['showDoctrinePanel'])) {
+            if (class_exists('\Doctrine\DBAL\Connection') && $this->container->has('doctrineConfig')) {
                 Debugger::getBar()->addPanel(
-                    new \RunTracy\Helpers\DoctrineDBALPanel(
-                        $this->container['dbalLogger']->getSQLLogger()->queries
+                    new \RunTracy\Helpers\DoctrinePanel(
+                        $this->container['doctrineConfig']->getSQLLogger()->queries
                     )
                 );
             } else {
                 // do not show in panel selector
-                unset($this->defcfg['showDoctrineDBALPanel']);
+                unset($this->defcfg['showDoctrinePanel']);
             }
         }
 
         // hardcoded without config prevent switch off
+        if (!isset($this->defcfg) && !is_array($this->defcfg)) {
+            $this->defcfg = [];
+        }
         Debugger::getBar()->addPanel(new PanelSelector(
             $cfg,
             array_diff_key($this->defcfg, ['configs' => null])
@@ -158,11 +163,18 @@ class TracyMiddleware
 
     private function runCollectors()
     {
-        if ($this->defcfg['showIdiormPanel'] > 0) {
+        if (isset($this->defcfg['showIdiormPanel']) && $this->defcfg['showIdiormPanel'] > 0) {
             if (class_exists('\ORM')) {
                 // no return values
                 new \RunTracy\Collectors\IdormCollector();
             }
+        }
+
+        if (isset($this->defcfg['showDoctrinePanel']) && class_exists('\Doctrine\DBAL\Connection')) {
+            new \RunTracy\Collectors\DoctrineCollector(
+                $this->container,
+                $this->defcfg['showDoctrinePanel']
+            );
         }
     }
 }

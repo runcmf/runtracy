@@ -30,7 +30,7 @@ class PanelSelector implements IBarPanel
     private $cfg;
     private $defcfg;
 
-    public function __construct($cfg, $defcfg)
+    public function __construct(array $cfg = [], array $defcfg = [])
     {
         $this->cfg = $cfg;
         $this->defcfg = $defcfg;
@@ -138,8 +138,8 @@ class PanelSelector implements IBarPanel
             $out .= '<tr><td style="padding-left: 20px">
             <input type="checkbox" name="selectedPanels[]" ' .
                 ((isset($this->cfg[$name]) && $this->cfg[$name] == 1) ? 'checked="checked"' : '') .
-                ' value="' . $name . '" />
-                    ' . $name . ($this->defcfg[$name] == 1 ? '&nbsp;<strong>*</strong>' : '') . '
+                ' value="' . $name . '" />&nbsp;' . $this->formatPanelName($name)
+                . ($this->defcfg[$name] == 1 ? '&nbsp;<strong>*</strong>' : '') . '
             </td></tr>';
         }
         $out .= '
@@ -155,5 +155,10 @@ class PanelSelector implements IBarPanel
         </div>';
 
         return $out;
+    }
+
+    private function formatPanelName($name = '')
+    {
+        return preg_replace('/[A-Z]{1,2}/', ' \0', str_replace('show', '', $name));
     }
 }

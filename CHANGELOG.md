@@ -1,4 +1,8 @@
 # CHANGELOG
+### 2017-02-02
+* add collector for both Doctrine DBAL & ORM
+* Fix [issue](https://github.com/runcmf/runtracy/issues/5) - Thanks to  [innobrig](https://github.com/innobrig)
+* add tests
 
 ### 2017-02-01
 * add Idiorm collector and Panel  

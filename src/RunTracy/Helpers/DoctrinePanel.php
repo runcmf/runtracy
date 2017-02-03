@@ -20,10 +20,10 @@ namespace RunTracy\Helpers;
 use Tracy\IBarPanel;
 
 /**
- * Class DoctrineDBALPanel
+ * Class DoctrinePanel
  * @package RunTracy\Helpers
  */
-class DoctrineDBALPanel implements IBarPanel
+class DoctrinePanel implements IBarPanel
 {
     private $icon;
     private $parsed;
@@ -57,7 +57,7 @@ class DoctrineDBALPanel implements IBarPanel
     {
         return '
         <h1>'.$this->icon.' &nbsp; Slim 3 / Doctrine DBAL</h1>
-        <div class="tracy-inner doctrineDBALPanel">
+        <div class="tracy-inner doctrinePanel">
             <p>
                 <table width="100%">' . $this->parsed . '
                     <tr class="yes">

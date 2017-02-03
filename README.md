@@ -22,7 +22,7 @@ now in package:
 | Slim Response | RAW data |
 | Slim Router | RAW data |
 | - | **DB** |
-| [Doctrine DBAL](https://github.com/doctrine/dbal) | time, sql, params, types |
+| Doctrine [ORM](https://github.com/doctrine/doctrine2) or [DBAL](https://github.com/doctrine/dbal) | time, sql, params, types. panel & collector for both. see config example below |
 | [Idiorm](https://github.com/j4mie/idiorm) | time, sql. panel & collector. **Note:** Idiorm support only one collector and if you use own this will not work. |
 | [Illuminate Database](https://github.com/illuminate/database) | sql, bindings |
 | - | **Template** |
@@ -44,11 +44,12 @@ now in package:
 ``` bash
 $ composer require runcmf/runtracy
 ```
-**2.** goto 3 or if need Twig, Doctrine DBAL, Eloquent ORM then:
+**2.** goto 3 or if need Twig, Doctrine DBAL, Doctrine ORM, Eloquent ORM then:
 
 **2.1** install it
 ``` bash
 $ composer require doctrine/dbal
+$ composer require doctrine/orm
 $ composer require slim/twig-view
 $ composer require illuminate/database
 ```
@@ -78,13 +79,7 @@ $capsule->bootEloquent();
 $capsule::connection()->enableQueryLog();
 
 // Doctrine DBAL
-$container['dbalLogger'] = function () {
-    $config = new \Doctrine\DBAL\Configuration;
-    $config->setSQLLogger(new \Doctrine\DBAL\Logging\DebugStack());
-    return $config;
-};
-
-$container['dbal'] = function ($c) {
+$c['dbal'] = function () {
     $conn = \Doctrine\DBAL\DriverManager::getConnection(
         [
             'driver' => 'pdo_mysql',
@@ -95,12 +90,28 @@ $container['dbal'] = function ($c) {
             'port' => 3306,
             'charset' => 'utf8',
         ],
-        $c['dbalLogger']
+        new \Doctrine\DBAL\Configuration
     );
+    // possible return or DBAL\Query\QueryBuilder or DBAL\Connection
     return $conn->createQueryBuilder();
 };
 
-```
+// Doctrine ORM
+// this example from https://github.com/vhchung/slim3-skeleton-mvc
+// doctrine EntityManager
+$c['em'] = function ($c) {
+    $settings = $c->get('settings');
+    $config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration(
+        $settings['doctrine']['meta']['entity_path'],
+        $settings['doctrine']['meta']['auto_generate_proxies'],
+        $settings['doctrine']['meta']['proxy_dir'],
+        $settings['doctrine']['meta']['cache'],
+        false
+    );
+    // possible return or ORM\EntityManager or ORM\QueryBuilder
+    return \Doctrine\ORM\EntityManager::create($settings['doctrine']['connection'], $config);
+};
+```  
 
 **3.** register middleware
 ``` php
@@ -121,7 +132,6 @@ add from local or from CDN (https://code.jquery.com/) or copy/paste
 ```  
   
 **5.** add to your settings Debugger initialisation and 'tracy' section.   
-if you plan to use twig and/or Eloquent ORM uncomment from below lines 'showTwigPanel' and/or 'showEloquentORMPanel'   
 ``` php
 use Tracy\Debugger;
 
@@ -143,11 +153,12 @@ return [
             'showSlimRequestPanel' => 1,
             'showSlimResponsePanel' => 1,
             'showSlimContainer' => 0,
-//            'showEloquentORMPanel' => 0,
-//            'showTwigPanel' => 0,
+            'showEloquentORMPanel' => 0,
+            'showTwigPanel' => 0,
             'showIdiormPanel' => 0,// > 0 mean you enable logging
             // but show or not panel you decide in browser in panel selector
-            'showDoctrineDBALPanel' => 0,
+            'showDoctrinePanel' => 'em',// here also enable logging and you must enter your Doctrine container name
+            // and also as above show or not panel you decide in browser in panel selector
             'showProfilerPanel' => 0,
             'showVendorVersionsPanel' => 0,
             'showXDebugHelper' => 0,
@@ -211,7 +222,7 @@ see config examples in vendor/runcmf/runtracy/Example
 
 
 Profiler Example in new installed [slim-skeleton](https://packagist.org/packages/slim/slim-skeleton)  
- public/index.php
+ `public/index.php`
 ``` php
 <?php
 if (PHP_SAPI == 'cli-server') {
@@ -258,6 +269,12 @@ RunTracy\Helpers\Profiler\Profiler::finish('App');
 ![example](ss/profiler_panel.png "Profiler Panel")
 
 ![idormDBAL](ss/idiorm_and_dbal.png "Idiorm and Doctrine DBAL Panels")
+
+---
+
+##  HOWTO
+[how-open-files-in-ide-from-debugger](https://pla.nette.org/en/how-open-files-in-ide-from-debugger)  
+
 
 ---
 ## Tests

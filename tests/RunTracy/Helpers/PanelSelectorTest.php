@@ -39,4 +39,21 @@ class PanelSelectorTest extends BaseTestCase
         // test Tracy panel
         $this->assertRegexp('#Panel Selector#', $panel->getPanel());
     }
+
+    public function testFormatPanelName()
+    {
+        $words = [
+            'showSlimEnvironmentPanel',// 3 words
+            'showSlimContainer',// 2 words
+            'showXDebugHelper'// 2 upper in word
+        ];
+        $result = $this->callProtectedMethod('formatPanelName', '\RunTracy\Helpers\PanelSelector', [$words[0]]);
+        $this->assertEquals(' Slim Environment Panel', $result);
+
+        $result = $this->callProtectedMethod('formatPanelName', '\RunTracy\Helpers\PanelSelector', [$words[1]]);
+        $this->assertEquals(' Slim Container', $result);
+
+        $result = $this->callProtectedMethod('formatPanelName', '\RunTracy\Helpers\PanelSelector', [$words[2]]);
+        $this->assertEquals(' XDebug Helper', $result);
+    }
 }

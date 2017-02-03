@@ -47,4 +47,57 @@ class VendorVersionsPanelTest extends BaseTestCase
 
         $this->assertRegexp('/phpunit\/php-code-coverage/s', $panel->getPanel());
     }
+
+    public function testVendorVersionsPanelComposerDirectory()
+    {
+        // normal path, error empty
+        $path = realpath(__DIR__.'/../../../');
+        $panel = new \RunTracy\Helpers\VendorVersionsPanel($path);
+        $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
+        $this->assertEmpty($panel->getError());
+
+        // fake path
+        $panel = new \RunTracy\Helpers\VendorVersionsPanel('/fakePath/');
+        $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
+        $this->assertEquals('Path "/fakePath/" is not a directory.', $panel->getError());
+
+        // path without composer
+        $path = realpath(__DIR__.'/../../');
+        $panel = new \RunTracy\Helpers\VendorVersionsPanel($path);
+        $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
+        $this->assertStringEndsWith('does not contain the composer.lock file.', $panel->getError());
+    }
+
+    public function testVendorVersionsPanelDecode()
+    {
+        // normal file
+        $path = realpath(__DIR__.'/../../../tests/');
+        $jsonFile = $path . DIRECTORY_SEPARATOR . 'testComposer.json';
+        $lockFile = $path . DIRECTORY_SEPARATOR . 'testComposer.lock';
+
+        $result = $this->callProtectedMethod('decode', '\RunTracy\Helpers\VendorVersionsPanel', [$jsonFile]);
+        $this->assertArrayHasKey('description', $result);
+        $this->assertArraySubset(['keywords' => []], $result);
+
+        $result = $this->callProtectedMethod('decode', '\RunTracy\Helpers\VendorVersionsPanel', [$lockFile]);
+        $this->assertArrayHasKey('_readme', $result);
+        $this->assertArraySubset(['packages' => []], $result);
+
+        // fake file with Syntax error
+        $path = realpath(__DIR__.'/../../../tests/');
+        $jsonFile = $path . DIRECTORY_SEPARATOR . 'testFake.json';
+        $result = $this->callProtectedMethodReturnObj('decode', '\RunTracy\Helpers\VendorVersionsPanel', [$jsonFile]);
+        $this->assertNull($result[1]);
+        $this->assertStringStartsWith('Syntax error', $result[0]->getError());
+    }
+
+    public function testVendorVersionsPanelDecodeWarning()
+    {
+        // no file
+        $path = realpath(__DIR__.'/../../../tests/');
+        $jsonFile = $path . DIRECTORY_SEPARATOR . 'zzzWWW.json';
+
+        $this->expectOutputRegex('#No such file or directory#');
+        $this->callProtectedMethod('decode', '\RunTracy\Helpers\VendorVersionsPanel', [$jsonFile]);
+    }
 }

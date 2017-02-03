@@ -96,8 +96,8 @@ return [
             'showSlimContainer' => 0,
             'showEloquentORMPanel' => 0,
             'showIdiormPanel' => 1,
-            'showDoctrineDBALPanel' => 1,
-            'showDoctrineORMPanel' => 0,
+            'showDoctrinePanel' => 'dbal',// here also enable logging and you must enter your Doctrine container name
+            // and also as above show or not panel you decide in browser in panel selector
             'showTwigPanel' => 0,
             'showProfilerPanel' => 0,
             'showVendorVersionsPanel' => 0,
@@ -132,7 +132,26 @@ return [
                     ]
                 ]
             ]
-        ]
+        ],
+        // doctrine settings
+        'doctrine' => [
+            'meta' => [
+                'entity_path' => [
+                    __DIR__ . '/src/models'
+                ],
+                'auto_generate_proxies' => true,
+                'proxy_dir' =>  __DIR__.'/../cache/proxies',
+                'cache' => null,
+            ],
+            'connection' => [
+                'driver'   => 'pdo_mysql',
+                'host'     => '127.0.0.1',
+                'port'     => 3306,
+                'dbname'   => 'blog',
+                'user'     => 'dbuser',
+                'password' => '123',
+            ]
+        ],
     ]
 ];
 // @codingStandardsIgnoreEnd

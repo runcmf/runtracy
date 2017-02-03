@@ -18,6 +18,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
 //        ob_end_clean();
+//vendor/bin/phpunit --coverage-html coverage
 //fwrite(STDERR, '$panel->getTab(): ' . $panel->getTab() . " ###\n");
     }
 
@@ -28,6 +29,18 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
         $obj = new $classname($params);
         return $method->invokeArgs($obj, $params);
+    }
+
+    protected function callProtectedMethodReturnObj($name, $classname, $params)
+    {
+        $class = new \ReflectionClass($classname);
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+        $obj = new $classname($params);
+        return [
+            $obj,
+            $method->invokeArgs($obj, $params)
+        ];
     }
 
     /**
