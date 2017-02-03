@@ -97,7 +97,7 @@ class VendorVersionsPanelTest extends BaseTestCase
         $path = realpath(__DIR__.'/../../../tests/');
         $jsonFile = $path . DIRECTORY_SEPARATOR . 'zzzWWW.json';
 
-        $this->expectOutputRegex('#No such file or directory#');
-        $this->callProtectedMethod('decode', '\RunTracy\Helpers\VendorVersionsPanel', [$jsonFile]);
+        $result = $this->callProtectedMethod('decode', '\RunTracy\Helpers\VendorVersionsPanel', [$jsonFile]);
+        $this->assertNull($result);
     }
 }
