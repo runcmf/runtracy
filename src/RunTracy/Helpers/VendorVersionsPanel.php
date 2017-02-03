@@ -109,13 +109,11 @@ class VendorVersionsPanel implements IBarPanel
      */
     private function decode($file)
     {
-        $json = file_get_contents($file);
-        if ($json === false) {
-            $this->error = error_get_last()['message'];
+        if (!is_file($file)) {
             return null;
         }
 
-        $decoded = json_decode($json, true);
+        $decoded = json_decode(file_get_contents($file), true);
         if (!is_array($decoded)) {
             $this->error = json_last_error_msg();
             return null;

@@ -23,7 +23,7 @@ function h($str) {
 	}
 
 	.milo-VendorVersionsPanel .tracy-inner {
-		width: 500px;
+		width: 100%;
 	}
 
 	.milo-VendorVersionsPanel table {
@@ -67,7 +67,7 @@ function h($str) {
 				</tbody>
 			</table>
 			<?php endforeach ?>
-			<p><small>Source: <?= Helpers::editorLink($jsonFile) . h(' & ') . Helpers::editorLink($lockFile) ?></small></p>
+            <p><small>Source:<p><?= Helpers::editorLink($jsonFile) ?></p><p><?= Helpers::editorLink($lockFile) ?></p></small></p>
 		<?php endif ?>
 	</div>
 </div>
