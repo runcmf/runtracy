@@ -159,6 +159,6 @@ class PanelSelector implements IBarPanel
 
     private function formatPanelName($name = '')
     {
-        return preg_replace('/[A-Z]{1,2}/', ' \0', str_replace('show', '', $name));
+        return preg_replace('/[A-Z]{1,3}/', ' \0', str_replace(['show', 'Panel'], '', $name));
     }
 }
