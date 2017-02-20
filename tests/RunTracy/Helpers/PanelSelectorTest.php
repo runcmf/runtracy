@@ -46,10 +46,10 @@ class PanelSelectorTest extends BaseTestCase
             'showSlimEnvironmentPanel',// 3 words
             'showSlimContainer',// 2 words
             'showXDebugHelper',// 2 upper in word
-            'showEloquentORMPanel',// 3 upper in word
+            'showEloquentORMPanel'// 3 upper in word
         ];
         $result = $this->callProtectedMethod('formatPanelName', '\RunTracy\Helpers\PanelSelector', [$words[0]]);
-        $this->assertEquals(' Slim Environment', $result);
+        $this->assertEquals(' Slim Environment Panel', $result);
 
         $result = $this->callProtectedMethod('formatPanelName', '\RunTracy\Helpers\PanelSelector', [$words[1]]);
         $this->assertEquals(' Slim Container', $result);
@@ -58,6 +58,6 @@ class PanelSelectorTest extends BaseTestCase
         $this->assertEquals(' XDebug Helper', $result);
 
         $result = $this->callProtectedMethod('formatPanelName', '\RunTracy\Helpers\PanelSelector', [$words[3]]);
-        $this->assertEquals(' Eloquent ORM', $result);
+        $this->assertEquals(' Eloquent ORM Panel', $result);
     }
 }

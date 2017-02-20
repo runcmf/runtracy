@@ -15,19 +15,19 @@ now in package:
 ---
 | Panel | Description |
 | --- | --- |
-| - | **Slim Framework** |
+| **Slim Framework** | - |
 | Slim Environment | RAW data |
 | Slim Container | RAW data |
 | Slim Request | RAW data |
 | Slim Response | RAW data |
 | Slim Router | RAW data |
-| - | **DB** |
+| **DB** | - |
 | Doctrine [ORM](https://github.com/doctrine/doctrine2) or [DBAL](https://github.com/doctrine/dbal) | time, sql, params, types. panel & collector for both. see config example below |
 | [Idiorm](https://github.com/j4mie/idiorm) | time, sql. panel & collector. **Note:** Idiorm support only one collector and if you use own this will not work. |
 | [Illuminate Database](https://github.com/illuminate/database) | sql, bindings |
-| - | **Template** |
+| **Template** | - |
 | [Twig](https://github.com/twigphp/Twig) | Twig_Profiler_Dumper_Html() |
-| - | **Common** |
+| **Common** | - |
 | PanelSelector | easy configure (part of fork from [TracyDebugger](https://github.com/adrianbj/TracyDebugger)) | 
 | PhpInfo | full phpinfo() |
 | Console | PTY (pseudo TTY) console (fork from [web-console](https://github.com/nickola/web-console)) |
