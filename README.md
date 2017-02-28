@@ -143,6 +143,7 @@ Debugger::enable(Debugger::DEVELOPMENT, DIR . 'var/log');
 
 return [
     'settings' => [
+        'addContentLengthHeader' => false// debugbar possible not working with true
     ... // ...
     ... // ...
 
