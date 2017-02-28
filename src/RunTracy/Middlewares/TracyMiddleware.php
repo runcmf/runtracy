@@ -40,7 +40,8 @@ class TracyMiddleware
             $this->versions = [
                 'slim' => App::VERSION,
             ];
-            $this->defcfg = $this->container['settings']['tracy'];
+            $this->defcfg = $this->container->has('settings.tracy') 
+                ? $this->container->get('settings.tracy') : $this->container->get('settings')['tracy'];
             $this->runCollectors();
         }
     }
@@ -75,7 +76,7 @@ class TracyMiddleware
         }
         if (isset($cfg['showTwigPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\TwigPanel(
-                $this->container['twig_profile']
+                $this->container->get('twig_profile')
             ));
         }
         if (isset($cfg['showPhpInfoPanel'])) {
@@ -83,7 +84,7 @@ class TracyMiddleware
         }
         if (isset($cfg['showSlimEnvironmentPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimEnvironmentPanel(
-                \Tracy\Dumper::toHtml($this->container['environment']),
+                \Tracy\Dumper::toHtml($this->container->get('environment')),
                 $this->versions
             ));
         }
@@ -95,19 +96,19 @@ class TracyMiddleware
         }
         if (isset($cfg['showSlimRouterPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRouterPanel(
-                \Tracy\Dumper::toHtml($this->container['router']),
+                \Tracy\Dumper::toHtml($this->container->get('router')),
                 $this->versions
             ));
         }
         if (isset($cfg['showSlimRequestPanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRequestPanel(
-                \Tracy\Dumper::toHtml($this->container['request']),
+                \Tracy\Dumper::toHtml($this->container->get('request')),
                 $this->versions
             ));
         }
         if (isset($cfg['showSlimResponsePanel'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimResponsePanel(
-                \Tracy\Dumper::toHtml($this->container['response']),
+                \Tracy\Dumper::toHtml($this->container->get('response')),
                 $this->versions
             ));
         }
@@ -140,7 +141,7 @@ class TracyMiddleware
             if (class_exists('\Doctrine\DBAL\Connection') && $this->container->has('doctrineConfig')) {
                 Debugger::getBar()->addPanel(
                     new \RunTracy\Helpers\DoctrinePanel(
-                        $this->container['doctrineConfig']->getSQLLogger()->queries
+                        $this->container->get('doctrineConfig')->getSQLLogger()->queries
                     )
                 );
             } else {
