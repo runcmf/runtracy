@@ -69,7 +69,7 @@ class EloquentORMPanelTest extends BaseTestCase
                         6 => 0,
                         7 => '89a412a4ad6ad9df88b42ca4c12bb271',
                     ],
-                'time' => 4.9100000000000001,
+                    'time' => 4.9100000000000001,
             ];
         // getHeader()
         $headerRow = $this->callProtectedMethod('getHeader', '\RunTracy\Helpers\EloquentORMPanel', []);

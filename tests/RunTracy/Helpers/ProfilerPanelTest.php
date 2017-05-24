@@ -115,12 +115,12 @@ class ProfilerPanelTest extends BaseTestCase
                             'finish_time' => 1482687818.821182,
                             'finish_memory_usage' => 1075296,
                          ],
-                    'absoluteDuration' => 0.013413906097412109,
-                    'duration' => 0.013413906097412109,
-                    'absoluteMemoryUsageChange' => 13912,
-                    'memoryUsageChange' => 13912,
+                         'absoluteDuration' => 0.013413906097412109,
+                         'duration' => 0.013413906097412109,
+                         'absoluteMemoryUsageChange' => 13912,
+                         'memoryUsageChange' => 13912,
                 ],
-            1 =>
+                1 =>
                 [
                     'meta' =>
                          [
@@ -133,10 +133,10 @@ class ProfilerPanelTest extends BaseTestCase
                             'finish_time' => 1482687818.9348431,
                             'finish_memory_usage' => 1490584,
                          ],
-                    'absoluteDuration' => 0.11363410949707031,
-                    'duration' => 0.11363410949707031,
-                    'absoluteMemoryUsageChange' => 414888,
-                    'memoryUsageChange' => 414888,
+                         'absoluteDuration' => 0.11363410949707031,
+                         'duration' => 0.11363410949707031,
+                         'absoluteMemoryUsageChange' => 414888,
+                         'memoryUsageChange' => 414888,
                 ],
         ];
 

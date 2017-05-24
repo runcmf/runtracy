@@ -38,7 +38,13 @@ $c['logger'] = function (\Slim\Container $c) {
     $logger = new Monolog\Logger($settings['name']);
     $logger->pushProcessor(new Monolog\Processor\UidProcessor());
     $logger->pushHandler(new Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
-    $logger->pushHandler(new Monolog\Handler\RotatingFileHandler($settings['path'], $settings['maxFiles'], $settings['level']));
+    $logger->pushHandler(
+        new Monolog\Handler\RotatingFileHandler(
+            $settings['path'],
+            $settings['maxFiles'],
+            $settings['level']
+        )
+    );
     return $logger;
 };
 
@@ -118,5 +124,3 @@ $c['em'] = function ($c) {
     // possible return or ORM\EntityManager or ORM\QueryBuilder
     return \Doctrine\ORM\EntityManager::create($settings['doctrine']['connection'], $config);
 };
-
-

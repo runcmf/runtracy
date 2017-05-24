@@ -35,14 +35,14 @@ class TracyMiddleware
 
     public function __construct(App $app = null)
     {
-        include_once __DIR__ . '/../shortcuts.php';
+        include_once realpath(__DIR__ . '/../') . '/shortcuts.php';
 
         if ($app instanceof App) {
             $this->container = $app->getContainer();
             $this->versions = [
                 'slim' => App::VERSION,
             ];
-            $this->defcfg = $this->container->has('settings.tracy') 
+            $this->defcfg = $this->container->has('settings.tracy')
                 ? $this->container->get('settings.tracy') : $this->container->get('settings')['tracy'];
             $this->runCollectors();
         }
