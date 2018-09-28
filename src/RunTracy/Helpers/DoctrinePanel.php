@@ -91,7 +91,7 @@ class DoctrinePanel implements IBarPanel
             if (!isset($log['executionMS'])) {
                 continue;
             }
-            $time = $log['executionMS'];
+            $time += $log['executionMS'];
             $row = $baseRow;
             $return .= sprintf(
                 $row,
