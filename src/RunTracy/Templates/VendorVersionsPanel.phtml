@@ -2,8 +2,13 @@
 
 use Tracy\Helpers;
 
-function h($str) {
+if (!function_exists('h')) {
+    /**
+     * Convenience method for htmlspecialchars.
+     */
+    function h($str) {
 	return htmlspecialchars($str, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
 }
 
 /**
