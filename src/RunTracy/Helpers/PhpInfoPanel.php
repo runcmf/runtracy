@@ -26,8 +26,8 @@ class PhpInfoPanel implements IBarPanel
     public function getTab()
     {
         $this->icon = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 16.172 '.
-            '16.172" style="enable-background:new 0 0 16.172 16.172;" xml:space="preserve" width="16px" '.
-            'height="16px"><path d="M13.043,6.367c-0.237,0-0.398,0.022-0.483,0.047v1.523c0.101,0.022,0.223,0.03,'.
+            '16.172" style="enable-background:new 0 0 16.172 16.172;" xml:space="preserve" width="16" '.
+            'height="16"><path d="M13.043,6.367c-0.237,0-0.398,0.022-0.483,0.047v1.523c0.101,0.022,0.223,0.03,'.
             '0.391,0.03 c0.621,0,1.004-0.313,1.004-0.842C13.954,6.651,13.625,6.367,13.043,6.367z" fill="#006DF0"/>'.
             ' <path d="M15.14,0H1.033C0.463,0,0,0.462,0,1.032v14.108c0,0.568,0.462,1.031,1.033,1.031H15.14 c0.57,'.
             '0,1.032-0.463,1.032-1.031V1.032C16.172,0.462,15.71,0,15.14,0z M4.904,8.32C4.506,8.695,3.916,8.863,'.
