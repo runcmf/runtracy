@@ -34,8 +34,8 @@ class SlimRequestPanel implements IBarPanel
 
     public function getTab()
     {
-        $this->icon = '<svg enable-background="new 0 0 64 64" height="16px" version="1.1" viewBox="0 0 64 64" '.
-            'width="16px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org'.
+        $this->icon = '<svg enable-background="new 0 0 64 64" height="16" version="1.1" viewBox="0 0 64 64" '.
+            'width="16" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org'.
             '/1999/xlink"><g><circle cx="32" cy="32" fill="#77B3D4" r="32"/></g><g opacity="0.2"><path d="M49.529'.
             ',33.855L35.259,15.71c-1.793-2.28-4.726-2.28-6.519,0L14.471,33.855 C12.679,36.135,13.439,38,16.161,'.
             '38H24v12c0,2.209,1.791,4,4,4h8c2.209,0,4-1.791,4-4V38h7.839 C50.561,38,51.321,36.135,49.529,33.855z"'.
