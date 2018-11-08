@@ -39,7 +39,7 @@ class PanelSelector implements IBarPanel
     public function getTab()
     {
         $this->icon = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '.
-            'version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 369.793 369.792"style="'.
+            'version="1.1" x="0px" y="0px" width="16" height="16" viewBox="0 0 369.793 369.792" style="'.
             'enable-background:new 0 0 369.793 369.792;" xml:space="preserve"><path d="M320.83,140.434l-1.'.
             '759-0.627l-6.87-16.399l0.745-1.685c20.812-47.201,19.377-48.609,15.925-52.031L301.11,42.61 '.
             'c-1.135-1.126-3.128-1.918-4.846-1.918c-1.562,0-6.293,0-47.294,18.57L247.326,60l-16.916-6.812l'.
