@@ -43,7 +43,7 @@ class VendorVersionsPanel implements IBarPanel
     {
         return '
         <span title="Vendor Versions">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 512" width="16px" height="16px">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 512" width="16" height="16">
                 <path fill="#478CCC" d="M489.349,131.258l0.47-0.462L374.228,15.515l-32.895,32.894l65.485,65.47c-29.'.
             '182,11.174-49.97,39.258-49.97,72.303  c0,42.818,34.758,77.576,77.575,77.576c11.016,0,21.576-2.326,'.
             '31.03-6.516V480.97c0,17.061-13.97,31.03-31.03,31.03  s-31.03-13.97-31.03-31.03V341.333c0-34.287-27.'.

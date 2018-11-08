@@ -65,7 +65,7 @@ class ConsolePanel implements IBarPanel
 
         $this->icon = '
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" '.
-            'y="0px" width="16px" height="16px" viewBox="0 0 471.362 471.362" style="enable-background:new '.
+            'y="0px" width="16" height="16" viewBox="0 0 471.362 471.362" style="enable-background:new '.
             '0 0 471.362 471.362;" xml:space="preserve"><g>
                 <path d="M468.794,355.171c-1.707-1.718-3.897-2.57-6.563-2.57H188.145c-2.664,0-4.854,0.853-6.567,2.57 '.
             'c-1.711,1.711-2.565,3.897-2.565,6.563v18.274c0,2.662,0.854,4.853,2.565,6.563c1.713,1.712,3.903,2.57,'.
