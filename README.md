@@ -183,6 +183,7 @@ return [
                 'ConsoleTerminalJs' => '/assets/js/jquery.terminal.min.js',
                 // terminal.css full URI
                 'ConsoleTerminalCss' => '/assets/css/jquery.terminal.min.css',
+                'ConsoleFromEncoding' => 'CP866', // or false
                 'ProfilerPanel' => [
                     // Memory usage 'primaryValue' set as Profiler::enable() or Profiler::enable(1)
 //                    'primaryValue' =>                   'effective',    // or 'absolute'

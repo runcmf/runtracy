@@ -44,6 +44,12 @@ class RunTracyConsole extends WebConsoleRPCServer
         $this->passwordHashAlgorithm = $cfg['ConsoleHashAlgorithm'] ?: '';
         $this->homeDirectory = $cfg['ConsoleHomeDirectory'] ?: '';
 
+        $ConsoleResponce = $this->execute();
+
+        if($cfg['ConsoleFromEncoding']){
+            $ConsoleResponce['result']['output'] = mb_convert_encoding($ConsoleResponce['result']['output'], "UTF-8", $cfg['ConsoleFromEncoding']);
+        }
+
         return $response->withJson($this->execute());
     }
 }
