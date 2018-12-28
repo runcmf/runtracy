@@ -50,6 +50,6 @@ class RunTracyConsole extends WebConsoleRPCServer
             $ConsoleResponce['result']['output'] = mb_convert_encoding($ConsoleResponce['result']['output'], "UTF-8", $cfg['ConsoleFromEncoding']);
         }
 
-        return $response->withJson($this->execute());
+        return $response->withJson($ConsoleResponce, null, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
     }
 }
