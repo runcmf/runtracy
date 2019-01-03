@@ -124,7 +124,7 @@
                     "");
                     return;
                 }
-                var command_parsed = $.terminal.splitCommand(command), method = null, parameters = [];
+                var command_parsed = $.terminal.split_command(command), method = null, parameters = [];
                 if (command_parsed.name.toLowerCase() === 'cd') {
                     method = 'cd';
                     parameters = [command_parsed.args.length ? command_parsed.args[0] : ''];
