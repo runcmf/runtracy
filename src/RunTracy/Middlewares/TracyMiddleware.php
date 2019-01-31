@@ -126,7 +126,7 @@ class TracyMiddleware
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\IncludedFiles());
         }
         // check if enabled or blink if active critical value
-        if (isset($cfg['showConsolePanel']) || $this->defcfg['configs']['ConsoleNoLogin']) {
+        if (isset($cfg['showConsolePanel']) || (isset($cfg['configs']['ConsoleNoLogin']) && $this->defcfg['configs']['ConsoleNoLogin'])) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\ConsolePanel(
                 $this->defcfg['configs']
             ));
