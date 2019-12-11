@@ -68,8 +68,8 @@ class TracyMiddleware
         }
         if (isset($cfg['showEloquentORMPanel'])) {
             if (class_exists('\Illuminate\Database\Capsule\Manager')) {
-                $connection = !empty($this->defcfg['config']['eloquentConnectionName'])
-                    ? $this->defcfg['config']['eloquentConnectionName'] : 'default';
+                $connection = !empty($this->defcfg['configs']['eloquentConnectionName'])
+                    ? $this->defcfg['configs']['eloquentConnectionName'] : 'default';
                 Debugger::getBar()->addPanel(new \RunTracy\Helpers\EloquentORMPanel(
                     \Illuminate\Database\Capsule\Manager::connection($connection)->getQueryLog()
                 ));
