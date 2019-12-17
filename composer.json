@@ -14,22 +14,22 @@
     "illuminate database",
     "PTY Terminal",
     "Profiler",
-    "Slim3", "Slim 3",
+    "Slim4", "Slim 4",
     "Twig",
     "Idorm",
     "Doctrine DBAL"
   ],
   "authors": [
     {
-      "name": "Vladimir",
-      "email": "1f7.wizard@gmail.com",
-      "homepage": "http://runcmf.ru"
+      "name": "Konstantin Kaluzhnikov",
+      "email": "k.kaluzhnikov@gmail.com",
+      "homepage": "http://github.com/EvilKraft"
     }
   ],
   "require": {
-    "php": ">=5.5.0",
-    "slim/slim": "~3.7",
-    "tracy/tracy": "~2.4"
+    "php": ">=7.1",
+    "slim/slim": "~4.1",
+    "tracy/tracy": "~2.7"
   },
   "require-dev": {
     "satooshi/php-coveralls": "1.*",
