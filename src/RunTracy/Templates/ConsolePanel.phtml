@@ -30,7 +30,7 @@
 <script type="text/javascript">
     if (typeof jQuery == 'undefined') {
         // jQuery IS NOT loaded, do stuff here.
-        alert('jQuery IS NOT loaded');
+        document.getElementById("term").innerHTML = "jQuery IS NOT loaded";
     }else{
         $.getScript( "<?php echo $this->terminalJs; ?>" )
             .done(function () {

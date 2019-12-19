@@ -47,20 +47,23 @@ class ConsolePanel implements IBarPanel
             }
         </style>
         <script type="text/javascript">
-            $(document).ready(function(){
-                // configure blinker
-                if('.$this->cfg['ConsoleNoLogin'].') {
-                    function blinker() {
-                        $(".warn_blink").fadeOut(800);
-                        $(".warn_blink").fadeIn(800);
+            if (typeof jQuery === "function") {
+                $(document).ready(function(){
+                    // configure blinker
+                    if('.$this->cfg['ConsoleNoLogin'].') {
+                        function blinker() {
+                            $(".warn_blink").fadeOut(800);
+                            $(".warn_blink").fadeIn(800);
+                        }
+                        setInterval(blinker, 1600);
+                    } else {
+                        $( ".warn_blink" ).each(function () {
+                            this.style.setProperty( "background", "transparent", "important" );
+                        });
                     }
-                    setInterval(blinker, 1600);
-                } else {
-                    $( ".warn_blink" ).each(function () {
-                        this.style.setProperty( "background", "transparent", "important" );
-                    });
-                }
-            });
+                });
+            }
+
         </script>';
 
         $this->icon = '
