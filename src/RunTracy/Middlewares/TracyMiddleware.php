@@ -1,19 +1,6 @@
 <?php
-/**
- * Copyright 2016 1f7.wizard@gmail.com
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
+declare(strict_types=1);
 
 namespace RunTracy\Middlewares;
 
@@ -23,10 +10,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Server\MiddlewareInterface as Middleware;
-use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Tracy\Debugger;
 use RunTracy\Helpers\PanelSelector;
 
@@ -34,13 +17,13 @@ use RunTracy\Helpers\PanelSelector;
  * Class TracyMiddleware
  * @package RunTracy\Middlewares
  */
-class TracyMiddleware extends MiddlewareInterface
+class TracyMiddleware implements MiddlewareInterface
 {
     private $container;
     private $defcfg;
     private $versions;
 
-    public function __construc1t(App $app = null)
+    public function __construct(App $app = null)
     {
         include_once realpath(__DIR__ . '/../') . '/shortcuts.php';
 
@@ -64,7 +47,13 @@ class TracyMiddleware extends MiddlewareInterface
     {
         $response = $handler->handle($request);
 
-        $cookies = json_decode($request->getCookieParam('tracyPanelsEnabled'));
+        $cookies = $request->getCookieParams();
+        if (isset($cookies['tracyPanelsEnabled'])) {
+            $cookies = json_decode($cookies['tracyPanelsEnabled']);
+        }else{
+            $cookies = [];
+        }
+
         if (!empty($cookies)) {
             $def = array_fill_keys(array_keys($this->defcfg), null);
             $cookies = array_fill_keys($cookies, 1);
@@ -72,6 +61,7 @@ class TracyMiddleware extends MiddlewareInterface
         } else {
             $cfg = $this->defcfg;
         }
+
         if (isset($cfg['showEloquentORMPanel']) && $cfg['showEloquentORMPanel']) {
             if (class_exists('\Illuminate\Database\Capsule\Manager')) {
                 Debugger::getBar()->addPanel(new \RunTracy\Helpers\EloquentORMPanel(
@@ -92,7 +82,7 @@ class TracyMiddleware extends MiddlewareInterface
         }
         if (isset($cfg['showSlimEnvironmentPanel']) && $cfg['showSlimEnvironmentPanel']) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimEnvironmentPanel(
-                \Tracy\Dumper::toHtml($this->container->get('environment')),
+                \Tracy\Dumper::toHtml($request->getServerParams()),
                 $this->versions
             ));
         }
@@ -102,21 +92,23 @@ class TracyMiddleware extends MiddlewareInterface
                 $this->versions
             ));
         }
+
         if (isset($cfg['showSlimRouterPanel']) && $cfg['showSlimRouterPanel']) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRouterPanel(
-                \Tracy\Dumper::toHtml($this->container->get('router')),
+                \Tracy\Dumper::toHtml($request->getAttribute('routingResults')->getDispatcher()),
                 $this->versions
             ));
         }
+
         if (isset($cfg['showSlimRequestPanel']) && $cfg['showSlimRequestPanel']) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRequestPanel(
-                \Tracy\Dumper::toHtml($this->container->get('request')),
+                \Tracy\Dumper::toHtml($handler),
                 $this->versions
             ));
         }
         if (isset($cfg['showSlimResponsePanel']) && $cfg['showSlimResponsePanel']) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimResponsePanel(
-                \Tracy\Dumper::toHtml($this->container->get('response')),
+                \Tracy\Dumper::toHtml($response),
                 $this->versions
             ));
         }
@@ -170,123 +162,6 @@ class TracyMiddleware extends MiddlewareInterface
         return $response;
     }
 
-    /**
-     * @param $request \Psr\Http\Message\RequestInterface
-     * @param $response \Psr\Http\Message\ResponseInterface
-     * @param $next Callable
-     * @return mixed
-     */
-    /*
-    public function __invoke(Request $request, Response $response, callable $next)
-    {
-        $res = $next($request, $response);
-
-        $cookies = json_decode($request->getCookieParam('tracyPanelsEnabled'));
-        if (!empty($cookies)) {
-            $def = array_fill_keys(array_keys($this->defcfg), null);
-            $cookies = array_fill_keys($cookies, 1);
-            $cfg = array_merge($def, $cookies);
-        } else {
-            $cfg = $this->defcfg;
-        }
-        if (isset($cfg['showEloquentORMPanel']) && $cfg['showEloquentORMPanel']) {
-            if (class_exists('\Illuminate\Database\Capsule\Manager')) {
-                Debugger::getBar()->addPanel(new \RunTracy\Helpers\EloquentORMPanel(
-                    \Illuminate\Database\Capsule\Manager::getQueryLog()
-                ));
-            } else {
-                // do not show in panel selector
-                unset($this->defcfg['showEloquentORMPanel']);
-            }
-        }
-        if (isset($cfg['showTwigPanel']) && $cfg['showTwigPanel']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\TwigPanel(
-                $this->container->get('twig_profile')
-            ));
-        }
-        if (isset($cfg['showPhpInfoPanel']) && $cfg['showPhpInfoPanel']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\PhpInfoPanel());
-        }
-        if (isset($cfg['showSlimEnvironmentPanel']) && $cfg['showSlimEnvironmentPanel']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimEnvironmentPanel(
-                \Tracy\Dumper::toHtml($this->container->get('environment')),
-                $this->versions
-            ));
-        }
-        if (isset($cfg['showSlimContainer']) && $cfg['showSlimContainer']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimContainerPanel(
-                \Tracy\Dumper::toHtml($this->container),
-                $this->versions
-            ));
-        }
-        if (isset($cfg['showSlimRouterPanel']) && $cfg['showSlimRouterPanel']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRouterPanel(
-                \Tracy\Dumper::toHtml($this->container->get('router')),
-                $this->versions
-            ));
-        }
-        if (isset($cfg['showSlimRequestPanel']) && $cfg['showSlimRequestPanel']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRequestPanel(
-                \Tracy\Dumper::toHtml($this->container->get('request')),
-                $this->versions
-            ));
-        }
-        if (isset($cfg['showSlimResponsePanel']) && $cfg['showSlimResponsePanel']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimResponsePanel(
-                \Tracy\Dumper::toHtml($this->container->get('response')),
-                $this->versions
-            ));
-        }
-        if (isset($cfg['showVendorVersionsPanel']) && $cfg['showVendorVersionsPanel']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\VendorVersionsPanel());
-        }
-        if (isset($cfg['showXDebugHelper']) && $cfg['showXDebugHelper']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\XDebugHelper(
-                $this->defcfg['configs']['XDebugHelperIDEKey']
-            ));
-        }
-        if (isset($cfg['showIncludedFiles']) && $cfg['showIncludedFiles']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\IncludedFiles());
-        }
-        // check if enabled or blink if active critical value
-        if ((isset($cfg['showConsolePanel']) && $cfg['showConsolePanel']) || isset($cfg['configs']['ConsoleNoLogin']) && $cfg['configs']['ConsoleNoLogin']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\ConsolePanel(
-                $this->defcfg['configs']
-            ));
-        }
-        if (isset($cfg['showProfilerPanel']) && $cfg['showProfilerPanel']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\ProfilerPanel(
-                $this->defcfg['configs']['ProfilerPanel']
-            ));
-        }
-        if (isset($cfg['showIdiormPanel']) && $cfg['showIdiormPanel']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\IdiormPanel());
-        }
-        if (isset($cfg['showDoctrinePanel']) && $cfg['showDoctrinePanel']) {
-            if (class_exists('\Doctrine\DBAL\Connection') && $this->container->has('doctrineConfig')) {
-                Debugger::getBar()->addPanel(
-                    new \RunTracy\Helpers\DoctrinePanel(
-                        $this->container->get('doctrineConfig')->getSQLLogger()->queries
-                    )
-                );
-            } else {
-                // do not show in panel selector
-                unset($this->defcfg['showDoctrinePanel']);
-            }
-        }
-
-        // hardcoded without config prevent switch off
-        if (!isset($this->defcfg) && !is_array($this->defcfg)) {
-            $this->defcfg = [];
-        }
-        Debugger::getBar()->addPanel(new PanelSelector(
-            $cfg,
-            array_diff_key($this->defcfg, ['configs' => null])
-        ));
-
-        return $res;
-    }
-*/
     private function runCollectors()
     {
         if (isset($this->defcfg['showIdiormPanel']) && $this->defcfg['showIdiormPanel'] > 0) {
