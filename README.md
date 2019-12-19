@@ -6,7 +6,7 @@
 [![Software License][ico-license]][link-license]  
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/2d080724-9e10-4770-9220-0678381eb341/big.png)](https://insight.sensiolabs.com/projects/2d080724-9e10-4770-9220-0678381eb341)
 
-# Slim Framework Tracy Debugger Bar #
+# Slim Framework 4 Tracy Debugger Bar #
 configure it by mouse
 ---
 ![example](ss/tracy_panel.png "Tracy Panel")
@@ -58,16 +58,15 @@ $ composer require illuminate/database
 ```php
 // Twig
 $c['twig_profile'] = function () {
-    return new Twig_Profiler_Profile();
+    return new \Twig\Profiler\Profile();
 };
 
 $c['view'] = function ($c) {
     $settings = $c->get('settings')['view'];
-    $view = new \Slim\Views\Twig($settings['template_path'], $settings['twig']);
+    $view = new \Slim\Views\Twig::create($settings['template_path'], $settings['twig']);
     // Add extensions
-    $view->addExtension(new Slim\Views\TwigExtension($c->get('router'), $c->get('request')->getUri()));
-    $view->addExtension(new Twig_Extension_Profiler($c['twig_profile']));
-    $view->addExtension(new Twig_Extension_Debug());
+    $view->addExtension(new \Twig\Extension\ProfilerExtension($c['twig_profile']));
+    $view->addExtension(new \Twig\Extension\DebugExtension());
     return $view;
 };
 
@@ -115,7 +114,7 @@ $c['em'] = function ($c) {
 
 **3.** register middleware
 ``` php
-$app->add(new RunTracy\Middlewares\TracyMiddleware($app));
+$app->add(RunTracy\Middlewares\TracyMiddleware::createFromContainer($app));
 ```
 
 **4.** register route if you plan use PTY Console
