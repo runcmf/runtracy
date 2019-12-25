@@ -65,7 +65,8 @@ class TracyMiddleware implements MiddlewareInterface
         if (isset($cfg['showEloquentORMPanel']) && $cfg['showEloquentORMPanel']) {
             if (class_exists('\Illuminate\Database\Capsule\Manager')) {
                 Debugger::getBar()->addPanel(new \RunTracy\Helpers\EloquentORMPanel(
-                    \Illuminate\Database\Capsule\Manager::getQueryLog()
+                    \Illuminate\Database\Capsule\Manager::getQueryLog(),
+                    $this->versions
                 ));
             } else {
                 // do not show in panel selector
@@ -74,7 +75,8 @@ class TracyMiddleware implements MiddlewareInterface
         }
         if (isset($cfg['showTwigPanel']) && $cfg['showTwigPanel']) {
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\TwigPanel(
-                $this->container->get('twig_profile')
+                $this->container->get('twig_profile'),
+                $this->versions
             ));
         }
         if (isset($cfg['showPhpInfoPanel']) && $cfg['showPhpInfoPanel']) {
@@ -135,15 +137,16 @@ class TracyMiddleware implements MiddlewareInterface
             ));
         }
         if (isset($cfg['showIdiormPanel']) && $cfg['showIdiormPanel']) {
-            Debugger::getBar()->addPanel(new \RunTracy\Helpers\IdiormPanel());
+            Debugger::getBar()->addPanel(new \RunTracy\Helpers\IdiormPanel(
+                $this->versions
+            ));
         }
         if (isset($cfg['showDoctrinePanel']) && $cfg['showDoctrinePanel']) {
             if (class_exists('\Doctrine\DBAL\Connection') && $this->container->has('doctrineConfig')) {
-                Debugger::getBar()->addPanel(
-                    new \RunTracy\Helpers\DoctrinePanel(
-                        $this->container->get('doctrineConfig')->getSQLLogger()->queries
-                    )
-                );
+                Debugger::getBar()->addPanel(new \RunTracy\Helpers\DoctrinePanel(
+                    $this->container->get('doctrineConfig')->getSQLLogger()->queries,
+                    $this->versions
+                ));
             } else {
                 // do not show in panel selector
                 unset($this->defcfg['showDoctrinePanel']);

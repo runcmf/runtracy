@@ -23,12 +23,14 @@ class EloquentORMPanel implements IBarPanel
 {
     private $count;
     private $data;
+    private $ver;
     private $time;
     private $icon;
 
-    public function __construct($data = null)
+    public function __construct($data = null, array $ver = [])
     {
         $this->data = $data;
+        $this->ver = $ver;
         $this->count = count($data);
     }
 
@@ -66,7 +68,7 @@ class EloquentORMPanel implements IBarPanel
     public function getPanel()
     {
         return '
-        <h1>'.$this->icon.' &nbsp; Slim 3 / Eloquent ORM</h1>
+        <h1>'.$this->icon.' &nbsp; Slim '.$this->ver['slim'].' / Eloquent ORM</h1>
         <div class="tracy-inner">
             <p>
                 <table width="100%">' . $this->data . '

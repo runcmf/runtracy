@@ -25,14 +25,16 @@ use Tracy\IBarPanel;
  */
 class IdiormPanel implements IBarPanel
 {
+    private $ver;
     private $icon;
     private $count;
     private $logs;
     private $time;
     private $parsed;
 
-    public function __construct()
+    public function __construct(array $ver = [])
     {
+        $this->ver = $ver;
         $this->parsed = $this->parse();
     }
 
@@ -48,7 +50,7 @@ class IdiormPanel implements IBarPanel
     public function getPanel()
     {
         return '
-        <h1>'.$this->icon.' &nbsp; Slim 3 / Idiorm</h1>
+        <h1>'.$this->icon.' &nbsp; Slim '.$this->ver['slim'].' / Idiorm</h1>
         <div class="tracy-inner">
             <p>
                 <table width="100%">' . $this->parsed . '
