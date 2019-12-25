@@ -17,7 +17,7 @@
 
 namespace RunTracy\Collectors;
 
-use Slim\Container;
+use Psr\Container\ContainerInterface as Container;
 use Doctrine\DBAL\Logging\DebugStack;
 
 /**
