@@ -26,7 +26,7 @@ now in package:
 | [Idiorm](https://github.com/j4mie/idiorm) | time, sql. panel & collector. **Note:** Idiorm support only one collector and if you use own this will not work. |
 | [Illuminate Database](https://github.com/illuminate/database) | sql, bindings |
 | **Template** | - |
-| [Twig](https://github.com/twigphp/Twig) | Twig_Profiler_Dumper_Html() |
+| [Twig](https://github.com/twigphp/Twig) | \Twig\Profiler\Dumper\HtmlDumper() |
 | **Common** | - |
 | PanelSelector | easy configure (part of fork from [TracyDebugger](https://github.com/adrianbj/TracyDebugger)) | 
 | PhpInfo | full phpinfo() |
