@@ -30,7 +30,6 @@ class TwigPanel implements IBarPanel
     {
         $this->data = $data;
         $this->ver = $ver;
-        $this->dumper = new \Twig_Profiler_Dumper_Html();
         $this->dumper = new \Twig\Profiler\Dumper\HtmlDumper();
     }
 
