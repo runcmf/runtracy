@@ -96,8 +96,14 @@ class TracyMiddleware implements MiddlewareInterface
         }
 
         if (isset($cfg['showSlimRouterPanel']) && $cfg['showSlimRouterPanel']) {
+
+            //$dispatcher = $request->getAttribute('__routingResults__')->getDispatcher();
+
+            $routeContext = \Slim\Routing\RouteContext::fromRequest($request);
+            $dispatcher = $routeContext->getRoutingResults()->getDispatcher();
+
             Debugger::getBar()->addPanel(new \RunTracy\Helpers\SlimRouterPanel(
-                \Tracy\Dumper::toHtml($request->getAttribute('__routingResults__')->getDispatcher()),
+                \Tracy\Dumper::toHtml($dispatcher),
                 $this->versions
             ));
         }
