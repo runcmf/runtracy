@@ -17,6 +17,7 @@
 
 namespace RunTracy\Helpers;
 
+use DateTime;
 use Tracy\IBarPanel;
 
 class EloquentORMPanel implements IBarPanel
@@ -89,7 +90,11 @@ class EloquentORMPanel implements IBarPanel
             $bind = '<span class="tracy-dump-hash"><hr />';
             if (!empty($var['bindings'])) {
                 foreach ($var['bindings'] as $k => $v) {
-                    $bind .= "[$k => $v]<br />";
+                    $value = $v;
+                    if ($v instanceof DateTime) {
+                        $value = $v->format("Y-m-d H:i:s");
+                    }
+                    $bind .= "[$k => $value]<br />";
                 }
             }
             $return .= sprintf(
