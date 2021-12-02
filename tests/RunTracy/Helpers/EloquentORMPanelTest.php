@@ -17,6 +17,7 @@
 
 namespace Tests\RunTracy\Helpers;
 
+use DateTime;
 use Tests\BaseTestCase;
 
 /**
@@ -68,6 +69,7 @@ class EloquentORMPanelTest extends BaseTestCase
                         5 => 0,
                         6 => 0,
                         7 => '89a412a4ad6ad9df88b42ca4c12bb271',
+                        8 => new DateTime()
                     ],
                     'time' => 4.9100000000000001,
             ];
