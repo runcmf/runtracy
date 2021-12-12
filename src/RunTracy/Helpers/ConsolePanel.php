@@ -87,9 +87,9 @@ class ConsolePanel implements IBarPanel
 
     public function getPanel()
     {
-        $this->noLogin = $this->cfg['ConsoleNoLogin'];
-        $this->terminalJs = $this->cfg['ConsoleTerminalJs'];
-        $this->terminalCss = $this->cfg['ConsoleTerminalCss'];
+        $this->noLogin = isset($this->cfg['ConsoleNoLogin']) ? $this->cfg['ConsoleNoLogin'] : null;
+        $this->terminalJs = isset($this->cfg['ConsoleTerminalJs']) ? $this->cfg['ConsoleTerminalJs'] : null;
+        $this->terminalCss = isset($this->cfg['ConsoleTerminalCss']) ? $this->cfg['ConsoleTerminalCss'] : null;
 
         ob_start();
         require __DIR__ .'../../Templates/ConsolePanel.phtml';
