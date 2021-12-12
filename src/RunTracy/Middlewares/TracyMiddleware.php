@@ -58,7 +58,8 @@ class TracyMiddleware
     {
         $res = $next($request, $response);
 
-        $cookies = json_decode($request->getCookieParam('tracyPanelsEnabled'));
+        $tracyPanelsEnabled = $request->getCookieParam('tracyPanelsEnabled');
+        $cookies = $tracyPanelsEnabled ? json_decode($tracyPanelsEnabled) : [];
         if (!empty($cookies)) {
             $def = array_fill_keys(array_keys($this->defcfg), null);
             $cookies = array_fill_keys($cookies, 1);

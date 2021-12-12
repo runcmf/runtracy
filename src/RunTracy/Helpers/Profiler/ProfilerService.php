@@ -91,10 +91,10 @@ class ProfilerService implements SingletonInterface
                         $profile->meta[Profiler::START_MEMORY_USAGE],
                         $profile->meta[Profiler::FINISH_MEMORY_USAGE]
                     );
-                    $this->metaData[self::META_TIME_LINE][$profile->meta[Profiler::START_TIME] * 1000] = [
+                    $this->metaData[self::META_TIME_LINE][(int)($profile->meta[Profiler::START_TIME] * 1000)] = [
                         self::META_TIME_LINE__MEMORY_USAGE => $profile->meta[Profiler::START_MEMORY_USAGE]
                     ];
-                    $this->metaData[self::META_TIME_LINE][$profile->meta[Profiler::FINISH_TIME] * 1000] = [
+                    $this->metaData[self::META_TIME_LINE][(int)($profile->meta[Profiler::FINISH_TIME] * 1000)] = [
                         self::META_TIME_LINE__MEMORY_USAGE => $profile->meta[Profiler::FINISH_MEMORY_USAGE]
                     ];
                 }
