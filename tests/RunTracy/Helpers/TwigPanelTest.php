@@ -33,7 +33,12 @@ class TwigPanelTest extends BaseTestCase
             $c = $app->getContainer();
 
             $c['twig_profile'] = function () {
-                return new \Twig_Profiler_Profile();
+                if (class_exists('\Twig_Profiler_Profile', false)) {
+                    $profile = new \Twig_Profiler_Profile();
+                } else {
+                    $profile = new \Twig\Profiler\Profile();
+                }
+                return $profile;
             };
 
             $view = new \Slim\Views\Twig(
@@ -42,14 +47,31 @@ class TwigPanelTest extends BaseTestCase
             );
             // Add extensions
             $view->addExtension(new \Slim\Views\TwigExtension($c->get('router'), $c->get('request')->getUri()));
-            $view->addExtension(new \Twig_Extension_Profiler($c['twig_profile']));
-            $view->addExtension(new \Twig_Extension_Debug());
+
+            if (class_exists('\Twig_Extension_Profiler', false)) {
+                $profileExtention = new \Twig_Extension_Profiler($c['twig_profile']);
+            } else {
+                $profileExtention = new \Twig\Extension\ProfilerExtension($c['twig_profile']);
+            }
+            $view->addExtension($profileExtention);
+
+            if (class_exists('\Twig_Extension_Debug', false)) {
+                $debugExtention = new \Twig_Extension_Debug();
+            } else {
+                $debugExtention = new \Twig\Extension\DebugExtension();
+            }
+            $view->addExtension($debugExtention);
 
             $this->assertInstanceOf('\Slim\App', $app);
             $this->assertInstanceOf('\Slim\Container', $c);
-            $this->assertInstanceOf('\Twig_Profiler_Profile', $c['twig_profile']);
             $this->assertInstanceOf('\Slim\Views\Twig', $view);
 
+            if (class_exists('\Twig_Profiler_Profile', false)) {
+                $this->assertInstanceOf('\Twig_Profiler_Profile', $c['twig_profile']);
+            } else {
+                $this->assertInstanceOf('\Twig\Extension\ProfilerExtension', $c['twig_profile']);
+            }
+            
             $panel = new \RunTracy\Helpers\TwigPanel($c['twig_profile']);
 
             $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
