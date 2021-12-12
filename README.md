@@ -56,7 +56,7 @@ $ composer require illuminate/database
 
 **2.2** add to your dependencies (Twig, Twig_Profiler) and/or Eloquent ORM like:
 ```php
-// Twig
+// Twig 1
 $c['twig_profile'] = function () {
     return new Twig_Profiler_Profile();
 };
@@ -70,6 +70,14 @@ $c['view'] = function ($c) {
     $view->addExtension(new Twig_Extension_Debug());
     return $view;
 };
+
+// Twig 3
+$c['twig_profile'] = function () {
+    return new \Twig\Profiler\Profile();
+};
+...
+$view->addExtension(new \Twig\Extension\ProfilerExtension($c['twig_profile']));
+$view->addExtension(new \Twig\Extension\DebugExtension());
 
 // Register Eloquent single connection
 $capsule = new \Illuminate\Database\Capsule\Manager;
