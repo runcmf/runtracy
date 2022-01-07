@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2017 1f7.wizard@gmail.com
  *
@@ -17,6 +18,8 @@
 
 namespace RunTracy\Collectors;
 
+use ORM;
+
 class IdormCollector
 {
     private static $qLog;
@@ -25,9 +28,9 @@ class IdormCollector
     {
         self::$qLog = [];
         // enable logging
-        \ORM::configure('logging', true);
+        ORM::configure('logging', true);
         // Collect query info
-        \ORM::configure('logger', function ($query, $time) {
+        ORM::configure('logger', function ($query, $time) {
             self::$qLog[] = [
                 'time' => $time,
                 'query' => $query
@@ -35,7 +38,7 @@ class IdormCollector
         });
     }
 
-    public static function getLog()
+    public static function getLog(): array
     {
         return self::$qLog;
     }
