@@ -22,7 +22,7 @@ use ORM;
 
 class IdormCollector
 {
-    private static $qLog;
+    private static $qLog = [];
 
     public function __construct()
     {
