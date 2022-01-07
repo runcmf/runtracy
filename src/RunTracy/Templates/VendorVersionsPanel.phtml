@@ -6,8 +6,9 @@ if (!function_exists('h')) {
     /**
      * Convenience method for htmlspecialchars.
      */
-    function h($str) {
-	return htmlspecialchars($str, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    function h($str): string
+    {
+	    return htmlspecialchars($str, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 }
 
@@ -18,7 +19,7 @@ if (!function_exists('h')) {
  * @var  array $data
  */
 ?>
-<style type="text/css">
+<style>
 	.milo-VendorVersionsPanel h2 {
 		font-weight: bold !important;
 	}
@@ -67,7 +68,11 @@ if (!function_exists('h')) {
 				</tbody>
 			</table>
 			<?php endforeach ?>
-            <div><small>Source:<p><?= Helpers::editorLink($jsonFile) ?></p><p><?= Helpers::editorLink($lockFile) ?></p></small></div>
+            <div style="font-size: smaller">
+                Source:
+                <p><?= Helpers::editorLink($jsonFile) ?></p>
+                <p><?= Helpers::editorLink($lockFile) ?></p>
+            </div>
 		<?php endif ?>
 	</div>
 </div>

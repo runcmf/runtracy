@@ -32,7 +32,6 @@ class ProfilerService implements SingletonInterface
 
     private function __construct()
     {
-        /** @noinspection PhpInternalEntityUsedInspection */
         Profiler::setPostProcessor([$this, 'addProfile']);
     }
 
@@ -51,7 +50,7 @@ class ProfilerService implements SingletonInterface
      * @return Profile
      * @internal
      */
-    public function addProfile(Profile $profile)
+    public function addProfile(Profile $profile): Profile
     {
         $this->metaData = [];
         $this->profiles[] = $profile;
@@ -61,7 +60,7 @@ class ProfilerService implements SingletonInterface
     /**
      * @return Profile[]
      */
-    public function getProfiles()
+    public function getProfiles(): array
     {
         return $this->profiles;
     }

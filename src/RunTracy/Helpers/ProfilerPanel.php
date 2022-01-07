@@ -41,8 +41,6 @@ class ProfilerPanel implements IBarPanel
     public function __construct(array $config = [])
     {
         $this->config = array_replace_recursive(ProfilerPanel::getDefaultConfig(), $config);
-
-        /** @noinspection PhpInternalEntityUsedInspection */
         $this->profilerService = ProfilerService::getInstance();
     }
 
@@ -50,7 +48,7 @@ class ProfilerPanel implements IBarPanel
      * @internal
      * @return array
      */
-    public static function getDefaultConfig()
+    public static function getDefaultConfig(): array
     {
         return [
             self::CONFIG_PRIMARY_VALUE => SimpleProfiler::isMemRealUsage() ?
@@ -66,7 +64,7 @@ class ProfilerPanel implements IBarPanel
     /**
      * @inheritdoc
      */
-    public function getTab()
+    public function getTab(): string
     {
         $countOfProfiles = count($this->profilerService->getProfiles());
         return sprintf(
@@ -82,10 +80,10 @@ class ProfilerPanel implements IBarPanel
     /**
      * @inheritdoc
      */
-    public function getPanel()
+    public function getPanel(): string
     {
         $table = '
-        <style type="text/css">
+        <style>
             .tracy-inner {
                 max-height: calc(100vh - 5px) !important;
             }
@@ -106,7 +104,6 @@ class ProfilerPanel implements IBarPanel
             <tr><th>Start</th><th>Finish</th><th>Time (effective)</th><th>Memory change (effective)</th></tr>';
         }
         $this->profilerService->iterateProfiles(function (Profile $profile) use (&$table) {
-            /** @noinspection PhpInternalEntityUsedInspection */
             if (!$this->config[self::CONFIG_SHOW][self::CONFIG_SHOW_SHORT_PROFILES] &&
                 ($profile->meta[ProfilerService::TIME_LINE_ACTIVE] +
                     $profile->meta[ProfilerService::TIME_LINE_INACTIVE]) < 1) {
@@ -115,8 +112,7 @@ class ProfilerPanel implements IBarPanel
             if ($profile->meta[Profiler::START_LABEL] == $profile->meta[Profiler::FINISH_LABEL]) {
                 $labels = sprintf(
                     '<td colspan="2">%s</td>',
-                    $profile->meta[Profiler::START_LABEL],
-                    $profile->meta[Profiler::FINISH_LABEL]
+                    $profile->meta[Profiler::START_LABEL]
                 );
             } else {
                 $labels = sprintf(
@@ -147,7 +143,6 @@ class ProfilerPanel implements IBarPanel
             }
 
             if ($this->config[self::CONFIG_SHOW][self::CONFIG_SHOW_TIME_LINES]) {
-                /** @noinspection PhpInternalEntityUsedInspection */
                 $table .= sprintf(
                     '<tr class="tracy-addons-profiler-hidden"><td colspan="4"></td></tr><tr><td colspan="4">' .
                     '<span class="tracy-addons-profiler-bar" style="width:%d%%;background-color:#cccccc;"></span>' .
@@ -171,7 +166,7 @@ class ProfilerPanel implements IBarPanel
         );
     }
 
-    private function getMemoryChart()
+    private function getMemoryChart(): string
     {
         $colors = [
             'axis' => '#000000',
@@ -236,7 +231,6 @@ class ProfilerPanel implements IBarPanel
             ) {
             
                 if ($firstIteration) {
-                    /** @noinspection PhpInternalEntityUsedInspection */
                     $memoryChart .= sprintf(
                         '<text x="%d" y="%d" font-size="%d">%d kB</text>',
                         $margin * 2,
@@ -246,7 +240,6 @@ class ProfilerPanel implements IBarPanel
                     );
                         $firstIteration = false;
                 }
-            /** @noinspection PhpInternalEntityUsedInspection */
                 $thisX = floor(max(0, $time) / $metaData[ProfilerService::META_TIME_TOTAL] * $maxWidth);
                 if ($thisX == $prevX) {
                     return /* continue */;
