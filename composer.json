@@ -29,9 +29,10 @@
     ],
     "require": {
         "php": ">=7.1",
+        "ext-mbstring": "*",
+        "ext-json": "*",
         "slim/slim": "~4.1",
-        "tracy/tracy": "~2.7",
-        "ext-mbstring": "*"
+        "tracy/tracy": "~2.7"
     },
     "require-dev": {
         "satooshi/php-coveralls": "1.*",

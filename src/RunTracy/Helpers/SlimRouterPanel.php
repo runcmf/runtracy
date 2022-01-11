@@ -22,19 +22,19 @@ use Tracy\IBarPanel;
 
 class SlimRouterPanel implements IBarPanel
 {
-    private $content;
+    private $routes;
     private $ver;
     private $icon;
 
     public function __construct($data = null, array $ver = [])
     {
-        $this->content = $data;
+        $this->routes = $data;
         $this->ver = $ver;
     }
 
-    public function getTab()
+    public function getTab(): string
     {
-        $this->icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" version="1.1" width="16" '.
+        $this->icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" width="16" '.
             'height="16"><path fill="#043CBF" d="m221.25 479.1c-79.88-6.85-150.37-51.83-189.99-121.24-14.666-'.
             '25.69-23.972-53.8-29.552-89.27-0.70825-4.5-1.1632-16.11-1.1384-29.06 0.04489-23.34 1.5027-35.94 6.5464'.
             '-56.54 14.241-58.18 49.919-109.05 99.764-142.23 30.47-20.29 60.66-31.962 98.61-38.123 10.115-1.6422 '.
@@ -71,9 +71,65 @@ class SlimRouterPanel implements IBarPanel
         return '<span title="Slim Router">'.$this->icon.'</span>';
     }
 
-    public function getPanel()
+    public function getPanel(): string
     {
+        $rows = [];
+        foreach ($this->getData() as $row){
+            $cells = array();
+            foreach ($row as $cell) {
+                $cells[] = '<td>'.$cell.'</td>';
+            }
+            $rows[] = "<tr>" . implode('', $cells) . "</tr>";
+        }
+
         return '<h1>'.$this->icon.' Slim '.$this->ver['slim'].' Router:</h1>
-        <div style="overflow: auto; max-height: 600px;">' . $this->content . '</div>';
+        <div class="tracy-inner slimRouterPanel">
+            <p>
+                <table style="width: 100%" ">
+                    <tr class="yes">
+                        <th><b>Id</b></th>
+                        <th><b>Name</b></th>
+                        <th><b>Pattern</b></th>
+                        <th><b>Methods</b></th>
+                        <th><b>Callable</b></th>
+                        <th><b>Arguments</b></th>
+                    </tr>'. implode('', $rows) .'
+                </table>
+            </p>
+        </div>';
+    }
+
+    private function getData(): array
+    {
+        $data = [];
+        foreach ($this->routes as $route) {
+            $callable = $route->getCallable();
+            if(is_a($callable, 'Closure')){
+                $callable = 'Closure';
+            }elseif (is_array($callable)){
+                $callable = implode(':', $callable);
+            }
+
+            $methods = $route->getMethods();
+            if($this->isAny($methods)){
+                $methods = ['(any)'];
+            }
+
+            $data[] = [
+                'id'        => $route->getIdentifier(),
+                'name'      => $route->getName() ?? '(unnamed)',
+                'pattern'   => $route->getPattern(),
+                'methods'   => implode(', ', $methods),
+                'callable'  => $callable,
+                'arguments' => json_encode($route->getArguments()),
+            ];
+        }
+
+        return $data;
+    }
+
+    private function isAny($methods): bool
+    {
+        return empty(array_diff(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], $methods));
     }
 }
