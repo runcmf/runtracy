@@ -74,9 +74,8 @@ class PhpInfoPanel implements IBarPanel
 
         // http://php.net/manual/en/function.phpinfo.php#87287
         return '
-        <h1>'.$this->icon.' PHP Info</h1>
-        <div class="tracy-inner">
-            <style type="text/css">
+            <style>
+                #tracy-debug-panel-RunTracy-Helpers-PhpInfoPanel {max-width: 940px !important}
                 .tracy-inner {max-width: 940px !important}
                 #phpinfo pre {margin: 0; font-family: monospace;}
                 #phpinfo a:link {color: #009; text-decoration: none; background-color: #fff;}
@@ -96,6 +95,8 @@ class PhpInfoPanel implements IBarPanel
                 #phpinfo img {float: right; border: 0;}
                 #phpinfo hr {background-color: #ccc; border: 0; height: 1px;}
             </style>
+        <h1>'.$this->icon.' PHP Info</h1>
+        <div class="tracy-inner">
             <div id="phpinfo">' . $phpInfo . '</div>
         </div>';
     }

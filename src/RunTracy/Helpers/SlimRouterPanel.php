@@ -82,10 +82,13 @@ class SlimRouterPanel implements IBarPanel
             $rows[] = "<tr>" . implode('', $cells) . "</tr>";
         }
 
-        return '<h1>'.$this->icon.' Slim '.$this->ver['slim'].' Router:</h1>
-        <div class="tracy-inner slimRouterPanel">
-            <p>
-                <table style="width: 100%" ">
+        return '
+        <style>
+            #tracy-debug-panel-RunTracy-Helpers-SlimRouterPanel {max-width: 1440px !important}
+        </style>
+        <h1>'.$this->icon.' Slim '.$this->ver['slim'].' Router:</h1>
+        <div class="tracy-inner">
+                <table>
                     <tr class="yes">
                         <th><b>Id</b></th>
                         <th><b>Name</b></th>
@@ -95,7 +98,7 @@ class SlimRouterPanel implements IBarPanel
                         <th><b>Arguments</b></th>
                     </tr>'. implode('', $rows) .'
                 </table>
-            </p>
+         
         </div>';
     }
 
