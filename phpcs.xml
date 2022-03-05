@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
-<ruleset name="Slim coding standard">
-    <description>Slim coding standard</description>
-
-    <!-- display progress -->
-    <arg value="p"/>
-    <!-- use colors in output -->
+<ruleset name="Coding Standard">
     <arg name="colors"/>
+    <arg name="tab-width" value="4"/>
+    <arg name="extensions" value="php"/>
+    <arg value="sp"/>
 
-    <!-- inherit rules from: -->
-    <rule ref="PSR2"/>
-    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-
-    <!-- Paths to check -->
     <file>src</file>
     <file>tests</file>
+
+    <rule ref="PSR12"></rule>
+
+    <rule ref="Squiz.Commenting.FunctionComment.MissingParamComment"/>
+    <rule ref="Squiz.Commenting.ClassComment.Missing"/>
+    <rule ref="Squiz.Commenting.VariableComment.Missing"/>
+    <rule ref="Squiz.Commenting.FunctionComment.Missing"/>
 </ruleset>

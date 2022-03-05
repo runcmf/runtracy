@@ -1,6 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Copyright 2016 1f7.wizard@gmail.com
+ * Copyright 2016 1f7.wizard@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +35,6 @@ class ConsolePanel implements IBarPanel
         $this->cfg = $cfg;
     }
 
-
     public function getTab()
     {
         // Set blinker to work with no active panel
@@ -50,7 +52,7 @@ class ConsolePanel implements IBarPanel
             if (typeof jQuery === "function") {
                 $(document).ready(function(){
                     // configure blinker
-                    if('.$this->cfg['ConsoleNoLogin'].') {
+                    if(' . $this->cfg['ConsoleNoLogin'] . ') {
                         function blinker() {
                             $(".warn_blink").fadeOut(800);
                             $(".warn_blink").fadeIn(800);
@@ -66,7 +68,12 @@ class ConsolePanel implements IBarPanel
             }
         </script>';
 
-        $this->icon = '<svg width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-terminal"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>';
+        $this->icon = '<svg width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" 
+        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+        class="feather feather-terminal">
+            <polyline points="4 17 10 11 4 5"></polyline>
+            <line x1="12" y1="19" x2="20" y2="19"></line>
+        </svg>';
 
         return $head . '
         <span title="PTY Console" class="warn_blink">
@@ -77,12 +84,14 @@ class ConsolePanel implements IBarPanel
 
     public function getPanel()
     {
-        $this->noLogin = $this->cfg['ConsoleNoLogin'];
-        $this->terminalJs = $this->cfg['ConsoleTerminalJs'];
+        $this->noLogin     = $this->cfg['ConsoleNoLogin'];
+        $this->terminalJs  = $this->cfg['ConsoleTerminalJs'];
         $this->terminalCss = $this->cfg['ConsoleTerminalCss'];
 
         ob_start();
-        require __DIR__ .'../../Templates/ConsolePanel.phtml';
+
+        require __DIR__ . '../../Templates/ConsolePanel.phtml';
+
         return ob_get_clean();
     }
 }

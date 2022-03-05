@@ -1,0 +1,7 @@
+{
+  "name": "runtracy",
+  "version": "0.2.11",
+  "scripts": {
+    "version": "auto-changelog -p --commit-limit false && git add CHANGELOG.md"
+  }
+}

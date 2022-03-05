@@ -27,7 +27,7 @@
     } else if (typeof global !== 'undefined') {
         root = global;
     } else {
-        throw new Error('Unknow context');
+        throw new Error('Unknown context');
     }
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
@@ -506,7 +506,7 @@
     $.terminal.AnsiParser = AnsiParser;
     // ---------------------------------------------------------------------
     // we match characters and html entities because command line escape brackets
-    // echo don't, when writing formatter always process html entitites so it work
+    // echo don't, when writing formatter always process html entities so it work
     // for cmd plugin as well for echo
     var chr = '[^\\x08]|[\\r\\n]{2}|&[^;]+;';
     var backspace_re = new RegExp('^(' + chr + ')?\\x08');
@@ -589,7 +589,7 @@
                 if (match) {
                     // we remove backspace and character or html entity before it
                     // but we keep it in removed array so we can put it back
-                    // when we have caritage return or line feed
+                    // when we have carriage return or line feed
                     if (match[1]) {
                         start = i - match[1].length + push;
                         removed_chars.push({
@@ -651,7 +651,7 @@
                             // next push to removed_char array
                             push++;
                             // we use special characters instead of terminal
-                            // formatting so it's easier to proccess when removing
+                            // formatting so it's easier to process when removing
                             // backspaces
                             if (removed_char.string === string[i]) {
                                 result += string[i] + '\uFFF1';
@@ -690,7 +690,7 @@
             }
             if (!string.match(/\x08/)) {
                 // we break the loop so if removed_chars still chave items
-                // we don't have infite loop
+                // we don't have infinite loop
                 break_next = true;
             }
         }
@@ -974,7 +974,7 @@
             cyan: '#5FF',
             white: '#FFF'
         },
-        // XTerm 8-bit pallete
+        // XTerm 8-bit pallette
         palette: [
             '#000000', '#AA0000', '#00AA00', '#AA5500', '#0000AA', '#AA00AA',
             '#00AAAA', '#AAAAAA', '#555555', '#FF5555', '#55FF55', '#FFFF55',

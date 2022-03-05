@@ -1,6 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Copyright 2017 1f7.wizard@gmail.com
+ * Copyright 2017 1f7.wizard@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +23,7 @@ namespace RunTracy\Helpers;
 use Tracy\IBarPanel;
 
 /**
- * Class IdiormPanel
- * @package RunTracy\Helpers
+ * Class IdiormPanel.
  */
 class IdiormPanel implements IBarPanel
 {
@@ -34,15 +36,16 @@ class IdiormPanel implements IBarPanel
 
     public function __construct(array $ver = [])
     {
-        $this->ver = $ver;
+        $this->ver    = $ver;
         $this->parsed = $this->parse();
     }
 
     public function getTab()
     {
         $this->icon = 'ORM';
+
         return '
-        <span title="Idiorm query logs">'.
+        <span title="Idiorm query logs">' .
             $this->icon . ' (' . $this->count . ' / ' . round($this->time * 1000, 2) . ' ms)
         </span>';
     }
@@ -50,7 +53,7 @@ class IdiormPanel implements IBarPanel
     public function getPanel()
     {
         return '
-        <h1>'.$this->icon.' &nbsp; Slim '.$this->ver['slim'].' / Idiorm</h1>
+        <h1>' . $this->icon . ' &nbsp; Slim ' . $this->ver['slim'] . ' / Idiorm</h1>
         <div class="tracy-inner">
             <p>
                 <table width="100%">' . $this->parsed . '
@@ -68,11 +71,12 @@ class IdiormPanel implements IBarPanel
         $this->logs = \RunTracy\Collectors\IdormCollector::getLog();
         if (empty($this->logs)) {
             $this->count = $this->time = 0;
+
             return '<p><strong>No Logs</strong>, maybe own collector work?</p>';
         }
-        $return = '<thead><tr><th><b>Count</b></th><th><b>Time,&nbsp;s</b></th><th>Query</th></tr></thead>';
+        $return  = '<thead><tr><th><b>Count</b></th><th><b>Time,&nbsp;s</b></th><th>Query</th></tr></thead>';
         $baseRow = '<tr><td>%s</td><td>%s</td><td>%s</td></tr>';
-        $time = $cnt = 0;
+        $time    = $cnt    = 0;
         foreach ($this->logs as $log) {
             $time += $log['time'];
             $row = $baseRow;
@@ -84,7 +88,8 @@ class IdiormPanel implements IBarPanel
             );
         }
         $this->count = $cnt;
-        $this->time = number_format($time, 8);
+        $this->time  = number_format($time, 8);
+
         return $return;
     }
 }

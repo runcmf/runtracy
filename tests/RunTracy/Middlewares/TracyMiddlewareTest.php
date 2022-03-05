@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 1f7.wizard@gmail.com
  *
@@ -36,9 +37,9 @@ class TracyMiddlewareTest extends BaseTestCase
     {
         $cookie = 'bar=foo; foo=bar; tracyPanelsEnabled=';
         // set all possible panels
-        $cookie .= '["showPhpInfoPanel","showSlimRouterPanel","showSlimEnvironmentPanel",'.
-            '"showSlimRequestPanel","showSlimResponsePanel","showSlimContainer",'.
-            '"showEloquentORMPanel","showTwigPanel","showProfilerPanel","showVendorVersionsPanel"'.
+        $cookie .= '["showPhpInfoPanel","showSlimRouterPanel","showSlimEnvironmentPanel",' .
+            '"showSlimRequestPanel","showSlimResponsePanel","showSlimContainer",' .
+            '"showEloquentORMPanel","showTwigPanel","showProfilerPanel","showVendorVersionsPanel"' .
             ',"showXDebugHelper","showIncludedFiles","showConsolePanel","showIdiormPanel","showDoctrinePanel"]';
 
         $environment = \Slim\Http\Environment::mock(
@@ -69,7 +70,7 @@ class TracyMiddlewareTest extends BaseTestCase
             return $view;
         };
         // Register Eloquent single connections
-        $capsule = new \Illuminate\Database\Capsule\Manager;
+        $capsule = new \Illuminate\Database\Capsule\Manager();
         $capsule->addConnection($this->cfg['settings']['db']['connections']['mysql']);
         $capsule->setAsGlobal();
         $capsule->bootEloquent();
@@ -78,7 +79,7 @@ class TracyMiddlewareTest extends BaseTestCase
         $c['dbal'] = function () {
             $conn = \Doctrine\DBAL\DriverManager::getConnection(
                 $this->getDoctrineDBALConfig(),
-                new \Doctrine\DBAL\Configuration
+                new \Doctrine\DBAL\Configuration()
             );
             // return DBAL\Connection
             return $conn;
@@ -95,7 +96,7 @@ class TracyMiddlewareTest extends BaseTestCase
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
             </head>
             <body>
-                <div>Hello, '.$request->getAttribute('name').'</div>
+                <div>Hello, ' . $request->getAttribute('name') . '</div>
             </body>
         </html>';
         });
@@ -108,7 +109,7 @@ class TracyMiddlewareTest extends BaseTestCase
         $this->assertRegexp('/Hello\, World/s', (string)$response->getBody());
 
         // try unset Manager
-        $capsule = new \Illuminate\Database\Capsule\Manager;
+        $capsule = new \Illuminate\Database\Capsule\Manager();
         unset($capsule);
         // check all work
         $response = $app->process($request, $response);
@@ -149,7 +150,7 @@ class TracyMiddlewareTest extends BaseTestCase
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
             </head>
             <body>
-                <div>Hello, '.$request->getAttribute('name').'</div>
+                <div>Hello, ' . $request->getAttribute('name') . '</div>
             </body>
         </html>';
         });
@@ -190,7 +191,7 @@ class TracyMiddlewareTest extends BaseTestCase
     public function testRunCollectorsReturnNull()
     {
         $foo = self::getMethod('runCollectors');
-        $obj = new TracyMiddleware;
+        $obj = new TracyMiddleware();
 
         $this->assertNull($foo->invokeArgs($obj, []));
     }

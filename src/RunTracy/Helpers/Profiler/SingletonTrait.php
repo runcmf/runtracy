@@ -1,15 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RunTracy\Helpers\Profiler;
 
 /**
- * Singleton trait
+ * Singleton trait.
  *
  * @author   Petr Knap <dev@petrknap.cz>
+ *
  * @since    2015-04-18
+ *
  * @category Patterns
- * @package  PetrKnap\Php\Singleton
+ *
  * @version  0.4
+ *
  * @license  https://github.com/petrknap/php-singleton/blob/master/LICENSE MIT
  */
 trait SingletonTrait
@@ -20,16 +25,17 @@ trait SingletonTrait
     private static $instances = [];
 
     /**
-     * Returns instance, if instance does not exist then creates new one and returns it
+     * Returns instance, if instance does not exist then creates new one and returns it.
      *
      * @return $this
      */
     public static function getInstance()
     {
-        $self = get_called_class();
+        $self = static::class;
         if (!isset(self::$instances[$self])) {
-            self::$instances[$self] = new $self;
+            self::$instances[$self] = new $self();
         }
+
         return self::$instances[$self];
     }
 
@@ -38,7 +44,8 @@ trait SingletonTrait
      */
     public static function hasInstance()
     {
-        $self = get_called_class();
+        $self = static::class;
+
         return isset(self::$instances[$self]);
     }
 }

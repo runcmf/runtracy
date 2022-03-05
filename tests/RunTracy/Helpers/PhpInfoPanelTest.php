@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 1f7.wizard@gmail.com
  *
@@ -87,13 +88,13 @@ class PhpInfoPanelTest extends BaseTestCase
 
         // check img tag exists
         $phpInfo = $dom->saveHTML($body);
-        $this->assertTrue((boolean)preg_match('/<img[^>]*/si', $phpInfo));
+        $this->assertTrue((bool)preg_match('/<img[^>]*/si', $phpInfo));
 
         // remove img tag
         $this->callProtectedMethod('removeElementsByTagName', '\RunTracy\Helpers\PhpInfoPanel', ['img', $body]);
 
         // check img tag not exists
         $phpInfo = $dom->saveHTML($body);
-        $this->assertFalse((boolean)preg_match('/<img[^>]*/si', $phpInfo));
+        $this->assertFalse((bool)preg_match('/<img[^>]*/si', $phpInfo));
     }
 }

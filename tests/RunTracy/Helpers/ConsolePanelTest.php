@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 1f7.wizard@gmail.com
  *
@@ -26,7 +27,6 @@ use Tests\BaseTestCase;
  */
 class ConsolePanelTest extends BaseTestCase
 {
-
     public function testConsolePanel()
     {
         $panel = new \RunTracy\Helpers\ConsolePanel($this->cfg['settings']['tracy']['configs']);

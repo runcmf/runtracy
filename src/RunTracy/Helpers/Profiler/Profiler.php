@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RunTracy\Helpers\Profiler;
 
 class Profiler extends AdvancedProfiler
@@ -17,10 +19,10 @@ class Profiler extends AdvancedProfiler
     /**
      * @var callable
      */
-    protected static $postProcessor = null;
+    protected static $postProcessor;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function enable($realUsage = false)
     {
@@ -29,7 +31,8 @@ class Profiler extends AdvancedProfiler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @internal
      */
     public static function setPostProcessor(callable $postProcessor)

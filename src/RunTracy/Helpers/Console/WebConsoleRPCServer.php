@@ -1,6 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Copyright 2016 1f7.wizard@gmail.com
+ * Copyright 2016 1f7.wizard@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,128 +26,22 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
 {
     protected $homeDirectory = '';
 
-    protected $noLogin = false;
-    protected $accounts = [];
+    protected $noLogin               = false;
+    protected $accounts              = [];
     protected $passwordHashAlgorithm = '';
-
-    // Authentication
-    protected function authenticateUser($user, $password)
-    {
-        $user = trim((string) $user);
-        $password = trim((string) $password);
-
-        if ($user && $password) {
-            if (isset($this->accounts[$user]) && !$this->isEmptyString($this->accounts[$user])) {
-                if ($this->passwordHashAlgorithm) {
-                    $password = $this->getHash($this->passwordHashAlgorithm, $password);
-                }
-
-                if ($this->isEqualStrings($password, $this->accounts[$user])) {
-                    return $user . ':' . $this->getHash('sha256', $password);
-                }
-            }
-        }
-
-        throw new IncorrectUserOrPassword();
-    }
-
-    protected function authenticateToken($token)
-    {
-        if ($this->noLogin) {
-            return true;
-        }
-
-        $token = trim((string) $token);
-        $tokenParts = explode(':', $token, 2);
-
-        if (count($tokenParts) == 2) {
-            $user = trim((string) $tokenParts[0]);
-            $passwordHash = trim((string) $tokenParts[1]);
-
-            if ($user && $passwordHash) {
-                if (isset($this->accounts[$user]) && !$this->isEmptyString($this->accounts[$user])) {
-                    $realPasswordHash = $this->getHash('sha256', $this->accounts[$user]);
-                    if ($this->isEqualStrings($passwordHash, $realPasswordHash)) {
-                        return $user;
-                    }
-                }
-            }
-        }
-
-        throw new IncorrectUserOrPassword();
-    }
-
-    protected function getHomeDirectory($user)
-    {
-        if (is_string($this->homeDirectory)) {
-            if (!$this->isEmptyString($this->homeDirectory)) {
-                return $this->homeDirectory;
-            }
-        } elseif (is_string($user) && !$this->isEmptyString($user)
-            && isset($this->homeDirectory[$user])
-            && !$this->isEmptyString($this->homeDirectory[$user])) {
-            return $this->homeDirectory[$user];
-        }
-
-        return getcwd();
-    }
-
-    // Environment
-    protected function getEnvironment()
-    {
-        $hostname = function_exists('gethostname') ? gethostname() : null;
-        return ['path' => getcwd(), 'hostname' => $hostname];
-    }
-
-    protected function setEnvironment($environment)
-    {
-        $environment = !empty($environment) ? (array) $environment : [];
-        $path = (isset($environment['path']) && !$this->isEmptyString($environment['path'])) ?
-            $environment['path'] : $this->homeDirectory;
-
-        if (!$this->isEmptyString($path)) {
-            if (is_dir($path)) {
-                if (!chdir($path)) {
-                    return [
-                    'output' => 'Unable to change directory to current working directory, updating current directory',
-                    'environment' => $this->getEnvironment()
-                    ];
-                }
-            } else {
-                return [
-                'output' => 'Current working directory not found, updating current directory',
-                'environment' => $this->getEnvironment()
-                ];
-            }
-        }
-        return false;
-    }
-
-    // Initialization
-    protected function initialize($token, $environment)
-    {
-        $user = $this->authenticateToken($token);
-        $this->homeDirectory = $this->getHomeDirectory($user);
-        $result = $this->setEnvironment($environment);
-
-        if ($result) {
-            return $result;
-        }
-        return false;
-    }
 
     // Methods
     public function login($user, $password)
     {
         $result = ['token' => $this->authenticateUser($user, $password),
-            'environment' => $this->getEnvironment()];
+            'environment'  => $this->getEnvironment(), ];
 
         $homeDirectory = $this->getHomeDirectory($user);
         if (!$this->isEmptyString($homeDirectory)) {
             if (is_dir($homeDirectory)) {
                 $result['environment']['path'] = $homeDirectory;
             } else {
-                $result['output'] = 'Home directory not found: '. $homeDirectory;
+                $result['output'] = 'Home directory not found: ' . $homeDirectory;
             }
         }
 
@@ -166,10 +63,10 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
         if (!$this->isEmptyString($path)) {
             if (is_dir($path)) {
                 if (!chdir($path)) {
-                    return ['output' => 'cd: '. $path . ': Unable to change directory'];
+                    return ['output' => 'cd: ' . $path . ': Unable to change directory'];
                 }
             } else {
-                return ['output' => 'cd: '. $path . ': No such directory'];
+                return ['output' => 'cd: ' . $path . ': No such directory'];
             }
         }
 
@@ -183,9 +80,9 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
             return $result;
         }
 
-        $scanPath = '';
+        $scanPath         = '';
         $completionPrefix = '';
-        $completion = [];
+        $completion       = [];
 
         if (!empty($pattern)) {
             if (!is_dir($pattern)) {
@@ -251,13 +148,124 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
         return ['output' => $output];
     }
 
+    // Authentication
+    protected function authenticateUser($user, $password)
+    {
+        $user     = trim((string) $user);
+        $password = trim((string) $password);
+
+        if ($user && $password) {
+            if (isset($this->accounts[$user]) && !$this->isEmptyString($this->accounts[$user])) {
+                if ($this->passwordHashAlgorithm) {
+                    $password = $this->getHash($this->passwordHashAlgorithm, $password);
+                }
+
+                if ($this->isEqualStrings($password, $this->accounts[$user])) {
+                    return $user . ':' . $this->getHash('sha256', $password);
+                }
+            }
+        }
+
+        throw new IncorrectUserOrPassword();
+    }
+
+    protected function authenticateToken($token)
+    {
+        if ($this->noLogin) {
+            return true;
+        }
+
+        $token      = trim((string) $token);
+        $tokenParts = explode(':', $token, 2);
+
+        if (count($tokenParts) == 2) {
+            $user         = trim((string) $tokenParts[0]);
+            $passwordHash = trim((string) $tokenParts[1]);
+
+            if ($user && $passwordHash) {
+                if (isset($this->accounts[$user]) && !$this->isEmptyString($this->accounts[$user])) {
+                    $realPasswordHash = $this->getHash('sha256', $this->accounts[$user]);
+                    if ($this->isEqualStrings($passwordHash, $realPasswordHash)) {
+                        return $user;
+                    }
+                }
+            }
+        }
+
+        throw new IncorrectUserOrPassword();
+    }
+
+    protected function getHomeDirectory($user)
+    {
+        if (is_string($this->homeDirectory)) {
+            if (!$this->isEmptyString($this->homeDirectory)) {
+                return $this->homeDirectory;
+            }
+        } elseif (
+            is_string($user) && !$this->isEmptyString($user)
+            && isset($this->homeDirectory[$user])
+            && !$this->isEmptyString($this->homeDirectory[$user])
+        ) {
+            return $this->homeDirectory[$user];
+        }
+
+        return getcwd();
+    }
+
+    // Environment
+    protected function getEnvironment()
+    {
+        $hostname = function_exists('gethostname') ? gethostname() : null;
+
+        return ['path' => getcwd(), 'hostname' => $hostname];
+    }
+
+    protected function setEnvironment($environment)
+    {
+        $environment = !empty($environment) ? (array) $environment : [];
+        $path        = (isset($environment['path']) && !$this->isEmptyString($environment['path'])) ?
+            $environment['path'] : $this->homeDirectory;
+
+        if (!$this->isEmptyString($path)) {
+            if (is_dir($path)) {
+                if (!chdir($path)) {
+                    return [
+                        'output'      => 'Unable to change directory to current working directory, updating current directory',
+                        'environment' => $this->getEnvironment(),
+                    ];
+                }
+            } else {
+                return [
+                    'output'      => 'Current working directory not found, updating current directory',
+                    'environment' => $this->getEnvironment(),
+                ];
+            }
+        }
+
+        return false;
+    }
+
+    // Initialization
+    protected function initialize($token, $environment)
+    {
+        $user                = $this->authenticateToken($token);
+        $this->homeDirectory = $this->getHomeDirectory($user);
+        $result              = $this->setEnvironment($environment);
+
+        if ($result) {
+            return $result;
+        }
+
+        return false;
+    }
+
     // Command execution
     private function executeCommand($command)
     {
         $descriptors = [
             0 => ['pipe', 'r'], // STDIN
             1 => ['pipe', 'w'], // STDOUT
-            2 => ['pipe', 'w']  // STDERR
+            2 => ['pipe', 'w'],  // STDERR
         ];
 
         $process = proc_open($command . ' 2>&1', $descriptors, $pipes);
@@ -280,6 +288,7 @@ class WebConsoleRPCServer extends BaseJsonRpcServer
         if (!empty($error)) {
             $output .= ', exit wit error:' . $error . ', code: ' . $code;
         }
+
         return $output;
     }
 

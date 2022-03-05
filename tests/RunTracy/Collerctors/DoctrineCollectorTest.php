@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2017 1f7.wizard@gmail.com
  *
@@ -50,7 +51,7 @@ class DoctrineCollectorTest extends BaseTestCase
         $c['dbal'] = function () {
             $conn = \Doctrine\DBAL\DriverManager::getConnection(
                 $this->getDoctrineDBALConfig(),
-                new \Doctrine\DBAL\Configuration
+                new \Doctrine\DBAL\Configuration()
             );
             // return DBAL\Query\QueryBuilder
             return $conn->createQueryBuilder();
@@ -77,7 +78,7 @@ class DoctrineCollectorTest extends BaseTestCase
         $c['dbal'] = function () {
             $conn = \Doctrine\DBAL\DriverManager::getConnection(
                 $this->getDoctrineDBALConfig(),
-                new \Doctrine\DBAL\Configuration
+                new \Doctrine\DBAL\Configuration()
             );
             // return DBAL\Connection
             return $conn;
