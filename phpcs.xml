@@ -6,7 +6,6 @@
     <arg value="sp"/>
 
     <file>src</file>
-    <file>tests</file>
 
     <rule ref="PSR12"></rule>
 

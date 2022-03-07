@@ -54,6 +54,9 @@
             "Tests\\": "tests/"
         }
     },
+    "files": [
+        "/../tracy/tracy/src/Tracy/functions.php"
+    ],
     "scripts": {
         "test": [
             "@phpunit"
