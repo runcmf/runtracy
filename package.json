@@ -1,6 +1,6 @@
 {
   "name": "runtracy",
-  "version": "0.2.14",
+  "version": "0.2.15",
   "scripts": {
     "version": "auto-changelog -p --commit-limit false && git add CHANGELOG.md",
     "check": "remark . --frail",
