@@ -88,16 +88,26 @@ class TracyMiddleware implements MiddlewareInterface
             $cfg = $this->defcfg;
         }
 
-        if (isset($cfg['showEloquentORMPanel']) && $cfg['showEloquentORMPanel']) {
-            if (class_exists('\Illuminate\Database\Capsule\Manager')) {
-                Debugger::getBar()->addPanel(new EloquentORMPanel(
-                    Manager::getQueryLog(),
-                    $this->versions
-                ));
-            } else {
-                // do not show in panel selector
-                unset($this->defcfg['showEloquentORMPanel']);
-            }
+        // Remove ORM Panel Selectors if class not found
+        if (!class_exists('\Doctrine\DBAL\Connection')) {
+            unset($this->defcfg['showDoctrinePanel']);
+        }
+        if (!class_exists('\ORM')) {
+            unset($this->defcfg['showIdiormPanel']);
+        }
+        if (!class_exists('\Illuminate\Database\Capsule\Manager')) {
+            unset($this->defcfg['showEloquentORMPanel']);
+        }
+
+        if (
+            isset($cfg['showEloquentORMPanel'])
+            && $cfg['showEloquentORMPanel']
+            && class_exists('\Illuminate\Database\Capsule\Manager')
+        ) {
+            Debugger::getBar()->addPanel(new EloquentORMPanel(
+                Manager::getQueryLog(),
+                $this->versions
+            ));
         }
         if (isset($cfg['showTwigPanel']) && $cfg['showTwigPanel']) {
             Debugger::getBar()->addPanel(new TwigPanel(
@@ -166,26 +176,21 @@ class TracyMiddleware implements MiddlewareInterface
                 $this->defcfg['configs']['ProfilerPanel']
             ));
         }
-        if (isset($cfg['showIdiormPanel']) && $cfg['showIdiormPanel']) {
-            if (class_exists('\ORM')) {
-                Debugger::getBar()->addPanel(new IdiormPanel(
-                    $this->versions
-                ));
-            } else {
-                // do not show in panel selector
-                unset($this->defcfg['showIdiormPanel']);
-            }
+        if (isset($cfg['showIdiormPanel']) && $cfg['showIdiormPanel'] && class_exists('\ORM')) {
+            Debugger::getBar()->addPanel(new IdiormPanel(
+                $this->versions
+            ));
         }
-        if (isset($cfg['showDoctrinePanel']) && $cfg['showDoctrinePanel']) {
-            if (class_exists('\Doctrine\DBAL\Connection') && $this->container->has('doctrineConfig')) {
-                Debugger::getBar()->addPanel(new DoctrinePanel(
-                    $this->container->get('doctrineConfig')->getSQLLogger()->queries,
-                    $this->versions
-                ));
-            } else {
-                // do not show in panel selector
-                unset($this->defcfg['showDoctrinePanel']);
-            }
+        if (
+            isset($cfg['showDoctrinePanel'])
+            && $cfg['showDoctrinePanel']
+            && class_exists('\Doctrine\DBAL\Connection')
+            && $this->container->has('doctrineConfig')
+        ) {
+            Debugger::getBar()->addPanel(new DoctrinePanel(
+                $this->container->get('doctrineConfig')->getSQLLogger()->queries,
+                $this->versions
+            ));
         }
 
         // hardcoded without config prevent switch off

@@ -17,6 +17,7 @@ declare(strict_types=1);
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 if (!function_exists('tdie') && class_exists('\Tracy\Debugger')) {
     /**
      * Tracy\Debugger::dump() die with backtrace shortcut.
