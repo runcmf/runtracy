@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * Copyright 2017 1f7.wizard@gmail.com
+ * Copyright 2017 1f7.wizard@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,8 +34,8 @@ class IdormCollector
         // Collect query info
         ORM::configure('logger', function ($query, $time) {
             self::$qLog[] = [
-                'time' => $time,
-                'query' => $query
+                'time'  => $time,
+                'query' => $query,
             ];
         });
     }

@@ -1,0 +1,22 @@
+{
+  "name": "runtracy",
+  "version": "0.2.15",
+  "scripts": {
+    "version": "auto-changelog -p --commit-limit false && git add CHANGELOG.md",
+    "check": "remark . --frail",
+    "format": "remark . --quiet --frail --output"
+  },
+  "devDependencies": {
+    "remark-cli": "^10.0.1",
+    "remark-lint-list-item-indent": "^3.1.1",
+    "remark-preset-lint-consistent": "^5.1.1",
+    "remark-preset-lint-recommended": "^6.1.2"
+  },
+  "remarkConfig": {
+    "plugins": [
+      "remark-lint-list-item-indent",
+      "remark-preset-lint-consistent",
+      "remark-preset-lint-recommended"
+    ]
+  }
+}

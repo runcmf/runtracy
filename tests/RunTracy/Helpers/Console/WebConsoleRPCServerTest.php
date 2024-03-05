@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 1f7.wizard@gmail.com
  *
@@ -60,7 +61,7 @@ class WebConsoleRPCServerTest extends BaseTestCase
     {
         $cfg = $this->cfg['settings']['tracy']['configs'];
 
-        $console = new FakeConsole;
+        $console = new FakeConsole();
         $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $console);
 
         $console->setVar('noLogin', ($cfg['ConsoleNoLogin'] ?: false));
@@ -92,7 +93,7 @@ class WebConsoleRPCServerTest extends BaseTestCase
     {
         $cfg = $this->cfg['settings']['tracy']['configs'];
 
-        $console = new FakeConsole;
+        $console = new FakeConsole();
         $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $console);
 
         $console->setVar('noLogin', ($cfg['ConsoleNoLogin'] ?: false));
@@ -111,7 +112,7 @@ class WebConsoleRPCServerTest extends BaseTestCase
     {
         $cfg = $this->cfg['settings']['tracy']['configs'];
 
-        $console = new FakeConsole;
+        $console = new FakeConsole();
         $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $console);
 
         $console->setVar('noLogin', ($cfg['ConsoleNoLogin'] ?: false));
@@ -185,7 +186,7 @@ class WebConsoleRPCServerTest extends BaseTestCase
     {
         $cfg = $this->cfg['settings']['tracy']['configs'];
 
-        $console = new FakeConsole;
+        $console = new FakeConsole();
         $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $console);
 
         $console->setVar('noLogin', ($cfg['ConsoleNoLogin'] ?: false));
@@ -229,7 +230,7 @@ class WebConsoleRPCServerTest extends BaseTestCase
     {
         $cfg = $this->cfg['settings']['tracy']['configs'];
 
-        $console = new FakeConsole;
+        $console = new FakeConsole();
         $this->assertInstanceOf('\RunTracy\Helpers\Console\BaseJsonRpcServer', $console);
 
         $console->setVar('noLogin', ($cfg['ConsoleNoLogin'] ?: false));
@@ -248,8 +249,8 @@ class WebConsoleRPCServerTest extends BaseTestCase
         );
 
         // echo command
-        $_GET['rawRequest'] = '{"jsonrpc":"2.0","method":"run","params":'.
-            '["dev:358e86472ec7619731baf6950db699b26e2c2df8d51a31159d40ae4987f6fbab",'.
+        $_GET['rawRequest'] = '{"jsonrpc":"2.0","method":"run","params":' .
+            '["dev:358e86472ec7619731baf6950db699b26e2c2df8d51a31159d40ae4987f6fbab",' .
             '{"user":"dev","path":"/"},"echo \'HelloWorld!!!\'"],"id":2}';
         $ret = $console->execute();
         $this->assertEquals('HelloWorld!!!', $ret['result']['output']);

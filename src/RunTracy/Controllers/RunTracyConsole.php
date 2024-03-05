@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * Copyright 2016 1f7.wizard@gmail.com
+ * Copyright 2016 1f7.wizard@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +20,10 @@
 
 namespace RunTracy\Controllers;
 
+use Interop\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use RunTracy\Helpers\Console\WebConsoleRPCServer;
-use Interop\Container\ContainerInterface;
 
 class RunTracyConsole extends WebConsoleRPCServer
 {
@@ -43,14 +45,22 @@ class RunTracyConsole extends WebConsoleRPCServer
             $this->accounts[$u] = $p;
         }
         $this->passwordHashAlgorithm = $cfg['ConsoleHashAlgorithm'] ?: '';
-        $this->homeDirectory = $cfg['ConsoleHomeDirectory'] ?: '';
+        $this->homeDirectory         = $cfg['ConsoleHomeDirectory'] ?: '';
 
         $ConsoleResponce = $this->execute();
 
-        if($cfg['ConsoleFromEncoding']){
-            $ConsoleResponce['result']['output'] = mb_convert_encoding($ConsoleResponce['result']['output'], "UTF-8", $cfg['ConsoleFromEncoding']);
+        if ($cfg['ConsoleFromEncoding']) {
+            $ConsoleResponce['result']['output'] = mb_convert_encoding(
+                $ConsoleResponce['result']['output'],
+                'UTF-8',
+                $cfg['ConsoleFromEncoding']
+            );
         }
 
-        return $response->withJson($ConsoleResponce, null, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+        return $response->withJson(
+            $ConsoleResponce,
+            null,
+            \JSON_UNESCAPED_UNICODE | \JSON_UNESCAPED_SLASHES | \JSON_NUMERIC_CHECK
+        );
     }
 }

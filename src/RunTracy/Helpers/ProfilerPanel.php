@@ -1,6 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Copyright 2016 1f7.wizard@gmail.com
+ * Copyright 2016 1f7.wizard@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +20,21 @@
 
 namespace RunTracy\Helpers;
 
-use RunTracy\Helpers\Profiler\Profiler;
 use RunTracy\Helpers\Profiler\Profile;
+use RunTracy\Helpers\Profiler\Profiler;
 use RunTracy\Helpers\Profiler\ProfilerService;
 use RunTracy\Helpers\Profiler\SimpleProfiler;
-
 use Tracy\IBarPanel;
 
 class ProfilerPanel implements IBarPanel
 {
-    const CONFIG_PRIMARY_VALUE = 'primaryValue';
-    const CONFIG_PRIMARY_VALUE_ABSOLUTE = 'absolute';
-    const CONFIG_PRIMARY_VALUE_EFFECTIVE = 'effective';
-    const CONFIG_SHOW = 'show';
-    const CONFIG_SHOW_MEMORY_USAGE_CHART = 'memoryUsageChart';
-    const CONFIG_SHOW_SHORT_PROFILES = 'shortProfiles';
-    const CONFIG_SHOW_TIME_LINES = 'timeLines';
+    protected const CONFIG_PRIMARY_VALUE           = 'primaryValue';
+    protected const CONFIG_PRIMARY_VALUE_ABSOLUTE  = 'absolute';
+    protected const CONFIG_PRIMARY_VALUE_EFFECTIVE = 'effective';
+    protected const CONFIG_SHOW                    = 'show';
+    protected const CONFIG_SHOW_MEMORY_USAGE_CHART = 'memoryUsageChart';
+    protected const CONFIG_SHOW_SHORT_PROFILES     = 'shortProfiles';
+    protected const CONFIG_SHOW_TIME_LINES         = 'timeLines';
 
     private $profilerService;
 
@@ -40,12 +42,13 @@ class ProfilerPanel implements IBarPanel
 
     public function __construct(array $config = [])
     {
-        $this->config = array_replace_recursive(ProfilerPanel::getDefaultConfig(), $config);
+        $this->config          = array_replace_recursive(ProfilerPanel::getDefaultConfig(), $config);
         $this->profilerService = ProfilerService::getInstance();
     }
 
     /**
      * @internal
+     *
      * @return array
      */
     public static function getDefaultConfig(): array
@@ -55,18 +58,19 @@ class ProfilerPanel implements IBarPanel
                 self::CONFIG_PRIMARY_VALUE_ABSOLUTE : self::CONFIG_PRIMARY_VALUE_EFFECTIVE,
             self::CONFIG_SHOW => [
                 self::CONFIG_SHOW_MEMORY_USAGE_CHART => true,
-                self::CONFIG_SHOW_SHORT_PROFILES => true,
-                self::CONFIG_SHOW_TIME_LINES => true
-            ]
+                self::CONFIG_SHOW_SHORT_PROFILES     => true,
+                self::CONFIG_SHOW_TIME_LINES         => true,
+            ],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTab(): string
     {
         $countOfProfiles = count($this->profilerService->getProfiles());
+
         return sprintf(
             '<span title="%s">⏱ %s</span>',
             'Profiler info',
@@ -78,7 +82,7 @@ class ProfilerPanel implements IBarPanel
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPanel(): string
     {
@@ -104,9 +108,11 @@ class ProfilerPanel implements IBarPanel
             <tr><th>Start</th><th>Finish</th><th>Time (effective)</th><th>Memory change (effective)</th></tr>';
         }
         $this->profilerService->iterateProfiles(function (Profile $profile) use (&$table) {
-            if (!$this->config[self::CONFIG_SHOW][self::CONFIG_SHOW_SHORT_PROFILES] &&
-                ($profile->meta[ProfilerService::TIME_LINE_ACTIVE] +
-                    $profile->meta[ProfilerService::TIME_LINE_INACTIVE]) < 1) {
+            if (
+                !$this->config[self::CONFIG_SHOW][self::CONFIG_SHOW_SHORT_PROFILES]
+                && ($profile->meta[ProfilerService::TIME_LINE_ACTIVE] +
+                    $profile->meta[ProfilerService::TIME_LINE_INACTIVE]) < 1
+            ) {
                 return /* continue */;
             }
             if ($profile->meta[Profiler::START_LABEL] == $profile->meta[Profiler::FINISH_LABEL]) {
@@ -145,11 +151,11 @@ class ProfilerPanel implements IBarPanel
             if ($this->config[self::CONFIG_SHOW][self::CONFIG_SHOW_TIME_LINES]) {
                 $table .= sprintf(
                     '<tr class="tracy-addons-profiler-hidden"><td colspan="4"></td></tr><tr><td colspan="4">' .
-                    '<span class="tracy-addons-profiler-bar" style="width:%d%%;background-color:#cccccc;"></span>' .
-                    '<span class="tracy-addons-profiler-bar" style="width:%d%%;background-color:#3987d4;"></span>' .
-                    '<span class="tracy-addons-profiler-bar" style="width:%s%%;background-color:#6ba9e6;"></span>' .
-                    '<span class="tracy-addons-profiler-bar" style="width:%s%%;background-color:#cccccc;"></span>' .
-                    '</td></tr>',
+                        '<span class="tracy-addons-profiler-bar" style="width:%d%%;background-color:#cccccc;"></span>' .
+                        '<span class="tracy-addons-profiler-bar" style="width:%d%%;background-color:#3987d4;"></span>' .
+                        '<span class="tracy-addons-profiler-bar" style="width:%s%%;background-color:#6ba9e6;"></span>' .
+                        '<span class="tracy-addons-profiler-bar" style="width:%s%%;background-color:#cccccc;"></span>' .
+                        '</td></tr>',
                     $profile->meta[ProfilerService::TIME_LINE_BEFORE],
                     $profile->meta[ProfilerService::TIME_LINE_ACTIVE],
                     $profile->meta[ProfilerService::TIME_LINE_INACTIVE],
@@ -169,15 +175,15 @@ class ProfilerPanel implements IBarPanel
     private function getMemoryChart(): string
     {
         $colors = [
-            'axis' => '#000000',
-            'gridLines' => '#cccccc',
-            'memoryUsage' => '#6ba9e6',
-            'memoryUsagePoint' => '#3987d4'
+            'axis'             => '#000000',
+            'gridLines'        => '#cccccc',
+            'memoryUsage'      => '#6ba9e6',
+            'memoryUsagePoint' => '#3987d4',
         ];
-        $margin = 3;
-        $maxWidth = 600 - 2 * $margin;
-        $maxHeight = 90 - 2 * $margin;
-        $gridStep = 10;
+        $margin      = 3;
+        $maxWidth    = 600 - 2 * $margin;
+        $maxHeight   = 90 - 2 * $margin;
+        $gridStep    = 10;
         $memoryChart = sprintf(
             '<!--suppress HtmlUnknownAttribute -->
             <svg style="width: %dpx; height: %dpx" viewBox="0 0 %d %d" xmlns="http://www.w3.org/2000/svg">',
@@ -208,10 +214,10 @@ class ProfilerPanel implements IBarPanel
         }
 
         $firstIteration = true;
-        $prevX = 0;
-        $prevY = $maxHeight;
-        $lines = '';
-        $points = '';
+        $prevX          = 0;
+        $prevY          = $maxHeight;
+        $lines          = '';
+        $points         = '';
         $this->profilerService->iterateMemoryTimeLine(
             function (
                 $time,
@@ -229,7 +235,6 @@ class ProfilerPanel implements IBarPanel
                 &$lines,
                 &$points
             ) {
-            
                 if ($firstIteration) {
                     $memoryChart .= sprintf(
                         '<text x="%d" y="%d" font-size="%d">%d kB</text>',
@@ -238,7 +243,7 @@ class ProfilerPanel implements IBarPanel
                         10,
                         floor($metaData[ProfilerService::META_MEMORY_PEAK] / 1024)
                     );
-                        $firstIteration = false;
+                    $firstIteration = false;
                 }
                 $thisX = floor(max(0, $time) / $metaData[ProfilerService::META_TIME_TOTAL] * $maxWidth);
                 if ($thisX == $prevX) {
@@ -254,8 +259,8 @@ class ProfilerPanel implements IBarPanel
                     $colors['memoryUsage']
                 );
                 $points .= sprintf(
-                    '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke-width="1" stroke="%s" />'.
-                    '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke-width="1" stroke="%s" />',
+                    '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke-width="1" stroke="%s" />' .
+                        '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke-width="1" stroke="%s" />',
                     $thisX + $margin,
                     $thisY + $margin - 3,
                     $thisX + $margin,

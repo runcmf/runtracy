@@ -13,7 +13,6 @@ use RunTracy\Helpers\Profiler\ProfilerService;
  */
 class ProfilerTest extends BaseTestCase
 {
-
     /**
      * @runTestsInSeparateProcesses
      */

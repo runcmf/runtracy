@@ -3,16 +3,22 @@
 [![Code Climate](https://codeclimate.com/github/runcmf/runtracy/badges/gpa.svg)](https://codeclimate.com/github/runcmf/runtracy)
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
-[![Software License][ico-license]][link-license]  
+[![Software License][ico-license]][link-license]
+
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/2d080724-9e10-4770-9220-0678381eb341/big.png)](https://insight.sensiolabs.com/projects/2d080724-9e10-4770-9220-0678381eb341)
 
-# Slim Framework 4 Tracy Debugger Bar #
+# Slim Framework 4 Tracy Debugger Bar
+
 configure it by mouse
----
+
+***
+
 ![example](ss/tracy_panel.png "Tracy Panel")
 
-now in package:  
----
+now in package:
+
+***
+
 | Panel | Description |
 | --- | --- |
 | **Slim Framework** | - |
@@ -28,33 +34,37 @@ now in package:
 | **Template** | - |
 | [Twig](https://github.com/twigphp/Twig) | \Twig\Profiler\Dumper\HtmlDumper() |
 | **Common** | - |
-| PanelSelector | easy configure (part of fork from [TracyDebugger](https://github.com/adrianbj/TracyDebugger)) | 
+| PanelSelector | easy configure (part of fork from [TracyDebugger](https://github.com/adrianbj/TracyDebugger)) |
 | PhpInfo | full phpinfo() |
 | Console | PTY (pseudo TTY) console (fork from [web-console](https://github.com/nickola/web-console)) |
 | Profiler | time, mem usage, timeline (fork from [profiler](https://github.com/netpromotion/profiler)) |
 | Included Files | Included Files list |
 | XDebug | start and stop a Xdebug session (fork from [Nette-XDebug-Helper](https://github.com/jsmitka/Nette-XDebug-Helper)) |
-| VendorVersions | version info from composer.json and composer.lock (fork from [vendor-versions](https://github.com/milo/vendor-versions)) | 
+| VendorVersions | version info from composer.json and composer.lock (fork from [vendor-versions](https://github.com/milo/vendor-versions)) |
 
----
-
+***
 
 # Install
+
 **1.**
-``` bash
+
+```bash
 $ composer require runcmf/runtracy
 ```
+
 **2.** goto 3 or if need Twig, Doctrine DBAL, Doctrine ORM, Eloquent ORM then:
 
 **2.1** install it
-``` bash
+
+```bash
 $ composer require doctrine/dbal
 $ composer require doctrine/orm
 $ composer require slim/twig-view
 $ composer require illuminate/database
 ```
 
-**2.2** add to your dependencies (Twig, Twig_Profiler) and/or Eloquent ORM like:
+**2.2** add to your dependencies (Twig, Twig\_Profiler) and/or Eloquent ORM like:
+
 ```php
 // Twig
 $c['twig_profile'] = function () {
@@ -110,28 +120,33 @@ $c['em'] = function ($c) {
     // possible return or ORM\EntityManager or ORM\QueryBuilder
     return \Doctrine\ORM\EntityManager::create($settings['doctrine']['connection'], $config);
 };
-```  
+```
 
 **3.** register middleware
-``` php
+
+```php
 $app->add(RunTracy\Middlewares\TracyMiddleware::createFromContainer($app));
 ```
 
 **4.** register route if you plan use PTY Console
-``` php
+
+```php
 $app->post('/console', 'RunTracy\Controllers\RunTracyConsole:index');
 ```
-also copy you want `jquery.terminal.min.js` & `jquery.terminal.min.css`  from vendor/runcmf/runtracy/web and correct path in 'settings' below.  
+
+also copy you want `jquery.terminal.min.js` & `jquery.terminal.min.css`  from vendor/runcmf/runtracy/web and correct path in 'settings' below.
 add from local or from CDN (https://code.jquery.com/) or copy/paste
-``` html
+
+```html
 <script
     src="https://code.jquery.com/jquery-3.1.1.min.js"
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
     crossorigin="anonymous"></script>
-```  
-  
-**5.** add to your settings Debugger initialisation and 'tracy' section.   
-``` php
+```
+
+**5.** add to your settings Debugger initialisation and 'tracy' section.
+
+```php
 use Tracy\Debugger;
 
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
@@ -196,7 +211,6 @@ return [
         ]
 ```
 
-
 see config examples in vendor/runcmf/runtracy/Example
 
 ![example](ss/panel_selector.png "Panel Selector")
@@ -221,10 +235,10 @@ see config examples in vendor/runcmf/runtracy/Example
 
 ![example](ss/console_panel.png "PTY Console Panel")
 
+Profiler Example in new installed [slim-skeleton](https://packagist.org/packages/slim/slim-skeleton)
+`public/index.php`
 
-Profiler Example in new installed [slim-skeleton](https://packagist.org/packages/slim/slim-skeleton)  
- `public/index.php`
-``` php
+```php
 <?php
 if (PHP_SAPI == 'cli-server') {
     // To help the built-in PHP dev server, check if the request was actually for
@@ -267,41 +281,47 @@ require __DIR__ . '/../src/routes.php';
 $app->run();
 RunTracy\Helpers\Profiler\Profiler::finish('App');
 ```
+
 ![example](ss/profiler_panel.png "Profiler Panel")
 
 ![idormDBAL](ss/idiorm_and_dbal.png "Idiorm and Doctrine DBAL Panels")
 
----
+***
 
-##  HOWTO
-[how-open-files-in-ide-from-debugger](https://pla.nette.org/en/how-open-files-in-ide-from-debugger)  
+## HOWTO
 
+[how-open-files-in-ide-from-debugger](https://pla.nette.org/en/how-open-files-in-ide-from-debugger)
 
----
+***
+
 ## Tests
+
 ```bash
 $ cd vendor/runcmf/runtracy
 $ composer update
 $ vendor/bin/phpunit
 ```
----  
 
-## Security  
+***
 
-If you discover any security related issues, please email to 1f7.wizard( at )gmail.com instead of using the issue tracker.  
+## Security
 
----
+If you discover any security related issues, please email to 1f7.wizard( at )gmail.com instead of using the issue tracker.
+
+***
+
 ## Credits
 
-* https://bitbucket.org/1f7
-* https://github.com/1f7
-* http://runetcms.ru
-* http://runcmf.ru  
+*   https://bitbucket.org/1f7
+*   https://github.com/1f7
+*   http://runetcms.ru
+*   http://runcmf.ru
 
----
+***
+
 ## License
- 
-```
+
+```bash
 Copyright 2016 1f7.wizard@gmail.com
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -318,9 +338,13 @@ limitations under the License.
 ```
 
 [ico-version]: https://img.shields.io/packagist/v/runcmf/runtracy.svg
+
 [ico-license]: https://img.shields.io/badge/license-Apache%202-green.svg
+
 [ico-downloads]: https://img.shields.io/packagist/dt/runcmf/runtracy.svg
 
 [link-packagist]: https://packagist.org/packages/runcmf/runtracy
+
 [link-license]: http://www.apache.org/licenses/LICENSE-2.0
+
 [link-downloads]: https://github.com/runcmf/runtracy

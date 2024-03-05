@@ -1,6 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Copyright 2016 1f7.wizard@gmail.com
+ * Copyright 2016 1f7.wizard@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +20,7 @@
 
 if (!function_exists('tdie') && class_exists('\Tracy\Debugger')) {
     /**
-     * Tracy\Debugger::dump() die with backtrace shortcut
+     * Tracy\Debugger::dump() die with backtrace shortcut.
      *
      * @param $var mixed
      */
@@ -25,15 +28,17 @@ if (!function_exists('tdie') && class_exists('\Tracy\Debugger')) {
     {
         \Tracy\Debugger::dump($var);
         $t = debug_backtrace(1, 1);
-        die('-- im in ' . $t[0]['file'] . ', line: ' . $t[0]['line'] . ' --');
+
+        exit('-- im in ' . $t[0]['file'] . ', line: ' . $t[0]['line'] . ' --');
     }
 }
 
 if (!function_exists('ttimer') && class_exists('\Tracy\Debugger')) {
     /**
-     * Tracy\Debugger::dump() set timer
+     * Tracy\Debugger::dump() set timer.
      *
      * @param $var mixed
+     *
      * @return float time
      */
     function ttimer($var = '')
@@ -58,26 +63,35 @@ if (!function_exists('ttimer') && class_exists('\Tracy\Debugger')) {
 
 if (!function_exists('cl')) {
     /**
-     * console log
+     * console log.
+     *
      * @param $data mixed
      * @param $type string (log | info | warn | error)
      */
     function cl($data, $type = 'info')
     {
         echo '<script>';
+
         switch ($type) {
             case 'log':
-                echo 'console.log(' . json_encode($data) . ');'."\n";
+                echo 'console.log(' . json_encode($data) . ');' . "\n";
+
                 break;
+
             case 'warn':
-                echo 'console.warn(' . json_encode($data) . ');'."\n";
+                echo 'console.warn(' . json_encode($data) . ');' . "\n";
+
                 break;
+
             case 'error':
-                echo 'console.error(' . json_encode($data) . ');'."\n";
+                echo 'console.error(' . json_encode($data) . ');' . "\n";
+
                 break;
+
             default:
             case 'info':
-                echo 'console.info(' . json_encode($data) . ');'."\n";
+                echo 'console.info(' . json_encode($data) . ');' . "\n";
+
                 break;
         }
         echo '</script>';

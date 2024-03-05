@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 1f7.wizard@gmail.com
  *
@@ -99,7 +100,7 @@ class ProfilerPanelTest extends BaseTestCase
         $this->assertRegexp('#svg style=#s', $panel->getPanel());
     }
 
-    protected function fillTestData(& $p)
+    protected function fillTestData(&$p)
     {
         $testProfiles =  [
             0 =>

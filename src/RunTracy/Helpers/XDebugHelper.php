@@ -1,6 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Copyright 2016 1f7.wizard@gmail.com
+ * Copyright 2016 1f7.wizard@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +18,6 @@
  * limitations under the License.
  */
 
-
 namespace RunTracy\Helpers;
 
 use Tracy\IBarPanel;
@@ -23,7 +25,6 @@ use Tracy\IBarPanel;
 class XDebugHelper implements IBarPanel
 {
     protected $ideKey;
-
 
     public function __construct($ideKey = 'PHPSTORM')
     {
@@ -38,7 +39,9 @@ class XDebugHelper implements IBarPanel
     public function getTab()
     {
         ob_start();
-        require __DIR__ .'../../Templates/xdebug-helper.tab.phtml';
+
+        require __DIR__ . '../../Templates/xdebug-helper.tab.phtml';
+
         return ob_get_clean();
     }
 }

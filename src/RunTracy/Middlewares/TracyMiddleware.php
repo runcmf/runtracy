@@ -6,6 +6,10 @@ namespace RunTracy\Middlewares;
 
 use Exception;
 use Illuminate\Database\Capsule\Manager;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use RunTracy\Collectors\DoctrineCollector;
 use RunTracy\Collectors\IdormCollector;
 use RunTracy\Helpers\ConsolePanel;
@@ -13,6 +17,7 @@ use RunTracy\Helpers\DoctrinePanel;
 use RunTracy\Helpers\EloquentORMPanel;
 use RunTracy\Helpers\IdiormPanel;
 use RunTracy\Helpers\IncludedFiles;
+use RunTracy\Helpers\PanelSelector;
 use RunTracy\Helpers\PhpInfoPanel;
 use RunTracy\Helpers\ProfilerPanel;
 use RunTracy\Helpers\SlimContainerPanel;
@@ -24,18 +29,11 @@ use RunTracy\Helpers\TwigPanel;
 use RunTracy\Helpers\VendorVersionsPanel;
 use RunTracy\Helpers\XDebugHelper;
 use Slim\App;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-
 use Tracy\Debugger;
-use RunTracy\Helpers\PanelSelector;
 use Tracy\Dumper;
 
 /**
- * Class TracyMiddleware
- * @package RunTracy\Middlewares
+ * Class TracyMiddleware.
  */
 class TracyMiddleware implements MiddlewareInterface
 {
@@ -53,7 +51,7 @@ class TracyMiddleware implements MiddlewareInterface
 
         if ($app instanceof App) {
             $this->container = $app->getContainer();
-            $this->versions = [
+            $this->versions  = [
                 'slim' => App::VERSION,
             ];
             $this->defcfg = $this->container->has('settings.tracy')
@@ -68,6 +66,7 @@ class TracyMiddleware implements MiddlewareInterface
     /**
      * @param ServerRequestInterface  $request
      * @param RequestHandlerInterface $handler
+     *
      * @return ResponseInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -77,28 +76,38 @@ class TracyMiddleware implements MiddlewareInterface
         $cookies = $request->getCookieParams();
         if (isset($cookies['tracyPanelsEnabled'])) {
             $cookies = json_decode($cookies['tracyPanelsEnabled']);
-        }else{
+        } else {
             $cookies = [];
         }
 
         if (!empty($cookies)) {
-            $def = array_fill_keys(array_keys($this->defcfg), null);
+            $def     = array_fill_keys(array_keys($this->defcfg), null);
             $cookies = array_fill_keys($cookies, 1);
-            $cfg = array_merge($def, $cookies);
+            $cfg     = array_merge($def, $cookies);
         } else {
             $cfg = $this->defcfg;
         }
 
-        if (isset($cfg['showEloquentORMPanel']) && $cfg['showEloquentORMPanel']) {
-            if (class_exists('\Illuminate\Database\Capsule\Manager')) {
-                Debugger::getBar()->addPanel(new EloquentORMPanel(
-                    Manager::getQueryLog(),
-                    $this->versions
-                ));
-            } else {
-                // do not show in panel selector
-                unset($this->defcfg['showEloquentORMPanel']);
-            }
+        // Remove ORM Panel Selectors if class not found
+        if (!class_exists('\Doctrine\DBAL\Connection')) {
+            unset($this->defcfg['showDoctrinePanel']);
+        }
+        if (!class_exists('\ORM')) {
+            unset($this->defcfg['showIdiormPanel']);
+        }
+        if (!class_exists('\Illuminate\Database\Capsule\Manager')) {
+            unset($this->defcfg['showEloquentORMPanel']);
+        }
+
+        if (
+            isset($cfg['showEloquentORMPanel'])
+            && $cfg['showEloquentORMPanel']
+            && class_exists('\Illuminate\Database\Capsule\Manager')
+        ) {
+            Debugger::getBar()->addPanel(new EloquentORMPanel(
+                Manager::getQueryLog(),
+                $this->versions
+            ));
         }
         if (isset($cfg['showTwigPanel']) && $cfg['showTwigPanel']) {
             Debugger::getBar()->addPanel(new TwigPanel(
@@ -153,7 +162,11 @@ class TracyMiddleware implements MiddlewareInterface
             Debugger::getBar()->addPanel(new IncludedFiles());
         }
         // check if enabled or blink if active critical value
-        if ((isset($cfg['showConsolePanel']) && $cfg['showConsolePanel']) || isset($cfg['configs']['ConsoleNoLogin']) && $cfg['configs']['ConsoleNoLogin']) {
+        if (
+            (isset($cfg['showConsolePanel']) && $cfg['showConsolePanel'])
+            || isset($cfg['configs']['ConsoleNoLogin'])
+            && $cfg['configs']['ConsoleNoLogin']
+        ) {
             Debugger::getBar()->addPanel(new ConsolePanel(
                 $this->defcfg['configs']
             ));
@@ -163,21 +176,21 @@ class TracyMiddleware implements MiddlewareInterface
                 $this->defcfg['configs']['ProfilerPanel']
             ));
         }
-        if (isset($cfg['showIdiormPanel']) && $cfg['showIdiormPanel']) {
+        if (isset($cfg['showIdiormPanel']) && $cfg['showIdiormPanel'] && class_exists('\ORM')) {
             Debugger::getBar()->addPanel(new IdiormPanel(
                 $this->versions
             ));
         }
-        if (isset($cfg['showDoctrinePanel']) && $cfg['showDoctrinePanel']) {
-            if (class_exists('\Doctrine\DBAL\Connection') && $this->container->has('doctrineConfig')) {
-                Debugger::getBar()->addPanel(new DoctrinePanel(
-                    $this->container->get('doctrineConfig')->getSQLLogger()->queries,
-                    $this->versions
-                ));
-            } else {
-                // do not show in panel selector
-                unset($this->defcfg['showDoctrinePanel']);
-            }
+        if (
+            isset($cfg['showDoctrinePanel'])
+            && $cfg['showDoctrinePanel']
+            && class_exists('\Doctrine\DBAL\Connection')
+            && $this->container->has('doctrineConfig')
+        ) {
+            Debugger::getBar()->addPanel(new DoctrinePanel(
+                $this->container->get('doctrineConfig')->getSQLLogger()->queries,
+                $this->versions
+            ));
         }
 
         // hardcoded without config prevent switch off

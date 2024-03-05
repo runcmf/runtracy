@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RunTracy\Helpers\Profiler;
 
 /**
- * Advanced PHP class for profiling
+ * Advanced PHP class for profiling.
  *
  * @author   Petr Knap <dev@petrknap.cz>
+ *
  * @since    2015-12-19
+ *
  * @license  https://github.com/petrknap/php-profiler/blob/master/LICENSE MIT
  */
 class AdvancedProfiler extends SimpleProfiler
@@ -24,10 +28,10 @@ class AdvancedProfiler extends SimpleProfiler
     /**
      * @var callable
      */
-    protected static $postProcessor = null;
+    protected static $postProcessor;
 
     /**
-     * Set post processor
+     * Set post processor.
      *
      * Post processor is callable with one input argument (return from finish method)
      * and is called at the end of finish method.
@@ -40,9 +44,9 @@ class AdvancedProfiler extends SimpleProfiler
     }
 
     /**
-     * Get current "{file}#{line}"
+     * Get current "{file}#{line}".
      *
-     * @return string|bool current "{file}#{line}" on success or false on failure
+     * @return bool|string current "{file}#{line}" on success or false on failure
      */
     public static function getCurrentFileHashLine()
     {
@@ -51,13 +55,13 @@ class AdvancedProfiler extends SimpleProfiler
         $deep = &$args[0];
 
         $backtrace = debug_backtrace();
-        $backtrace = &$backtrace[$deep ? $deep : 0];
+        $backtrace = &$backtrace[$deep ?: 0];
 
         if ($backtrace) {
             return sprintf(
-                "%s#%s",
-                $backtrace["file"],
-                $backtrace["line"]
+                '%s#%s',
+                $backtrace['file'],
+                $backtrace['line']
             );
         }
 
@@ -65,15 +69,15 @@ class AdvancedProfiler extends SimpleProfiler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function start($labelOrFormat = null, $args = null, $opt = null)
     {
         if (static::$enabled) {
             if ($labelOrFormat === null) {
                 $labelOrFormat = static::getCurrentFileHashLine(1);
-                $args = null;
-                $opt = null;
+                $args          = null;
+                $opt           = null;
             }
 
             return parent::start($labelOrFormat, $args, $opt);
@@ -83,15 +87,15 @@ class AdvancedProfiler extends SimpleProfiler
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function finish($labelOrFormat = null, $args = null, $opt = null)
     {
         if (static::$enabled) {
             if ($labelOrFormat === null) {
                 $labelOrFormat = static::getCurrentFileHashLine(1);
-                $args = null;
-                $opt = null;
+                $args          = null;
+                $opt           = null;
             }
 
             $profile = parent::finish($labelOrFormat, $args, $opt);

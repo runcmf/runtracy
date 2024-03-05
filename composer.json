@@ -28,21 +28,21 @@
         }
     ],
     "require": {
-        "php": ">=7.1",
+        "php": "^7.4|^8.0",
         "ext-mbstring": "*",
         "ext-json": "*",
-        "slim/slim": "~4.1",
-        "tracy/tracy": "~2.7"
+        "tracy/tracy": "^2.9",
+        "slim/slim": "^4.9"
     },
     "require-dev": {
-        "satooshi/php-coveralls": "1.*",
-        "squizlabs/php_codesniffer": "^2.5",
-        "phpunit/phpunit": "^5.7",
-        "illuminate/database": "^5.3",
-        "twig/twig": "~1.24",
-        "slim/twig-view": "~2.1",
+        "squizlabs/php_codesniffer": "^3.6",
+        "friendsofphp/php-cs-fixer": "^3.6",
+        "phpunit/phpunit": "^5.2",
+        "illuminate/database": "^9.2",
+        "twig/twig": "^3.3",
+        "slim/twig-view": "^3.3",
         "j4mie/idiorm": "^1.5",
-        "doctrine/orm": "^2.5"
+        "doctrine/orm": "^2.11"
     },
     "autoload": {
         "psr-4": {
@@ -58,6 +58,9 @@
         "test": [
             "@phpunit"
         ],
-        "phpunit": "php vendor/bin/phpunit"
+        "phpunit": "php vendor/bin/phpunit",
+        "cleanup": "vendor/bin/php-cs-fixer fix --show-progress=dots -vvv",
+        "phpcs": "vendor/bin/phpcs -s",
+        "fix": "vendor/bin/phpcbf -s"
     }
 }

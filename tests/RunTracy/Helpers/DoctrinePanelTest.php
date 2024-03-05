@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2017 1f7.wizard@gmail.com
  *
@@ -134,7 +135,7 @@ class DoctrinePanelTest extends BaseTestCase
 
     public function dbalLogger()
     {
-        $config = new \Doctrine\DBAL\Configuration;
+        $config = new \Doctrine\DBAL\Configuration();
         $config->setSQLLogger(new \Doctrine\DBAL\Logging\DebugStack());
         return $config;
     }

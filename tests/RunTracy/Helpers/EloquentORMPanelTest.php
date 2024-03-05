@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 1f7.wizard@gmail.com
  *
@@ -32,7 +33,7 @@ class EloquentORMPanelTest extends BaseTestCase
             $this->markTestSkipped('Illuminate\Database not installed and all tests in this file are invactive!');
         } else {
             // Register Eloquent single connections
-            $capsule = new \Illuminate\Database\Capsule\Manager;
+            $capsule = new \Illuminate\Database\Capsule\Manager();
             $capsule->addConnection($this->cfg['settings']['db']['connections']['mysql']);
             $capsule->setAsGlobal();
             $capsule->bootEloquent();

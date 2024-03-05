@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 1f7.wizard@gmail.com
  *
@@ -40,7 +41,7 @@ class VendorVersionsPanelTest extends BaseTestCase
 
     public function testVendorVersionsPanelWithData()
     {
-        $path = realpath(__DIR__.'/../../../');
+        $path = realpath(__DIR__ . '/../../../');
 
         $panel = new \RunTracy\Helpers\VendorVersionsPanel($path);
         $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
@@ -51,7 +52,7 @@ class VendorVersionsPanelTest extends BaseTestCase
     public function testVendorVersionsPanelComposerDirectory()
     {
         // normal path, error empty
-        $path = realpath(__DIR__.'/../../../');
+        $path = realpath(__DIR__ . '/../../../');
         $panel = new \RunTracy\Helpers\VendorVersionsPanel($path);
         $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
         $this->assertEmpty($panel->getError());
@@ -62,7 +63,7 @@ class VendorVersionsPanelTest extends BaseTestCase
         $this->assertEquals('Path "/fakePath/" is not a directory.', $panel->getError());
 
         // path without composer
-        $path = realpath(__DIR__.'/../../');
+        $path = realpath(__DIR__ . '/../../');
         $panel = new \RunTracy\Helpers\VendorVersionsPanel($path);
         $this->assertInstanceOf('\Tracy\IBarPanel', $panel);
         $this->assertStringEndsWith('does not contain the composer.lock file.', $panel->getError());
@@ -71,7 +72,7 @@ class VendorVersionsPanelTest extends BaseTestCase
     public function testVendorVersionsPanelDecode()
     {
         // normal file
-        $path = realpath(__DIR__.'/../../../tests/');
+        $path = realpath(__DIR__ . '/../../../tests/');
         $jsonFile = $path . DIRECTORY_SEPARATOR . 'testComposer.json';
         $lockFile = $path . DIRECTORY_SEPARATOR . 'testComposer.lock';
 
@@ -84,7 +85,7 @@ class VendorVersionsPanelTest extends BaseTestCase
         $this->assertArraySubset(['packages' => []], $result);
 
         // fake file with Syntax error
-        $path = realpath(__DIR__.'/../../../tests/');
+        $path = realpath(__DIR__ . '/../../../tests/');
         $jsonFile = $path . DIRECTORY_SEPARATOR . 'testFake.json';
         $result = $this->callProtectedMethodReturnObj('decode', '\RunTracy\Helpers\VendorVersionsPanel', [$jsonFile]);
         $this->assertNull($result[1]);
@@ -94,7 +95,7 @@ class VendorVersionsPanelTest extends BaseTestCase
     public function testVendorVersionsPanelDecodeWarning()
     {
         // no file
-        $path = realpath(__DIR__.'/../../../tests/');
+        $path = realpath(__DIR__ . '/../../../tests/');
         $jsonFile = $path . DIRECTORY_SEPARATOR . 'zzzWWW.json';
 
         $result = $this->callProtectedMethod('decode', '\RunTracy\Helpers\VendorVersionsPanel', [$jsonFile]);

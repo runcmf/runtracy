@@ -3,7 +3,8 @@ Thumbs.db
 .DS_Store
 .env
 .phpunit.result.cache
-
+.dccache
 /vendor/*
-
+.vscode/
 /composer.lock
+node_modules/
