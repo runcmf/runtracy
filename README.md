@@ -6,7 +6,7 @@
 [![Software License][ico-license]][link-license]  
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/2d080724-9e10-4770-9220-0678381eb341/big.png)](https://insight.sensiolabs.com/projects/2d080724-9e10-4770-9220-0678381eb341)
 
-# Slim Framework Tracy Debugger Bar #
+# Slim Framework 4 Tracy Debugger Bar #
 configure it by mouse
 ---
 ![example](ss/tracy_panel.png "Tracy Panel")
@@ -26,7 +26,7 @@ now in package:
 | [Idiorm](https://github.com/j4mie/idiorm) | time, sql. panel & collector. **Note:** Idiorm support only one collector and if you use own this will not work. |
 | [Illuminate Database](https://github.com/illuminate/database) | sql, bindings |
 | **Template** | - |
-| [Twig](https://github.com/twigphp/Twig) | Twig_Profiler_Dumper_Html() |
+| [Twig](https://github.com/twigphp/Twig) | \Twig\Profiler\Dumper\HtmlDumper() |
 | **Common** | - |
 | PanelSelector | easy configure (part of fork from [TracyDebugger](https://github.com/adrianbj/TracyDebugger)) | 
 | PhpInfo | full phpinfo() |
@@ -58,16 +58,15 @@ $ composer require illuminate/database
 ```php
 // Twig
 $c['twig_profile'] = function () {
-    return new Twig_Profiler_Profile();
+    return new \Twig\Profiler\Profile();
 };
 
 $c['view'] = function ($c) {
     $settings = $c->get('settings')['view'];
-    $view = new \Slim\Views\Twig($settings['template_path'], $settings['twig']);
+    $view = new \Slim\Views\Twig::create($settings['template_path'], $settings['twig']);
     // Add extensions
-    $view->addExtension(new Slim\Views\TwigExtension($c->get('router'), $c->get('request')->getUri()));
-    $view->addExtension(new Twig_Extension_Profiler($c['twig_profile']));
-    $view->addExtension(new Twig_Extension_Debug());
+    $view->addExtension(new \Twig\Extension\ProfilerExtension($c['twig_profile']));
+    $view->addExtension(new \Twig\Extension\DebugExtension());
     return $view;
 };
 
@@ -115,7 +114,7 @@ $c['em'] = function ($c) {
 
 **3.** register middleware
 ``` php
-$app->add(new RunTracy\Middlewares\TracyMiddleware($app));
+$app->add(RunTracy\Middlewares\TracyMiddleware::createFromContainer($app));
 ```
 
 **4.** register route if you plan use PTY Console
@@ -183,6 +182,7 @@ return [
                 'ConsoleTerminalJs' => '/assets/js/jquery.terminal.min.js',
                 // terminal.css full URI
                 'ConsoleTerminalCss' => '/assets/css/jquery.terminal.min.css',
+                'ConsoleFromEncoding' => 'CP866', // or false
                 'ProfilerPanel' => [
                     // Memory usage 'primaryValue' set as Profiler::enable() or Profiler::enable(1)
 //                    'primaryValue' =>                   'effective',    // or 'absolute'

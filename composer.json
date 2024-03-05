@@ -1,60 +1,63 @@
 {
-  "name": "runcmf/runtracy",
-  "description": "Slim Framework Debugger",
-  "license": "Apache-2.0",
-  "type": "library",
-  "keywords": [
-    "Slim Framework",
-    "runtracy",
-    "Tracy",
-    "Debug bar",
-    "Debugbar",
-    "Debugger",
-    "Eloquent ORM",
-    "illuminate database",
-    "PTY Terminal",
-    "Profiler",
-    "Slim3", "Slim 3",
-    "Twig",
-    "Idorm",
-    "Doctrine DBAL"
-  ],
-  "authors": [
-    {
-      "name": "Vladimir",
-      "email": "1f7.wizard@gmail.com",
-      "homepage": "http://runcmf.ru"
-    }
-  ],
-  "require": {
-    "php": ">=5.5.0",
-    "slim/slim": "~3.7",
-    "tracy/tracy": "~2.4"
-  },
-  "require-dev": {
-    "satooshi/php-coveralls": "1.*",
-    "squizlabs/php_codesniffer": "^2.5",
-    "phpunit/phpunit": "^5.7",
-    "illuminate/database": "^5.3",
-    "twig/twig": "~1.24",
-    "slim/twig-view": "~2.1",
-    "j4mie/idiorm": "^1.5",
-    "doctrine/orm": "^2.5"
-  },
-  "autoload": {
-    "psr-4": {
-      "RunTracy\\": "src/RunTracy"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\": "tests/"
-    }
-  },
-  "scripts": {
-    "test": [
-      "@phpunit"
+    "name": "runcmf/runtracy",
+    "description": "Slim Framework Debugger",
+    "license": "Apache-2.0",
+    "type": "library",
+    "keywords": [
+        "Slim Framework",
+        "runtracy",
+        "Tracy",
+        "Debug bar",
+        "Debugbar",
+        "Debugger",
+        "Eloquent ORM",
+        "illuminate database",
+        "PTY Terminal",
+        "Profiler",
+        "Slim4",
+        "Slim 4",
+        "Twig",
+        "Idorm",
+        "Doctrine DBAL"
     ],
-    "phpunit": "php vendor/bin/phpunit"
-  }
+    "authors": [
+        {
+            "name": "Konstantin Kaluzhnikov",
+            "email": "k.kaluzhnikov@gmail.com",
+            "homepage": "https://github.com/EvilKraft"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "ext-mbstring": "*",
+        "ext-json": "*",
+        "slim/slim": "~4.1",
+        "tracy/tracy": "~2.7"
+    },
+    "require-dev": {
+        "satooshi/php-coveralls": "1.*",
+        "squizlabs/php_codesniffer": "^2.5",
+        "phpunit/phpunit": "^5.7",
+        "illuminate/database": "^5.3",
+        "twig/twig": "~1.24",
+        "slim/twig-view": "~2.1",
+        "j4mie/idiorm": "^1.5",
+        "doctrine/orm": "^2.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "RunTracy\\": "src/RunTracy"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "@phpunit"
+        ],
+        "phpunit": "php vendor/bin/phpunit"
+    }
 }

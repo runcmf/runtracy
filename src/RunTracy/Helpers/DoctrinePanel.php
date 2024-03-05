@@ -25,16 +25,18 @@ use Tracy\IBarPanel;
  */
 class DoctrinePanel implements IBarPanel
 {
+    private $ver;
     private $icon;
     private $parsed;
     private $count;
     private $time;
 
-    public function __construct($logs = null)
+    public function __construct($logs = null, array $ver = [])
     {
         $this->parsed = $this->parse(
             $logs
         );
+        $this->ver = $ver;
     }
 
     public function getTab()
@@ -68,7 +70,7 @@ class DoctrinePanel implements IBarPanel
     public function getPanel()
     {
         return '
-        <h1>'.$this->icon.' &nbsp; Slim 3 / Doctrine DBAL</h1>
+        <h1>'.$this->icon.' &nbsp; Slim '.$this->ver['slim'].' / Doctrine DBAL</h1>
         <div class="tracy-inner doctrinePanel">
             <p>
                 <table width="100%">' . $this->parsed . '
@@ -91,7 +93,7 @@ class DoctrinePanel implements IBarPanel
             if (!isset($log['executionMS'])) {
                 continue;
             }
-            $time = $log['executionMS'];
+            $time += $log['executionMS'];
             $row = $baseRow;
             $return .= sprintf(
                 $row,

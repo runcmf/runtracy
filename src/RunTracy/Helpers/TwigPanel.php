@@ -22,13 +22,15 @@ use Tracy\IBarPanel;
 class TwigPanel implements IBarPanel
 {
     private $data;
+    private $ver;
     private $dumper;
     private $icon;
 
-    public function __construct($data = null)
+    public function __construct($data = null, array $ver = [])
     {
         $this->data = $data;
-        $this->dumper = new \Twig_Profiler_Dumper_Html();
+        $this->ver = $ver;
+        $this->dumper = new \Twig\Profiler\Dumper\HtmlDumper();
     }
 
     public function getTab()
@@ -88,7 +90,7 @@ class TwigPanel implements IBarPanel
 
     public function getPanel()
     {
-        return '<h1>'.$this->icon.' Slim 3 / Twig </h1>
+        return '<h1>'.$this->icon.' Slim '.$this->ver['slim'].' / Twig </h1>
         <div class="tracy-inner">
             <p>
                 <table width="100%">

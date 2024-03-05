@@ -23,12 +23,14 @@ class EloquentORMPanel implements IBarPanel
 {
     private $count;
     private $data;
+    private $ver;
     private $time;
     private $icon;
 
-    public function __construct($data = null)
+    public function __construct($data = null, array $ver = [])
     {
         $this->data = $data;
+        $this->ver = $ver;
         $this->count = count($data);
     }
 
@@ -46,8 +48,8 @@ class EloquentORMPanel implements IBarPanel
     {
         $this->data = $this->parse($this->data);
         $this->icon = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px"viewBox="0 0 284.207 '.
-            '284.207" style="enable-background:new 0 0 284.207 284.207;" xml:space="preserve" width="16px" height='.
-            '"16px"><path d="M239.604,45.447c0-25.909-41.916-45.447-97.5-45.447s-97.5,19.538-97.5,45.447v47.882c0,'.
+            '284.207" style="enable-background:new 0 0 284.207 284.207;" xml:space="preserve" width="16" height='.
+            '"16"><path d="M239.604,45.447c0-25.909-41.916-45.447-97.5-45.447s-97.5,19.538-97.5,45.447v47.882c0,'.
             '6.217,2.419,12.064,6.854,17.365  c-3.84,0.328-6.854,3.543-6.854,7.468v47.882c0,6.217,2.419,12.065,6.855'.
             ',17.366c-3.84,0.328-6.855,3.543-6.855,7.468v47.881  c0,25.91,41.916,45.448,97.5,45.448s97.5-19.538,97.'.
             '5-45.448v-47.881c0-3.925-3.016-7.14-6.855-7.468  c4.437-5.301,6.855-11.149,6.855-17.366v-47.882c0-3.'.
@@ -66,7 +68,7 @@ class EloquentORMPanel implements IBarPanel
     public function getPanel()
     {
         return '
-        <h1>'.$this->icon.' &nbsp; Slim 3 / Eloquent ORM</h1>
+        <h1>'.$this->icon.' &nbsp; Slim '.$this->ver['slim'].' / Eloquent ORM</h1>
         <div class="tracy-inner">
             <p>
                 <table width="100%">' . $this->data . '

@@ -35,8 +35,8 @@ class IncludedFiles implements IBarPanel
 
     public function getTab()
     {
-        $this->icon = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" width="16px" '.
-            'height="16px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">'.
+        $this->icon = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" width="16" '.
+            'height="16" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">'.
             '<g><path d="M506.195,307.084H5.805c-3.206,0-5.805,2.599-5.805,5.805V488.2c0,9.618,7.797,17.415,17.415,'.
             '17.415h477.17    c9.618,0,17.415-7.797,17.415-17.415V312.889C512,309.683,509.401,307.084,506.195,307.'.
             '084z M256,456.853    c-27.848,0-50.503-22.656-50.503-50.503c0-27.848,22.656-50.503,50.503-50.503s50.'.

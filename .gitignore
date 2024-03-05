@@ -1,0 +1,9 @@
+.idea/
+Thumbs.db
+.DS_Store
+.env
+.phpunit.result.cache
+
+/vendor/*
+
+/composer.lock

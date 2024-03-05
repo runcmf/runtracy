@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2017 1f7.wizard@gmail.com
  *
@@ -17,7 +18,12 @@
 
 namespace RunTracy\Collectors;
 
-use Slim\Container;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\QueryBuilder as OrmQueryBuilder;
+use Exception;
+use Psr\Container\ContainerInterface as Container;
 use Doctrine\DBAL\Logging\DebugStack;
 
 /**
@@ -30,9 +36,9 @@ class DoctrineCollector
      * DoctrineCollector constructor.
      * @param Container|null $c
      * @param string $containerName
-     * @throws \Exception
+     * @throws Exception
      */
-    public function __construct(Container $c = null, $containerName = '')
+    public function __construct(Container $c = null, string $containerName = '')
     {
         if ($c === null || !$c->has($containerName)) {
             return 0;
@@ -41,25 +47,27 @@ class DoctrineCollector
 
         // check instance
         switch (true) {
-            case $dm instanceof \Doctrine\DBAL\Query\QueryBuilder:
-                $conf = $dm->getConnection()->getConfiguration();
-                break;
-            case $dm instanceof \Doctrine\DBAL\Connection:
+            case $dm instanceof Connection:
                 $conf = $dm->getConfiguration();
                 break;
-            case $dm instanceof \Doctrine\ORM\EntityManager:
+            case $dm instanceof EntityManager:
+            case $dm instanceof QueryBuilder:
                 $conf = $dm->getConnection()->getConfiguration();
                 break;
-            case $dm instanceof \Doctrine\ORM\QueryBuilder:
+            case $dm instanceof OrmQueryBuilder:
                 $conf = $dm->getEntityManager()->getConnection()->getConfiguration();
                 break;
             default:
-                throw new \Exception('Neither Doctrine DBAL neither ORM not found');
-                break;
+                throw new Exception('Neither Doctrine DBAL neither ORM not found');
         }
 
         $conf->setSQLLogger(new DebugStack());
-        $c['doctrineConfig'] = $conf;
+
+        if(method_exists($c, 'set')){
+            $c->set('doctrineConfig', $conf);
+        }else{
+            $c['doctrineConfig'] = $conf;
+        }
 
         return true;
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 1f7.wizard@gmail.com
  *
@@ -44,6 +45,12 @@ class RunTracyConsole extends WebConsoleRPCServer
         $this->passwordHashAlgorithm = $cfg['ConsoleHashAlgorithm'] ?: '';
         $this->homeDirectory = $cfg['ConsoleHomeDirectory'] ?: '';
 
-        return $response->withJson($this->execute());
+        $ConsoleResponce = $this->execute();
+
+        if($cfg['ConsoleFromEncoding']){
+            $ConsoleResponce['result']['output'] = mb_convert_encoding($ConsoleResponce['result']['output'], "UTF-8", $cfg['ConsoleFromEncoding']);
+        }
+
+        return $response->withJson($ConsoleResponce, null, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
     }
 }
